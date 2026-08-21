@@ -1,0 +1,249 @@
+{
+  "schemaVersion": "1.0",
+  "batch": {
+    "producer": "codex-cli-repo-research",
+    "generatedAt": "2026-08-21T00:00:00Z",
+    "summary": "تثبيت وتشغيل Codex CLI من المستودع الرسمي.",
+    "notes": "منقول من README الرسمي لمستودع openai/codex."
+  },
+  "sources": [
+    {
+      "key": "codex-cli-repo",
+      "name": "Codex CLI — official repository",
+      "sourceType": "official_repo",
+      "url": "https://github.com/openai/codex",
+      "isOfficial": true,
+      "toolSlug": "codex-cli",
+      "syncStrategy": "agent"
+    }
+  ],
+  "items": [
+    {
+      "externalKey": "codex-cli:install-unix",
+      "slug": "codex-install-unix",
+      "itemType": "cli_command",
+      "title": "تثبيت Codex CLI على macOS/Linux",
+      "toolSlug": "codex-cli",
+      "shortDescription": "تنزيل وتثبيت Codex CLI عبر سكربت التثبيت الرسمي.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install",
+        "getting-started"
+      ],
+      "tags": [
+        "setup",
+        "cli"
+      ],
+      "aliases": [
+        "تثبيت كودكس",
+        "install codex",
+        "codex setup"
+      ],
+      "syntax": "curl -fsSL https://chatgpt.com/codex/install.sh | sh",
+      "whenToUse": "عند التثبيت لأول مرة على macOS أو Linux.",
+      "expectedResult": "يُثبَّت الملف التنفيذي codex ويصبح متاحًا من الطرفية.",
+      "warningText": "السكربت يُنفَّذ مباشرة من الإنترنت. راجع مصدره قبل تشغيله على جهاز عمل.",
+      "iconKey": "download",
+      "accentKey": "green",
+      "sources": [
+        {
+          "sourceKey": "codex-cli-repo",
+          "url": "https://github.com/openai/codex",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "codex-cli:install-windows",
+      "slug": "codex-install-windows",
+      "itemType": "cli_command",
+      "title": "تثبيت Codex CLI على Windows",
+      "toolSlug": "codex-cli",
+      "shortDescription": "تثبيت Codex CLI عبر PowerShell.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install"
+      ],
+      "tags": [
+        "setup"
+      ],
+      "aliases": [
+        "تثبيت على ويندوز",
+        "codex windows"
+      ],
+      "syntax": "powershell -ExecutionPolicy ByPass -c \"irm https://chatgpt.com/codex/install.ps1 | iex\"",
+      "whenToUse": "عند التثبيت على Windows 11.",
+      "iconKey": "download",
+      "accentKey": "green",
+      "sources": [
+        {
+          "sourceKey": "codex-cli-repo",
+          "url": "https://github.com/openai/codex",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "codex-cli:install-npm",
+      "slug": "codex-install-npm",
+      "itemType": "cli_command",
+      "title": "npm install -g @openai/codex",
+      "toolSlug": "codex-cli",
+      "shortDescription": "تثبيت Codex CLI عبر npm.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install"
+      ],
+      "tags": [
+        "setup"
+      ],
+      "aliases": [
+        "npm codex",
+        "تثبيت عبر npm"
+      ],
+      "syntax": "npm install -g @openai/codex",
+      "iconKey": "download",
+      "accentKey": "green",
+      "sources": [
+        {
+          "sourceKey": "codex-cli-repo",
+          "url": "https://github.com/openai/codex",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "codex-cli:install-brew",
+      "slug": "codex-install-brew",
+      "itemType": "cli_command",
+      "title": "brew install --cask codex",
+      "toolSlug": "codex-cli",
+      "shortDescription": "تثبيت Codex CLI عبر Homebrew.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install"
+      ],
+      "tags": [
+        "setup"
+      ],
+      "aliases": [
+        "brew codex"
+      ],
+      "syntax": "brew install --cask codex",
+      "iconKey": "download",
+      "accentKey": "green",
+      "sources": [
+        {
+          "sourceKey": "codex-cli-repo",
+          "url": "https://github.com/openai/codex",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "codex-cli:start",
+      "slug": "codex-start",
+      "itemType": "cli_command",
+      "title": "codex",
+      "toolSlug": "codex-cli",
+      "shortDescription": "تشغيل Codex CLI وبدء جلسة تفاعلية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup",
+        "sessions",
+        "authentication"
+      ],
+      "categories": [
+        "first-run",
+        "cli-commands",
+        "login"
+      ],
+      "tags": [
+        "cli",
+        "ai",
+        "auth"
+      ],
+      "aliases": [
+        "تشغيل كودكس",
+        "بدء codex",
+        "codex run",
+        "sign in with chatgpt"
+      ],
+      "fullDescription": "بعد التثبيت، تشغيل الأمر codex يفتح الجلسة التفاعلية. في أول تشغيل يمكنك اختيار «Sign in with ChatGPT» لاستخدام خطة ChatGPT الخاصة بك.",
+      "syntax": "codex",
+      "whenToUse": "عند بدء العمل مع Codex في مجلد المشروع.",
+      "expectedResult": "تفتح واجهة Codex التفاعلية داخل الطرفية.",
+      "iconKey": "terminal",
+      "accentKey": "green",
+      "examples": [
+        {
+          "code": "codex",
+          "title": "تشغيل عادي"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "codex-cli-repo",
+          "url": "https://github.com/openai/codex",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "codex-cli:app",
+      "slug": "codex-app",
+      "itemType": "cli_command",
+      "title": "codex app",
+      "toolSlug": "codex-cli",
+      "shortDescription": "فتح تجربة تطبيق سطح المكتب من Codex.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "first-run"
+      ],
+      "tags": [
+        "cli"
+      ],
+      "aliases": [
+        "تطبيق كودكس",
+        "codex desktop"
+      ],
+      "syntax": "codex app",
+      "iconKey": "grid",
+      "accentKey": "green",
+      "sources": [
+        {
+          "sourceKey": "codex-cli-repo",
+          "url": "https://github.com/openai/codex",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    }
+  ]
+}

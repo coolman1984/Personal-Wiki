@@ -1,0 +1,360 @@
+{
+  "schemaVersion": "1.0",
+  "batch": {
+    "producer": "git-docs-research",
+    "generatedAt": "2026-08-21T00:00:00Z",
+    "summary": "أوامر Git الأساسية من المرجع الرسمي.",
+    "notes": "الصيغ منقولة من صفحات SYNOPSIS في التوثيق الرسمي لـ Git."
+  },
+  "sources": [
+    {
+      "key": "git-docs",
+      "name": "Git — official reference manual",
+      "sourceType": "official_docs",
+      "url": "https://git-scm.com/docs",
+      "isOfficial": true,
+      "toolSlug": "git-github",
+      "syncStrategy": "agent"
+    }
+  ],
+  "items": [
+    {
+      "externalKey": "git-github:switch",
+      "slug": "git-switch",
+      "itemType": "cli_command",
+      "title": "git switch",
+      "toolSlug": "git-github",
+      "shortDescription": "التبديل بين الفروع، أو إنشاء فرع جديد والانتقال إليه.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "git-workflow"
+      ],
+      "categories": [
+        "workflow",
+        "workflow-git"
+      ],
+      "tags": [
+        "git"
+      ],
+      "aliases": [
+        "تبديل الفرع",
+        "انتقل إلى فرع",
+        "إنشاء فرع",
+        "switch branch",
+        "checkout branch"
+      ],
+      "fullDescription": "يحدّث شجرة العمل والفهرس ليطابقا الفرع المحدد، وتُضاف كل الالتزامات الجديدة إلى رأس ذلك الفرع. يمكن إنشاء فرع جديد بالخيار -c، أو فصل شجرة العمل عن أي فرع بالخيار --detach.",
+      "syntax": "git switch [<options>] [--no-guess] <branch>",
+      "whenToUse": "عند الانتقال إلى فرع آخر.\nعند إنشاء فرع جديد للعمل على ميزة.",
+      "expectedResult": "تتحدّث شجرة العمل لتطابق الفرع المطلوب.",
+      "warningText": "تُلغى العملية إذا كانت ستؤدي إلى فقدان تغييرات محلية، ما لم تستخدم --discard-changes أو --merge.",
+      "iconKey": "git",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "git switch main",
+          "title": "الانتقال إلى الفرع الرئيسي"
+        },
+        {
+          "code": "git switch -c feature/login",
+          "title": "إنشاء فرع جديد والانتقال إليه"
+        },
+        {
+          "code": "git switch --detach <start-point>",
+          "title": "فصل شجرة العمل عن أي فرع"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "-c, --create",
+          "description": "إنشاء فرع جديد والانتقال إليه.",
+          "isRequired": false
+        },
+        {
+          "name": "--detach",
+          "description": "فصل شجرة العمل عن أي فرع.",
+          "isRequired": false
+        },
+        {
+          "name": "--orphan",
+          "description": "إنشاء فرع جديد بلا تاريخ سابق.",
+          "isRequired": false
+        },
+        {
+          "name": "--no-guess",
+          "description": "منع التخمين التلقائي لفرع بعيد بنفس الاسم.",
+          "isRequired": false
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "git-docs",
+          "url": "https://git-scm.com/docs/git-switch",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "git-github:restore",
+          "relationshipType": "related"
+        },
+        {
+          "toExternalKey": "git-github:status",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "git-github:restore",
+      "slug": "git-restore",
+      "itemType": "cli_command",
+      "title": "git restore",
+      "toolSlug": "git-github",
+      "shortDescription": "استعادة ملفات في شجرة العمل أو في الفهرس.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "git-workflow"
+      ],
+      "categories": [
+        "workflow-git"
+      ],
+      "tags": [
+        "git"
+      ],
+      "aliases": [
+        "تراجع عن تعديل",
+        "استعادة ملف",
+        "إلغاء التجهيز",
+        "undo changes",
+        "unstage"
+      ],
+      "syntax": "git restore [<options>] [--source=<tree>] [--staged] [--worktree] [--] <pathspec>...",
+      "whenToUse": "عند التراجع عن تعديلات محلية في ملف.\nعند إخراج ملف من منطقة التجهيز.",
+      "warningText": "استعادة ملف في شجرة العمل تحذف تعديلاتك غير المحفوظة عليه.",
+      "iconKey": "refresh",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "git restore src/app.ts",
+          "title": "التراجع عن تعديلات ملف"
+        },
+        {
+          "code": "git restore --staged src/app.ts",
+          "title": "إخراج ملف من التجهيز"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "--staged",
+          "description": "العمل على الفهرس بدل شجرة العمل.",
+          "isRequired": false
+        },
+        {
+          "name": "--worktree",
+          "description": "العمل على شجرة العمل.",
+          "isRequired": false
+        },
+        {
+          "name": "--source=<tree>",
+          "description": "الاستعادة من شجرة محددة.",
+          "isRequired": false
+        },
+        {
+          "name": "-p, --patch",
+          "description": "اختيار الأجزاء المراد استعادتها تفاعليًا.",
+          "isRequired": false
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "git-docs",
+          "url": "https://git-scm.com/docs/git-restore",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "git-github:switch",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "git-github:status",
+      "slug": "git-status",
+      "itemType": "cli_command",
+      "title": "git status",
+      "toolSlug": "git-github",
+      "shortDescription": "عرض حالة شجرة العمل والملفات المجهّزة وغير المتعقّبة.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "git-workflow"
+      ],
+      "categories": [
+        "workflow-git"
+      ],
+      "tags": [
+        "git"
+      ],
+      "aliases": [
+        "حالة المستودع",
+        "ما الذي تغيّر",
+        "status",
+        "الملفات المعدلة"
+      ],
+      "syntax": "git status [<options>] [--] [<pathspec>...]",
+      "whenToUse": "قبل الالتزام، للتأكد ممّا سيُحفظ.",
+      "iconKey": "list",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "git status",
+          "title": "الحالة الكاملة"
+        },
+        {
+          "code": "git status --short",
+          "title": "عرض مختصر"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "git-docs",
+          "url": "https://git-scm.com/docs/git-status",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "git-github:log",
+      "slug": "git-log",
+      "itemType": "cli_command",
+      "title": "git log",
+      "toolSlug": "git-github",
+      "shortDescription": "عرض سجل الالتزامات.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "git-workflow",
+        "search"
+      ],
+      "categories": [
+        "workflow-git"
+      ],
+      "tags": [
+        "git"
+      ],
+      "aliases": [
+        "سجل الالتزامات",
+        "تاريخ المشروع",
+        "history",
+        "log"
+      ],
+      "syntax": "git log [<options>] [<revision-range>] [[--] <path>...]",
+      "whenToUse": "عند تتبّع تاريخ ملف أو البحث عن التزام معيّن.",
+      "iconKey": "clock",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "git log --oneline -10",
+          "title": "آخر عشرة التزامات بسطر واحد"
+        },
+        {
+          "code": "git log -- path/to/file",
+          "title": "تاريخ ملف محدد"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "git-docs",
+          "url": "https://git-scm.com/docs/git-log",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "git-github:stash",
+      "slug": "git-stash",
+      "itemType": "cli_command",
+      "title": "git stash",
+      "toolSlug": "git-github",
+      "shortDescription": "تخزين التعديلات مؤقتًا وإعادة شجرة العمل إلى حالة نظيفة.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "git-workflow"
+      ],
+      "categories": [
+        "workflow-git"
+      ],
+      "tags": [
+        "git"
+      ],
+      "aliases": [
+        "حفظ مؤقت",
+        "تخزين التعديلات",
+        "stash",
+        "علّق التغييرات"
+      ],
+      "syntax": "git stash [push] [-u | --include-untracked] [(-m | --message) <message>]",
+      "whenToUse": "عند الحاجة إلى التبديل إلى فرع آخر بسرعة دون الالتزام بالتعديلات الحالية.",
+      "expectedResult": "تُحفظ التعديلات في مخزن مؤقت وتعود شجرة العمل نظيفة.",
+      "iconKey": "download",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "git stash push -m \"wip: login form\"",
+          "title": "تخزين مع رسالة"
+        },
+        {
+          "code": "git stash list",
+          "title": "عرض المخزون"
+        },
+        {
+          "code": "git stash pop",
+          "title": "استرجاع آخر تخزين وحذفه"
+        },
+        {
+          "code": "git stash apply",
+          "title": "استرجاع بدون حذف"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "-u, --include-untracked",
+          "description": "تضمين الملفات غير المتعقّبة.",
+          "isRequired": false
+        },
+        {
+          "name": "-m, --message <message>",
+          "description": "رسالة توضح محتوى التخزين.",
+          "isRequired": false
+        },
+        {
+          "name": "-p, --patch",
+          "description": "اختيار الأجزاء المراد تخزينها تفاعليًا.",
+          "isRequired": false
+        },
+        {
+          "name": "--staged",
+          "description": "تخزين المجهّز فقط.",
+          "isRequired": false
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "git-docs",
+          "url": "https://git-scm.com/docs/git-stash",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    }
+  ]
+}

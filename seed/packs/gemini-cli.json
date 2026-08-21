@@ -1,0 +1,292 @@
+{
+  "schemaVersion": "1.0",
+  "batch": {
+    "producer": "gemini-cli-repo-research",
+    "generatedAt": "2026-08-21T00:00:00Z",
+    "summary": "تثبيت Gemini CLI وقنوات إصداره وميزاته الأساسية.",
+    "notes": "منقول من README الرسمي لمستودع google-gemini/gemini-cli."
+  },
+  "sources": [
+    {
+      "key": "gemini-cli-repo",
+      "name": "Gemini CLI — official repository",
+      "sourceType": "official_repo",
+      "url": "https://github.com/google-gemini/gemini-cli",
+      "isOfficial": true,
+      "toolSlug": "gemini-cli",
+      "syncStrategy": "agent"
+    }
+  ],
+  "items": [
+    {
+      "externalKey": "gemini-cli:npx",
+      "slug": "gemini-npx",
+      "itemType": "cli_command",
+      "title": "npx @google/gemini-cli",
+      "toolSlug": "gemini-cli",
+      "shortDescription": "تشغيل Gemini CLI فورًا بدون تثبيت.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install",
+        "first-run"
+      ],
+      "tags": [
+        "setup",
+        "cli"
+      ],
+      "aliases": [
+        "تجربة جيميناي",
+        "npx gemini",
+        "بدون تثبيت"
+      ],
+      "syntax": "npx @google/gemini-cli",
+      "whenToUse": "عند التجربة السريعة قبل التثبيت الدائم.",
+      "iconKey": "play",
+      "accentKey": "blue",
+      "sources": [
+        {
+          "sourceKey": "gemini-cli-repo",
+          "url": "https://github.com/google-gemini/gemini-cli",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "gemini-cli:install-npm",
+      "slug": "gemini-install-npm",
+      "itemType": "cli_command",
+      "title": "npm install -g @google/gemini-cli",
+      "toolSlug": "gemini-cli",
+      "shortDescription": "تثبيت Gemini CLI عالميًا عبر npm.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install"
+      ],
+      "tags": [
+        "setup"
+      ],
+      "aliases": [
+        "تثبيت جيميناي",
+        "install gemini"
+      ],
+      "syntax": "npm install -g @google/gemini-cli",
+      "iconKey": "download",
+      "accentKey": "blue",
+      "sources": [
+        {
+          "sourceKey": "gemini-cli-repo",
+          "url": "https://github.com/google-gemini/gemini-cli",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "gemini-cli:install-brew",
+      "slug": "gemini-install-brew",
+      "itemType": "cli_command",
+      "title": "brew install gemini-cli",
+      "toolSlug": "gemini-cli",
+      "shortDescription": "تثبيت Gemini CLI عبر Homebrew على macOS/Linux.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install"
+      ],
+      "tags": [
+        "setup"
+      ],
+      "aliases": [
+        "brew gemini"
+      ],
+      "syntax": "brew install gemini-cli",
+      "iconKey": "download",
+      "accentKey": "blue",
+      "sources": [
+        {
+          "sourceKey": "gemini-cli-repo",
+          "url": "https://github.com/google-gemini/gemini-cli",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "gemini-cli:channels",
+      "slug": "gemini-release-channels",
+      "itemType": "concept",
+      "title": "قنوات الإصدار",
+      "toolSlug": "gemini-cli",
+      "shortDescription": "ثلاث قنوات للإصدارات: stable و preview و nightly.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "updates",
+        "setup"
+      ],
+      "categories": [
+        "maintenance",
+        "install"
+      ],
+      "tags": [
+        "setup"
+      ],
+      "aliases": [
+        "قنوات الإصدار",
+        "preview",
+        "nightly",
+        "تحديث جيميناي"
+      ],
+      "fullDescription": "القناة المستقرة (latest) تصدر أسبوعيًا، وقناة المعاينة (preview) أسبوعيًا أيضًا وقد تحتوي على تراجعات، وقناة nightly تصدر يوميًا من الفرع الرئيسي.",
+      "syntax": "npm install -g @google/gemini-cli@latest",
+      "whenToUse": "عند اختيار درجة الاستقرار المناسبة لك.",
+      "warningText": "قناة nightly غير مُتحقَّق منها بالكامل ويُفترض وجود مشكلات معلّقة فيها.",
+      "iconKey": "refresh",
+      "accentKey": "blue",
+      "examples": [
+        {
+          "code": "npm install -g @google/gemini-cli@latest",
+          "title": "المستقرة"
+        },
+        {
+          "code": "npm install -g @google/gemini-cli@preview",
+          "title": "المعاينة"
+        },
+        {
+          "code": "npm install -g @google/gemini-cli@nightly",
+          "title": "اليومية"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "gemini-cli-repo",
+          "url": "https://github.com/google-gemini/gemini-cli",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "gemini-cli:context-file",
+      "slug": "gemini-context-file",
+      "itemType": "concept",
+      "title": "ملف السياق GEMINI.md",
+      "toolSlug": "gemini-cli",
+      "shortDescription": "ملف سياق مخصص يضبط سلوك Gemini CLI في مشروعك.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "memory-context",
+        "project-config"
+      ],
+      "categories": [
+        "context-files",
+        "config-project"
+      ],
+      "tags": [
+        "config"
+      ],
+      "aliases": [
+        "gemini.md",
+        "ملف السياق",
+        "قواعد المشروع"
+      ],
+      "whenToUse": "عند الرغبة في تثبيت قواعد المشروع بحيث تُقرأ في كل جلسة.",
+      "iconKey": "folder",
+      "accentKey": "blue",
+      "sources": [
+        {
+          "sourceKey": "gemini-cli-repo",
+          "url": "https://github.com/google-gemini/gemini-cli",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "gemini-cli:checkpointing",
+      "slug": "gemini-checkpointing",
+      "itemType": "concept",
+      "title": "حفظ الجلسات واستئنافها",
+      "toolSlug": "gemini-cli",
+      "shortDescription": "إمكانية حفظ المحادثات المعقّدة واستئنافها لاحقًا.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "sessions",
+        "memory-context"
+      ],
+      "categories": [
+        "context-sessions"
+      ],
+      "tags": [
+        "session"
+      ],
+      "aliases": [
+        "checkpoint",
+        "حفظ الجلسة",
+        "استئناف"
+      ],
+      "iconKey": "clock",
+      "accentKey": "blue",
+      "sources": [
+        {
+          "sourceKey": "gemini-cli-repo",
+          "url": "https://github.com/google-gemini/gemini-cli",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "gemini-cli:github-action",
+      "slug": "gemini-github-action",
+      "itemType": "workflow",
+      "title": "Gemini CLI GitHub Action",
+      "toolSlug": "gemini-cli",
+      "shortDescription": "دمج Gemini CLI في سير عمل GitHub لمراجعة الطلبات وفرز المشكلات.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "git-workflow",
+        "automation"
+      ],
+      "categories": [
+        "workflow-git"
+      ],
+      "tags": [
+        "git",
+        "ai"
+      ],
+      "aliases": [
+        "github action",
+        "مراجعة تلقائية",
+        "gemini في github"
+      ],
+      "fullDescription": "يتيح مراجعة تلقائية لطلبات السحب، وفرز المشكلات وتصنيفها، والاستجابة عند ذكر ‎@gemini-cli‎ في المشكلات والطلبات.",
+      "syntax": "@gemini-cli",
+      "iconKey": "git",
+      "accentKey": "blue",
+      "sources": [
+        {
+          "sourceKey": "gemini-cli-repo",
+          "url": "https://github.com/google-gemini/gemini-cli",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    }
+  ]
+}

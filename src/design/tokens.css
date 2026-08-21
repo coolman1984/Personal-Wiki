@@ -1,0 +1,139 @@
+/* Personal Wiki design tokens — docs/UI_SPEC.md §2.
+   Components consume variables only; no raw hex belongs in a component file. */
+
+:root {
+  color-scheme: light;
+
+  /* surfaces */
+  --background: #f6f8fc;
+  --surface: #ffffff;
+  --surface-muted: #f3f5fa;
+  --surface-sunken: #eef2f9;
+  --border: #e4e9f2;
+  --border-strong: #d3dae8;
+
+  /* text */
+  --text-primary: #10182b;
+  --text-secondary: #5a6782;
+  --text-tertiary: #8a96ad;
+  --text-inverse: #ffffff;
+
+  /* accents */
+  --accent-blue: #2f6bff;   --accent-blue-soft: #e8efff;
+  --accent-green: #17a46a;  --accent-green-soft: #e3f7ee;
+  --accent-purple: #7a5af8; --accent-purple-soft: #ede9fe;
+  --accent-orange: #f2762e; --accent-orange-soft: #ffede1;
+  --accent-teal: #0fa3b1;   --accent-teal-soft: #e1f6f8;
+  --accent-red: #e0483e;    --accent-red-soft: #fdeceb;
+  --accent-slate: #64748b;  --accent-slate-soft: #eef1f6;
+
+  /* status */
+  --success: #17a46a;
+  --warning: #e0a32e;
+  --danger: #e0483e;
+  --info: #2f6bff;
+
+  /* radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  /* elevation */
+  --shadow-sm: 0 1px 2px rgba(16, 24, 43, 0.04), 0 1px 3px rgba(16, 24, 43, 0.06);
+  --shadow-md: 0 4px 12px rgba(16, 24, 43, 0.06), 0 2px 4px rgba(16, 24, 43, 0.04);
+  --shadow-lg: 0 12px 32px rgba(16, 24, 43, 0.1);
+
+  /* spacing */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-7: 32px; --space-8: 40px;
+
+  /* layout */
+  --titlebar-height: 64px;
+  --rail-width: 232px;
+  --panel-width: 344px;
+  --content-max: 1180px;
+
+  /* type */
+  --font-sans: "Segoe UI", "IBM Plex Sans Arabic", "Noto Sans Arabic", system-ui, -apple-system, sans-serif;
+  --font-mono: "Cascadia Code", "Cascadia Mono", Consolas, "Courier New", monospace;
+
+  /* motion */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app { height: 100%; }
+
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+
+:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Numbers, code, paths and URLs stay left-to-right inside the RTL page. */
+.ltr { direction: ltr; unicode-bidi: isolate; text-align: start; }
+code, kbd, pre, .mono { font-family: var(--font-mono); direction: ltr; unicode-bidi: isolate; }
+
+/* Directional glyphs mirror in RTL; semantic ones never do. */
+[dir="rtl"] .icon-directional { transform: scaleX(-1); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); background-clip: content-box; }
+::-webkit-scrollbar-track { background: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---- shared primitives used across screens ---- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.section-title {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.muted { color: var(--text-secondary); }
+.tertiary { color: var(--text-tertiary); }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-muted) 25%, var(--surface-sunken) 50%, var(--surface-muted) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s var(--ease) infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px;
+  padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}

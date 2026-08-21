@@ -1,0 +1,611 @@
+{
+  "schemaVersion": "1.0",
+  "batch": {
+    "producer": "personal-wiki-starter",
+    "generatedAt": "2026-08-21T00:00:00Z",
+    "summary": "المحتوى الأساسي: الأدوات والمهام والأقسام والمصادر الرسمية.",
+    "notes": "البنية التصنيفية الأولى. الأوامر تُضاف عبر حزم معرفة موثّقة من المصادر الرسمية."
+  },
+  "tools": [
+    {
+      "slug": "claude-code",
+      "name": "Claude Code",
+      "shortName": "Claude Code",
+      "iconKey": "terminal",
+      "accentKey": "orange",
+      "officialHomeUrl": "https://claude.com/claude-code",
+      "description": "واجهة سطر أوامر من Anthropic للبرمجة بمساعدة Claude داخل الطرفية ومحرر الأكواد.",
+      "sortOrder": 10,
+      "externalKey": "tool:claude-code"
+    },
+    {
+      "slug": "codex-cli",
+      "name": "Codex CLI",
+      "shortName": "Codex",
+      "iconKey": "terminal",
+      "accentKey": "green",
+      "officialHomeUrl": "https://developers.openai.com/codex/cli/",
+      "description": "واجهة سطر أوامر من OpenAI لتشغيل وكيل برمجي محليًا في الطرفية.",
+      "sortOrder": 20,
+      "externalKey": "tool:codex-cli"
+    },
+    {
+      "slug": "opencode",
+      "name": "OpenCode",
+      "shortName": "OpenCode",
+      "iconKey": "code",
+      "accentKey": "purple",
+      "officialHomeUrl": "https://opencode.ai/",
+      "description": "وكيل برمجي مفتوح المصدر يعمل في الطرفية ويدعم عدة مزوّدي نماذج.",
+      "sortOrder": 30,
+      "externalKey": "tool:opencode"
+    },
+    {
+      "slug": "gemini-cli",
+      "name": "Gemini CLI",
+      "shortName": "Gemini",
+      "iconKey": "sparkle",
+      "accentKey": "blue",
+      "officialHomeUrl": "https://github.com/google-gemini/gemini-cli",
+      "description": "وكيل Gemini مفتوح المصدر من Google يعمل داخل الطرفية.",
+      "sortOrder": 40,
+      "externalKey": "tool:gemini-cli"
+    },
+    {
+      "slug": "antigravity",
+      "name": "Antigravity",
+      "shortName": "Antigravity",
+      "iconKey": "rocket",
+      "accentKey": "teal",
+      "officialHomeUrl": "https://antigravity.google/",
+      "description": "منصّة تطوير من Google قائمة على الوكلاء مع محرر ومتصفّح وطرفية.",
+      "sortOrder": 50,
+      "externalKey": "tool:antigravity"
+    },
+    {
+      "slug": "git-github",
+      "name": "Git / GitHub",
+      "shortName": "Git",
+      "iconKey": "git",
+      "accentKey": "orange",
+      "officialHomeUrl": "https://git-scm.com/doc",
+      "description": "نظام إدارة الإصدارات ومنصّة استضافة المستودعات وسير عمل المراجعة.",
+      "sortOrder": 60,
+      "externalKey": "tool:git-github"
+    },
+    {
+      "slug": "vs-code",
+      "name": "VS Code",
+      "shortName": "VS Code",
+      "iconKey": "code",
+      "accentKey": "blue",
+      "officialHomeUrl": "https://code.visualstudio.com/docs",
+      "description": "محرر أكواد من Microsoft مع إضافات وإعدادات واختصارات.",
+      "sortOrder": 70,
+      "externalKey": "tool:vs-code"
+    },
+    {
+      "slug": "openrouter",
+      "name": "OpenRouter",
+      "shortName": "OpenRouter",
+      "iconKey": "link",
+      "accentKey": "purple",
+      "officialHomeUrl": "https://openrouter.ai/docs",
+      "description": "بوابة موحّدة للوصول إلى نماذج ذكاء اصطناعي متعددة عبر واجهة واحدة.",
+      "sortOrder": 80,
+      "externalKey": "tool:openrouter"
+    },
+    {
+      "slug": "useful-links",
+      "name": "روابط مفيدة",
+      "shortName": "روابط",
+      "iconKey": "link",
+      "accentKey": "green",
+      "description": "مواقع ومراجع مختارة تُستخدم بشكل متكرر.",
+      "sortOrder": 90,
+      "externalKey": "tool:useful-links"
+    }
+  ],
+  "tasks": [
+    {
+      "slug": "setup",
+      "name": "التثبيت والإعداد",
+      "description": "تنزيل الأداة وتهيئتها لأول مرة.",
+      "iconKey": "download",
+      "sortOrder": 10,
+      "externalKey": "task:setup"
+    },
+    {
+      "slug": "authentication",
+      "name": "تسجيل الدخول والمصادقة",
+      "description": "ربط الحساب ومفاتيح الوصول وتسجيل الخروج.",
+      "iconKey": "key",
+      "sortOrder": 20,
+      "externalKey": "task:authentication"
+    },
+    {
+      "slug": "sessions",
+      "name": "الجلسات",
+      "description": "بدء جلسة، استئنافها، وإدارة سجل المحادثة.",
+      "iconKey": "clock",
+      "sortOrder": 30,
+      "externalKey": "task:sessions"
+    },
+    {
+      "slug": "agents",
+      "name": "الوكلاء والوكلاء الفرعيون",
+      "description": "إنشاء وكلاء وتفويض المهام وتشغيلها بالتوازي.",
+      "iconKey": "robot",
+      "sortOrder": 40,
+      "externalKey": "task:agents"
+    },
+    {
+      "slug": "memory-context",
+      "name": "الذاكرة والسياق",
+      "description": "ما تتذكّره الأداة عن مشروعك وكيف تتحكّم فيه.",
+      "iconKey": "brain",
+      "sortOrder": 50,
+      "externalKey": "task:memory-context"
+    },
+    {
+      "slug": "project-config",
+      "name": "إعدادات المشروع",
+      "description": "ملفات التهيئة والتعليمات على مستوى المشروع.",
+      "iconKey": "folder",
+      "sortOrder": 60,
+      "externalKey": "task:project-config"
+    },
+    {
+      "slug": "prompting",
+      "name": "المطالبات والتوجيه",
+      "description": "كتابة تعليمات فعّالة والحصول على نتائج أدق.",
+      "iconKey": "sparkle",
+      "sortOrder": 70,
+      "externalKey": "task:prompting"
+    },
+    {
+      "slug": "search",
+      "name": "البحث",
+      "description": "البحث داخل الكود والملفات والمستودع.",
+      "iconKey": "search",
+      "sortOrder": 80,
+      "externalKey": "task:search"
+    },
+    {
+      "slug": "debugging",
+      "name": "تتبّع الأخطاء",
+      "description": "تشخيص المشكلات وإصلاحها.",
+      "iconKey": "bug",
+      "sortOrder": 90,
+      "externalKey": "task:debugging"
+    },
+    {
+      "slug": "testing",
+      "name": "الاختبارات",
+      "description": "كتابة الاختبارات وتشغيلها.",
+      "iconKey": "check",
+      "sortOrder": 100,
+      "externalKey": "task:testing"
+    },
+    {
+      "slug": "git-workflow",
+      "name": "سير عمل Git",
+      "description": "الفروع والدمج والمراجعة وطلبات السحب.",
+      "iconKey": "git",
+      "sortOrder": 110,
+      "externalKey": "task:git-workflow"
+    },
+    {
+      "slug": "background-work",
+      "name": "العمل في الخلفية",
+      "description": "تشغيل المهام الطويلة دون تعطيل العمل.",
+      "iconKey": "clock",
+      "sortOrder": 120,
+      "externalKey": "task:background-work"
+    },
+    {
+      "slug": "automation",
+      "name": "الأتمتة",
+      "description": "تشغيل الأدوات داخل سكربتات وسير عمل تلقائي.",
+      "iconKey": "refresh",
+      "sortOrder": 125,
+      "externalKey": "task:automation"
+    },
+    {
+      "slug": "model-selection",
+      "name": "اختيار النموذج",
+      "description": "تبديل النماذج والموازنة بين السرعة والدقة.",
+      "iconKey": "sparkle",
+      "sortOrder": 130,
+      "externalKey": "task:model-selection"
+    },
+    {
+      "slug": "permissions",
+      "name": "الصلاحيات",
+      "description": "التحكّم في ما يُسمح للأداة بفعله.",
+      "iconKey": "shield",
+      "sortOrder": 140,
+      "externalKey": "task:permissions"
+    },
+    {
+      "slug": "updates",
+      "name": "التحديثات",
+      "description": "تحديث الأداة ومتابعة الجديد.",
+      "iconKey": "refresh",
+      "sortOrder": 150,
+      "externalKey": "task:updates"
+    },
+    {
+      "slug": "troubleshooting",
+      "name": "حل المشكلات",
+      "description": "الأعطال الشائعة وطرق معالجتها.",
+      "iconKey": "warning",
+      "sortOrder": 160,
+      "externalKey": "task:troubleshooting"
+    }
+  ],
+  "categories": [
+    {
+      "slug": "getting-started",
+      "name": "البداية والتثبيت",
+      "iconKey": "download",
+      "accentKey": "blue",
+      "sortOrder": 10,
+      "externalKey": "category:getting-started"
+    },
+    {
+      "slug": "install",
+      "name": "التثبيت",
+      "parentSlug": "getting-started",
+      "iconKey": "download",
+      "accentKey": "blue",
+      "sortOrder": 11,
+      "externalKey": "category:install"
+    },
+    {
+      "slug": "first-run",
+      "name": "أول تشغيل",
+      "parentSlug": "getting-started",
+      "iconKey": "play",
+      "accentKey": "blue",
+      "sortOrder": 12,
+      "externalKey": "category:first-run"
+    },
+    {
+      "slug": "accounts",
+      "name": "الدخول والحسابات",
+      "iconKey": "key",
+      "accentKey": "purple",
+      "sortOrder": 20,
+      "externalKey": "category:accounts"
+    },
+    {
+      "slug": "login",
+      "name": "تسجيل الدخول",
+      "parentSlug": "accounts",
+      "iconKey": "key",
+      "accentKey": "purple",
+      "sortOrder": 21,
+      "externalKey": "category:login"
+    },
+    {
+      "slug": "api-keys",
+      "name": "مفاتيح الوصول",
+      "parentSlug": "accounts",
+      "iconKey": "shield",
+      "accentKey": "purple",
+      "sortOrder": 22,
+      "externalKey": "category:api-keys"
+    },
+    {
+      "slug": "agents-hub",
+      "name": "الوكلاء",
+      "iconKey": "robot",
+      "accentKey": "green",
+      "sortOrder": 30,
+      "externalKey": "category:agents-hub"
+    },
+    {
+      "slug": "agents-create",
+      "name": "إنشاء الوكلاء",
+      "parentSlug": "agents-hub",
+      "iconKey": "robot",
+      "accentKey": "green",
+      "sortOrder": 31,
+      "externalKey": "category:agents-create"
+    },
+    {
+      "slug": "agents-manage",
+      "name": "إدارة الوكلاء",
+      "parentSlug": "agents-hub",
+      "iconKey": "robot",
+      "accentKey": "green",
+      "sortOrder": 32,
+      "externalKey": "category:agents-manage"
+    },
+    {
+      "slug": "agents-background",
+      "name": "الوكلاء في الخلفية",
+      "parentSlug": "agents-hub",
+      "iconKey": "clock",
+      "accentKey": "green",
+      "sortOrder": 33,
+      "externalKey": "category:agents-background"
+    },
+    {
+      "slug": "agents-parallel",
+      "name": "التنفيذ بالتوازي",
+      "parentSlug": "agents-hub",
+      "iconKey": "code",
+      "accentKey": "green",
+      "sortOrder": 34,
+      "externalKey": "category:agents-parallel"
+    },
+    {
+      "slug": "context",
+      "name": "الذاكرة والسياق",
+      "iconKey": "brain",
+      "accentKey": "orange",
+      "sortOrder": 40,
+      "externalKey": "category:context"
+    },
+    {
+      "slug": "context-files",
+      "name": "ملفات السياق",
+      "parentSlug": "context",
+      "iconKey": "folder",
+      "accentKey": "orange",
+      "sortOrder": 41,
+      "externalKey": "category:context-files"
+    },
+    {
+      "slug": "context-sessions",
+      "name": "الجلسات والاستئناف",
+      "parentSlug": "context",
+      "iconKey": "clock",
+      "accentKey": "orange",
+      "sortOrder": 42,
+      "externalKey": "category:context-sessions"
+    },
+    {
+      "slug": "commands",
+      "name": "الأوامر",
+      "iconKey": "terminal",
+      "accentKey": "blue",
+      "sortOrder": 50,
+      "externalKey": "category:commands"
+    },
+    {
+      "slug": "slash-commands",
+      "name": "الأوامر المائلة",
+      "parentSlug": "commands",
+      "iconKey": "terminal",
+      "accentKey": "blue",
+      "sortOrder": 51,
+      "externalKey": "category:slash-commands"
+    },
+    {
+      "slug": "cli-commands",
+      "name": "أوامر الطرفية",
+      "parentSlug": "commands",
+      "iconKey": "terminal",
+      "accentKey": "blue",
+      "sortOrder": 52,
+      "externalKey": "category:cli-commands"
+    },
+    {
+      "slug": "config",
+      "name": "الإعدادات والتهيئة",
+      "iconKey": "settings",
+      "accentKey": "teal",
+      "sortOrder": 60,
+      "externalKey": "category:config"
+    },
+    {
+      "slug": "config-project",
+      "name": "إعدادات المشروع",
+      "parentSlug": "config",
+      "iconKey": "folder",
+      "accentKey": "teal",
+      "sortOrder": 61,
+      "externalKey": "category:config-project"
+    },
+    {
+      "slug": "config-permissions",
+      "name": "الصلاحيات",
+      "parentSlug": "config",
+      "iconKey": "shield",
+      "accentKey": "teal",
+      "sortOrder": 62,
+      "externalKey": "category:config-permissions"
+    },
+    {
+      "slug": "workflow",
+      "name": "سير العمل",
+      "iconKey": "git",
+      "accentKey": "orange",
+      "sortOrder": 70,
+      "externalKey": "category:workflow"
+    },
+    {
+      "slug": "workflow-git",
+      "name": "Git والمراجعة",
+      "parentSlug": "workflow",
+      "iconKey": "git",
+      "accentKey": "orange",
+      "sortOrder": 71,
+      "externalKey": "category:workflow-git"
+    },
+    {
+      "slug": "workflow-testing",
+      "name": "الاختبارات",
+      "parentSlug": "workflow",
+      "iconKey": "check",
+      "accentKey": "orange",
+      "sortOrder": 72,
+      "externalKey": "category:workflow-testing"
+    },
+    {
+      "slug": "links",
+      "name": "روابط ومراجع",
+      "iconKey": "link",
+      "accentKey": "green",
+      "sortOrder": 80,
+      "externalKey": "category:links"
+    },
+    {
+      "slug": "maintenance",
+      "name": "الصيانة والتحديثات",
+      "iconKey": "refresh",
+      "accentKey": "purple",
+      "sortOrder": 90,
+      "externalKey": "category:maintenance"
+    },
+    {
+      "slug": "troubleshoot",
+      "name": "استكشاف الأخطاء",
+      "iconKey": "warning",
+      "accentKey": "red",
+      "sortOrder": 100,
+      "externalKey": "category:troubleshoot"
+    }
+  ],
+  "tags": [
+    {
+      "slug": "cli",
+      "name": "CLI",
+      "accentKey": "blue"
+    },
+    {
+      "slug": "ai",
+      "name": "AI",
+      "accentKey": "purple"
+    },
+    {
+      "slug": "agents",
+      "name": "وكلاء",
+      "accentKey": "green"
+    },
+    {
+      "slug": "setup",
+      "name": "إعداد",
+      "accentKey": "teal"
+    },
+    {
+      "slug": "auth",
+      "name": "مصادقة",
+      "accentKey": "purple"
+    },
+    {
+      "slug": "session",
+      "name": "جلسة",
+      "accentKey": "orange"
+    },
+    {
+      "slug": "config",
+      "name": "تهيئة",
+      "accentKey": "teal"
+    },
+    {
+      "slug": "git",
+      "name": "Git",
+      "accentKey": "orange"
+    },
+    {
+      "slug": "editor",
+      "name": "محرر",
+      "accentKey": "blue"
+    },
+    {
+      "slug": "docs",
+      "name": "توثيق",
+      "accentKey": "green"
+    },
+    {
+      "slug": "models",
+      "name": "نماذج",
+      "accentKey": "purple"
+    },
+    {
+      "slug": "security",
+      "name": "أمان",
+      "accentKey": "red"
+    }
+  ],
+  "sources": [
+    {
+      "key": "claude-code-docs",
+      "name": "Claude Code Documentation",
+      "sourceType": "official_docs",
+      "url": "https://docs.claude.com/en/docs/claude-code/overview",
+      "isOfficial": true,
+      "toolSlug": "claude-code",
+      "syncStrategy": "agent"
+    },
+    {
+      "key": "codex-cli-docs",
+      "name": "Codex CLI Documentation",
+      "sourceType": "official_docs",
+      "url": "https://developers.openai.com/codex/cli/",
+      "isOfficial": true,
+      "toolSlug": "codex-cli",
+      "syncStrategy": "agent"
+    },
+    {
+      "key": "opencode-docs",
+      "name": "OpenCode Documentation",
+      "sourceType": "official_docs",
+      "url": "https://opencode.ai/docs/",
+      "isOfficial": true,
+      "toolSlug": "opencode",
+      "syncStrategy": "agent"
+    },
+    {
+      "key": "gemini-cli-repo",
+      "name": "Gemini CLI Repository",
+      "sourceType": "official_repo",
+      "url": "https://github.com/google-gemini/gemini-cli",
+      "isOfficial": true,
+      "toolSlug": "gemini-cli",
+      "syncStrategy": "agent"
+    },
+    {
+      "key": "antigravity-docs",
+      "name": "Antigravity Documentation",
+      "sourceType": "official_docs",
+      "url": "https://antigravity.google/docs",
+      "isOfficial": true,
+      "toolSlug": "antigravity",
+      "syncStrategy": "agent"
+    },
+    {
+      "key": "git-docs",
+      "name": "Git Reference Manual",
+      "sourceType": "official_docs",
+      "url": "https://git-scm.com/docs",
+      "isOfficial": true,
+      "toolSlug": "git-github",
+      "syncStrategy": "agent"
+    },
+    {
+      "key": "vscode-docs",
+      "name": "Visual Studio Code Docs",
+      "sourceType": "official_docs",
+      "url": "https://code.visualstudio.com/docs",
+      "isOfficial": true,
+      "toolSlug": "vs-code",
+      "syncStrategy": "agent"
+    },
+    {
+      "key": "openrouter-docs",
+      "name": "OpenRouter Documentation",
+      "sourceType": "official_docs",
+      "url": "https://openrouter.ai/docs",
+      "isOfficial": true,
+      "toolSlug": "openrouter",
+      "syncStrategy": "agent"
+    }
+  ],
+  "items": [],
+  "removals": []
+}

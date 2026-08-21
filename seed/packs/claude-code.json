@@ -1,0 +1,2304 @@
+{
+  "schemaVersion": "1.0",
+  "batch": {
+    "producer": "claude-code-docs-research",
+    "generatedAt": "2026-08-21T00:00:00Z",
+    "summary": "أوامر Claude Code من التوثيق الرسمي: أوامر الطرفية، الخيارات، والأوامر المائلة.",
+    "notes": "جميع الصيغ منقولة من مرجع سطر الأوامر ومرجع الأوامر الرسميين في code.claude.com."
+  },
+  "sources": [
+    {
+      "key": "claude-code-cli-reference",
+      "name": "Claude Code — CLI reference",
+      "sourceType": "official_docs",
+      "url": "https://code.claude.com/docs/en/cli-reference",
+      "isOfficial": true,
+      "toolSlug": "claude-code",
+      "syncStrategy": "agent"
+    },
+    {
+      "key": "claude-code-commands",
+      "name": "Claude Code — commands reference",
+      "sourceType": "official_docs",
+      "url": "https://code.claude.com/docs/en/commands",
+      "isOfficial": true,
+      "toolSlug": "claude-code",
+      "syncStrategy": "agent"
+    }
+  ],
+  "items": [
+    {
+      "externalKey": "claude-code:start",
+      "slug": "claude-start",
+      "itemType": "cli_command",
+      "title": "claude",
+      "toolSlug": "claude-code",
+      "shortDescription": "بدء جلسة تفاعلية مع Claude Code في مجلد المشروع الحالي.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup",
+        "sessions"
+      ],
+      "categories": [
+        "getting-started",
+        "first-run",
+        "cli-commands"
+      ],
+      "tags": [
+        "cli",
+        "ai"
+      ],
+      "aliases": [
+        "تشغيل كلود",
+        "افتح كلود كود",
+        "start claude",
+        "بدء جلسة"
+      ],
+      "fullDescription": "الأمر الأساسي لتشغيل Claude Code. يفتح جلسة تفاعلية داخل الطرفية في المجلد الذي تشغّله منه، ويقرأ إعدادات المشروع وملف CLAUDE.md إن وُجد.",
+      "syntax": "claude",
+      "whenToUse": "عند بدء العمل على مشروع.\nعند الرغبة في محادثة تفاعلية بدل أمر واحد.",
+      "expectedResult": "تفتح واجهة Claude Code التفاعلية وتصبح جاهزًا لكتابة أول طلب.",
+      "iconKey": "terminal",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "claude",
+          "title": "تشغيل عادي",
+          "description": "من داخل مجلد المشروع."
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:start-with-query",
+      "slug": "claude-start-with-query",
+      "itemType": "cli_command",
+      "title": "claude \"query\"",
+      "toolSlug": "claude-code",
+      "shortDescription": "بدء جلسة تفاعلية مع طلب أوّلي مكتوب مباشرة.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "sessions",
+        "prompting"
+      ],
+      "categories": [
+        "cli-commands",
+        "first-run"
+      ],
+      "tags": [
+        "cli"
+      ],
+      "aliases": [
+        "بدء بسؤال",
+        "claude with prompt"
+      ],
+      "syntax": "claude \"query\"",
+      "whenToUse": "عندما تعرف مسبقًا ما تريد أن تبدأ به.",
+      "iconKey": "terminal",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "claude \"explain this project\"",
+          "title": "شرح المشروع"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:print-mode",
+      "slug": "claude-print-mode",
+      "itemType": "cli_command",
+      "title": "claude -p",
+      "toolSlug": "claude-code",
+      "shortDescription": "تنفيذ طلب واحد وطباعة الإجابة ثم الخروج، بدون واجهة تفاعلية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "prompting"
+      ],
+      "categories": [
+        "cli-commands"
+      ],
+      "tags": [
+        "cli",
+        "ai"
+      ],
+      "aliases": [
+        "وضع الطباعة",
+        "تشغيل غير تفاعلي",
+        "headless",
+        "print mode",
+        "سكربت"
+      ],
+      "fullDescription": "وضع الطباعة (print mode) مناسب للسكربتات والأتمتة: يرسل الطلب، يطبع النتيجة على المخرج القياسي، ثم ينتهي.",
+      "syntax": "claude -p \"query\"",
+      "whenToUse": "عند استخدام Claude Code داخل سكربت.\nعند تمرير محتوى عبر الأنبوب (pipe).",
+      "expectedResult": "تُطبع إجابة واحدة على الطرفية ثم ينتهي الأمر.",
+      "iconKey": "terminal",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "claude -p \"explain this function\"",
+          "title": "طلب واحد"
+        },
+        {
+          "code": "cat logs.txt | claude -p \"explain\"",
+          "title": "تمرير محتوى بالأنبوب",
+          "description": "يقرأ المحتوى من stdin."
+        }
+      ],
+      "parameters": [
+        {
+          "name": "-p, --print",
+          "description": "طباعة الإجابة بدون وضع تفاعلي.",
+          "isRequired": true
+        },
+        {
+          "name": "--output-format",
+          "description": "صيغة المخرجات في وضع الطباعة (مثل json).",
+          "isRequired": false
+        },
+        {
+          "name": "--max-turns",
+          "description": "حد أقصى لعدد الدورات الوكيلة.",
+          "isRequired": false
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:continue",
+      "slug": "claude-continue",
+      "itemType": "cli_command",
+      "title": "claude -c",
+      "toolSlug": "claude-code",
+      "shortDescription": "استئناف آخر محادثة في المجلد الحالي.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "sessions",
+        "memory-context"
+      ],
+      "categories": [
+        "context-sessions",
+        "cli-commands"
+      ],
+      "tags": [
+        "cli",
+        "session"
+      ],
+      "aliases": [
+        "استئناف المحادثة",
+        "أكمل من حيث توقفت",
+        "continue",
+        "resume last"
+      ],
+      "syntax": "claude -c",
+      "whenToUse": "عند العودة إلى العمل بعد إغلاق الطرفية.",
+      "expectedResult": "تُفتح آخر محادثة بسياقها كاملًا.",
+      "iconKey": "clock",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "claude -c",
+          "title": "استئناف"
+        },
+        {
+          "code": "claude -c -p \"Check for type errors\"",
+          "title": "استئناف مع طلب واحد"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:resume",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:resume",
+      "slug": "claude-resume",
+      "itemType": "cli_command",
+      "title": "claude -r",
+      "toolSlug": "claude-code",
+      "shortDescription": "استئناف جلسة محددة بالمعرّف أو بالاسم.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "sessions"
+      ],
+      "categories": [
+        "context-sessions",
+        "cli-commands"
+      ],
+      "tags": [
+        "cli",
+        "session"
+      ],
+      "aliases": [
+        "استئناف جلسة",
+        "resume session",
+        "فتح جلسة سابقة"
+      ],
+      "syntax": "claude -r \"<session>\" \"query\"",
+      "whenToUse": "عند وجود أكثر من جلسة وتريد العودة إلى واحدة بعينها.",
+      "iconKey": "clock",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "claude -r \"auth-refactor\" \"Finish this PR\"",
+          "title": "استئناف بالاسم"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "-r, --resume",
+          "description": "معرّف الجلسة أو اسمها.",
+          "isRequired": true
+        },
+        {
+          "name": "--fork-session",
+          "description": "إنشاء معرّف جلسة جديد بدل إعادة استخدام الأصلي.",
+          "isRequired": false
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:continue",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:auth-login",
+      "slug": "claude-auth-login",
+      "itemType": "cli_command",
+      "title": "claude auth login",
+      "toolSlug": "claude-code",
+      "shortDescription": "تسجيل الدخول إلى حساب Anthropic.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "authentication",
+        "setup"
+      ],
+      "categories": [
+        "accounts",
+        "login"
+      ],
+      "tags": [
+        "auth",
+        "cli"
+      ],
+      "aliases": [
+        "تسجيل الدخول",
+        "login",
+        "سجل دخول كلود"
+      ],
+      "syntax": "claude auth login",
+      "whenToUse": "عند أول تشغيل أو بعد تسجيل الخروج.",
+      "expectedResult": "يفتح تدفق تسجيل الدخول ويحفظ بيانات الاعتماد محليًا.",
+      "iconKey": "key",
+      "accentKey": "purple",
+      "examples": [
+        {
+          "code": "claude auth login --console",
+          "title": "تسجيل الدخول عبر الطرفية"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:auth-status",
+          "relationshipType": "related"
+        },
+        {
+          "toExternalKey": "claude-code:auth-logout",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:auth-logout",
+      "slug": "claude-auth-logout",
+      "itemType": "cli_command",
+      "title": "claude auth logout",
+      "toolSlug": "claude-code",
+      "shortDescription": "تسجيل الخروج من حساب Anthropic.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "authentication"
+      ],
+      "categories": [
+        "accounts",
+        "login"
+      ],
+      "tags": [
+        "auth"
+      ],
+      "aliases": [
+        "تسجيل الخروج",
+        "logout"
+      ],
+      "syntax": "claude auth logout",
+      "iconKey": "key",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:auth-status",
+      "slug": "claude-auth-status",
+      "itemType": "cli_command",
+      "title": "claude auth status",
+      "toolSlug": "claude-code",
+      "shortDescription": "عرض حالة المصادقة بصيغة JSON.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "authentication",
+        "troubleshooting"
+      ],
+      "categories": [
+        "accounts",
+        "troubleshoot"
+      ],
+      "tags": [
+        "auth"
+      ],
+      "aliases": [
+        "حالة الحساب",
+        "هل أنا مسجل دخول",
+        "auth status"
+      ],
+      "syntax": "claude auth status",
+      "whenToUse": "عند الشك في أن المشكلة سببها تسجيل الدخول.",
+      "iconKey": "shield",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:setup-token",
+      "slug": "claude-setup-token",
+      "itemType": "cli_command",
+      "title": "claude setup-token",
+      "toolSlug": "claude-code",
+      "shortDescription": "توليد رمز OAuth طويل الأمد للاستخدام في CI والسكربتات.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "authentication",
+        "automation"
+      ],
+      "categories": [
+        "accounts",
+        "api-keys"
+      ],
+      "tags": [
+        "auth",
+        "security"
+      ],
+      "aliases": [
+        "رمز CI",
+        "توكن",
+        "token for ci"
+      ],
+      "syntax": "claude setup-token",
+      "whenToUse": "عند تشغيل Claude Code داخل خط تكامل مستمر.",
+      "warningText": "الرمز الناتج يمنح وصولًا إلى حسابك — تعامل معه ككلمة مرور ولا تضعه في مستودع عام.",
+      "iconKey": "shield",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:agents",
+      "slug": "claude-agents",
+      "itemType": "cli_command",
+      "title": "claude agents",
+      "toolSlug": "claude-code",
+      "shortDescription": "فتح واجهة الوكلاء لمتابعة وتشغيل جلسات خلفية متوازية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "agents",
+        "background-work"
+      ],
+      "categories": [
+        "agents-hub",
+        "agents-manage",
+        "agents-parallel"
+      ],
+      "tags": [
+        "agents",
+        "cli"
+      ],
+      "aliases": [
+        "الوكلاء",
+        "عرض الوكلاء",
+        "إدارة الوكلاء",
+        "list agents",
+        "parallel sessions"
+      ],
+      "fullDescription": "تعرض هذه الواجهة الجلسات الخلفية النشطة وتتيح إطلاق جلسات جديدة تعمل بالتوازي.",
+      "syntax": "claude agents",
+      "whenToUse": "عند تشغيل أكثر من مهمة في وقت واحد.\nعند متابعة تقدم مهام طويلة.",
+      "iconKey": "robot",
+      "accentKey": "green",
+      "resultDiagram": {
+        "kind": "fan_out",
+        "nodes": [
+          {
+            "id": "main",
+            "label": "الجلسة الرئيسية",
+            "sublabel": "claude",
+            "accentKey": "green"
+          },
+          {
+            "id": "a",
+            "label": "جلسة خلفية 1",
+            "sublabel": "background",
+            "accentKey": "purple",
+            "status": "ok"
+          },
+          {
+            "id": "b",
+            "label": "جلسة خلفية 2",
+            "sublabel": "background",
+            "accentKey": "purple",
+            "status": "pending"
+          }
+        ],
+        "edges": [
+          {
+            "from": "main",
+            "to": "a"
+          },
+          {
+            "from": "main",
+            "to": "b"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "code": "claude agents --json",
+          "title": "مخرجات قابلة للقراءة آليًا"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:background",
+          "relationshipType": "related"
+        },
+        {
+          "toExternalKey": "claude-code:attach",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:background",
+      "slug": "claude-background",
+      "itemType": "cli_command",
+      "title": "claude --bg",
+      "toolSlug": "claude-code",
+      "shortDescription": "بدء الجلسة كوكيل في الخلفية والعودة فورًا إلى الطرفية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "background-work",
+        "agents"
+      ],
+      "categories": [
+        "agents-background"
+      ],
+      "tags": [
+        "agents",
+        "cli"
+      ],
+      "aliases": [
+        "تشغيل في الخلفية",
+        "background",
+        "خلفية",
+        "مهمة طويلة"
+      ],
+      "syntax": "claude --bg \"prompt\"",
+      "whenToUse": "عند تشغيل مهمة طويلة لا تريد انتظارها.",
+      "expectedResult": "تُنشأ جلسة خلفية ويعود سطر الأوامر مباشرة، ويمكن متابعتها لاحقًا.",
+      "iconKey": "clock",
+      "accentKey": "green",
+      "examples": [
+        {
+          "code": "claude --bg \"investigate the flaky test\"",
+          "title": "مهمة تحقيق في الخلفية"
+        },
+        {
+          "code": "claude --bg --exec 'pytest -x'",
+          "title": "تشغيل أمر كمهمة خلفية"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:attach",
+          "relationshipType": "related"
+        },
+        {
+          "toExternalKey": "claude-code:logs",
+          "relationshipType": "related"
+        },
+        {
+          "toExternalKey": "claude-code:stop",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:attach",
+      "slug": "claude-attach",
+      "itemType": "cli_command",
+      "title": "claude attach",
+      "toolSlug": "claude-code",
+      "shortDescription": "الاتصال بجلسة خلفية داخل الطرفية الحالية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "background-work",
+        "sessions"
+      ],
+      "categories": [
+        "agents-background"
+      ],
+      "tags": [
+        "agents"
+      ],
+      "aliases": [
+        "الاتصال بجلسة",
+        "attach"
+      ],
+      "syntax": "claude attach <id>",
+      "iconKey": "link",
+      "accentKey": "green",
+      "examples": [
+        {
+          "code": "claude attach 7c5dcf5d"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:logs",
+      "slug": "claude-logs",
+      "itemType": "cli_command",
+      "title": "claude logs",
+      "toolSlug": "claude-code",
+      "shortDescription": "طباعة آخر مخرجات جلسة خلفية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "background-work",
+        "troubleshooting"
+      ],
+      "categories": [
+        "agents-background",
+        "troubleshoot"
+      ],
+      "tags": [
+        "agents"
+      ],
+      "aliases": [
+        "سجلات الجلسة",
+        "logs"
+      ],
+      "syntax": "claude logs <id>",
+      "iconKey": "list",
+      "accentKey": "green",
+      "examples": [
+        {
+          "code": "claude logs 7c5dcf5d"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:stop",
+      "slug": "claude-stop",
+      "itemType": "cli_command",
+      "title": "claude stop",
+      "toolSlug": "claude-code",
+      "shortDescription": "إيقاف جلسة خلفية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "background-work"
+      ],
+      "categories": [
+        "agents-background"
+      ],
+      "tags": [
+        "agents"
+      ],
+      "aliases": [
+        "إيقاف جلسة",
+        "stop session"
+      ],
+      "syntax": "claude stop <id>",
+      "iconKey": "close",
+      "accentKey": "green",
+      "examples": [
+        {
+          "code": "claude stop 7c5dcf5d"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:doctor",
+      "slug": "claude-doctor",
+      "itemType": "cli_command",
+      "title": "claude doctor",
+      "toolSlug": "claude-code",
+      "shortDescription": "طباعة تشخيص للتثبيت والإعدادات للقراءة فقط.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "troubleshooting",
+        "setup"
+      ],
+      "categories": [
+        "troubleshoot",
+        "maintenance"
+      ],
+      "tags": [
+        "cli"
+      ],
+      "aliases": [
+        "تشخيص",
+        "doctor",
+        "فحص التثبيت"
+      ],
+      "syntax": "claude doctor",
+      "whenToUse": "عند مواجهة سلوك غير متوقع بعد التثبيت أو التحديث.",
+      "iconKey": "warning",
+      "accentKey": "red",
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:update",
+      "slug": "claude-update",
+      "itemType": "cli_command",
+      "title": "claude update",
+      "toolSlug": "claude-code",
+      "shortDescription": "تحديث Claude Code إلى أحدث إصدار.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "updates"
+      ],
+      "categories": [
+        "maintenance"
+      ],
+      "tags": [
+        "cli"
+      ],
+      "aliases": [
+        "تحديث",
+        "update claude"
+      ],
+      "syntax": "claude update",
+      "iconKey": "refresh",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:install",
+      "slug": "claude-install",
+      "itemType": "cli_command",
+      "title": "claude install",
+      "toolSlug": "claude-code",
+      "shortDescription": "تثبيت أو إعادة تثبيت النسخة الثنائية الأصلية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup",
+        "updates"
+      ],
+      "categories": [
+        "install",
+        "maintenance"
+      ],
+      "tags": [
+        "setup"
+      ],
+      "aliases": [
+        "تثبيت",
+        "install"
+      ],
+      "syntax": "claude install [version]",
+      "iconKey": "download",
+      "accentKey": "blue",
+      "examples": [
+        {
+          "code": "claude install stable",
+          "title": "تثبيت القناة المستقرة"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:mcp",
+      "slug": "claude-mcp",
+      "itemType": "cli_command",
+      "title": "claude mcp",
+      "toolSlug": "claude-code",
+      "shortDescription": "إعداد خوادم MCP وإدارة اتصالاتها.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "project-config"
+      ],
+      "categories": [
+        "config"
+      ],
+      "tags": [
+        "config",
+        "cli"
+      ],
+      "aliases": [
+        "خوادم mcp",
+        "mcp"
+      ],
+      "syntax": "claude mcp",
+      "iconKey": "link",
+      "accentKey": "teal",
+      "examples": [
+        {
+          "code": "claude mcp login sentry",
+          "title": "تشغيل تدفق OAuth لخادم"
+        },
+        {
+          "code": "claude mcp logout sentry",
+          "title": "حذف بيانات الاعتماد المخزنة"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:plugin",
+      "slug": "claude-plugin",
+      "itemType": "cli_command",
+      "title": "claude plugin",
+      "toolSlug": "claude-code",
+      "shortDescription": "إدارة إضافات Claude Code.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "project-config"
+      ],
+      "categories": [
+        "config"
+      ],
+      "tags": [
+        "config"
+      ],
+      "aliases": [
+        "إضافات",
+        "plugins"
+      ],
+      "syntax": "claude plugin",
+      "iconKey": "grid",
+      "accentKey": "teal",
+      "examples": [
+        {
+          "code": "claude plugin install code-review@claude-plugins-official",
+          "title": "تثبيت إضافة"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:import",
+      "slug": "claude-import",
+      "itemType": "cli_command",
+      "title": "claude import",
+      "toolSlug": "claude-code",
+      "shortDescription": "جلب الإعدادات من أدوات برمجة أخرى إلى Claude Code.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup",
+        "project-config"
+      ],
+      "categories": [
+        "getting-started",
+        "config"
+      ],
+      "tags": [
+        "setup"
+      ],
+      "aliases": [
+        "استيراد الإعدادات",
+        "import config",
+        "نقل من كودكس"
+      ],
+      "syntax": "claude import [codex|gemini]",
+      "whenToUse": "عند الانتقال من Codex CLI أو Gemini CLI.",
+      "iconKey": "upload",
+      "accentKey": "blue",
+      "examples": [
+        {
+          "code": "claude import codex --dry-run",
+          "title": "معاينة بدون تطبيق"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-model",
+      "slug": "claude-flag-model",
+      "itemType": "setting",
+      "title": "--model",
+      "toolSlug": "claude-code",
+      "shortDescription": "تحديد النموذج المستخدم في الجلسة الحالية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "model-selection"
+      ],
+      "categories": [
+        "config"
+      ],
+      "tags": [
+        "models"
+      ],
+      "aliases": [
+        "تغيير النموذج",
+        "اختيار النموذج",
+        "switch model"
+      ],
+      "syntax": "claude --model <model>",
+      "whenToUse": "عند الحاجة إلى نموذج أقوى لمهمة صعبة أو أسرع لمهمة بسيطة.",
+      "iconKey": "sparkle",
+      "accentKey": "purple",
+      "examples": [
+        {
+          "code": "claude --model claude-sonnet-5"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:flag-fallback-model",
+          "relationshipType": "related"
+        },
+        {
+          "toExternalKey": "claude-code:cmd-model",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-fallback-model",
+      "slug": "claude-flag-fallback-model",
+      "itemType": "setting",
+      "title": "--fallback-model",
+      "toolSlug": "claude-code",
+      "shortDescription": "تفعيل التحويل التلقائي إلى نموذج بديل عند تعذّر الأول.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "model-selection"
+      ],
+      "categories": [
+        "config"
+      ],
+      "tags": [
+        "models"
+      ],
+      "aliases": [
+        "نموذج احتياطي",
+        "fallback"
+      ],
+      "syntax": "claude --fallback-model <models>",
+      "iconKey": "sparkle",
+      "accentKey": "purple",
+      "examples": [
+        {
+          "code": "claude --fallback-model sonnet,haiku"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-permission-mode",
+      "slug": "claude-flag-permission-mode",
+      "itemType": "setting",
+      "title": "--permission-mode",
+      "toolSlug": "claude-code",
+      "shortDescription": "بدء الجلسة في وضع صلاحيات محدد.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "permissions"
+      ],
+      "categories": [
+        "config-permissions"
+      ],
+      "tags": [
+        "security",
+        "config"
+      ],
+      "aliases": [
+        "وضع الصلاحيات",
+        "plan mode",
+        "وضع التخطيط"
+      ],
+      "syntax": "claude --permission-mode <mode>",
+      "whenToUse": "عند الرغبة في التخطيط أولًا قبل السماح بالتعديل.",
+      "iconKey": "shield",
+      "accentKey": "teal",
+      "examples": [
+        {
+          "code": "claude --permission-mode plan",
+          "title": "بدء في وضع التخطيط"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:flag-allowed-tools",
+          "relationshipType": "related"
+        },
+        {
+          "toExternalKey": "claude-code:cmd-permissions",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-allowed-tools",
+      "slug": "claude-flag-allowed-tools",
+      "itemType": "setting",
+      "title": "--allowedTools",
+      "toolSlug": "claude-code",
+      "shortDescription": "تحديد الأدوات التي تُنفَّذ بدون طلب إذن.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "permissions",
+        "automation"
+      ],
+      "categories": [
+        "config-permissions"
+      ],
+      "tags": [
+        "security"
+      ],
+      "aliases": [
+        "أدوات مسموحة",
+        "allowed tools",
+        "بدون إذن"
+      ],
+      "syntax": "claude --allowedTools <rules>",
+      "warningText": "كل أداة تضيفها هنا تعمل بدون سؤال. اجعل القائمة أضيق ما يمكن.",
+      "iconKey": "shield",
+      "accentKey": "teal",
+      "examples": [
+        {
+          "code": "claude --allowedTools \"Bash(git log *)\" \"Bash(git diff *)\" \"Read\""
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-add-dir",
+      "slug": "claude-flag-add-dir",
+      "itemType": "setting",
+      "title": "--add-dir",
+      "toolSlug": "claude-code",
+      "shortDescription": "إضافة مجلدات عمل إضافية يمكن لـ Claude قراءتها وتعديلها.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "project-config"
+      ],
+      "categories": [
+        "config-project"
+      ],
+      "tags": [
+        "config"
+      ],
+      "aliases": [
+        "مجلد إضافي",
+        "add directory",
+        "مسارات إضافية"
+      ],
+      "syntax": "claude --add-dir <paths>",
+      "whenToUse": "عند العمل على مستودع متعدد الحزم.",
+      "iconKey": "folder",
+      "accentKey": "teal",
+      "examples": [
+        {
+          "code": "claude --add-dir ../apps ../lib"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-effort",
+      "slug": "claude-flag-effort",
+      "itemType": "setting",
+      "title": "--effort",
+      "toolSlug": "claude-code",
+      "shortDescription": "ضبط مستوى الجهد للجلسة الحالية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "model-selection"
+      ],
+      "categories": [
+        "config"
+      ],
+      "tags": [
+        "models"
+      ],
+      "aliases": [
+        "مستوى الجهد",
+        "effort"
+      ],
+      "syntax": "claude --effort <level>",
+      "iconKey": "sliders",
+      "accentKey": "purple",
+      "examples": [
+        {
+          "code": "claude --effort high"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-agents",
+      "slug": "claude-flag-agents",
+      "itemType": "setting",
+      "title": "--agents",
+      "toolSlug": "claude-code",
+      "shortDescription": "تعريف وكلاء فرعيين ديناميكيًا عبر JSON.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "agents"
+      ],
+      "categories": [
+        "agents-create"
+      ],
+      "tags": [
+        "agents"
+      ],
+      "aliases": [
+        "وكيل فرعي",
+        "subagent",
+        "إنشاء وكيل",
+        "تعريف وكلاء"
+      ],
+      "syntax": "claude --agents '<json>'",
+      "whenToUse": "عند الحاجة إلى وكيل متخصص لمهمة واحدة دون إنشاء ملف.",
+      "iconKey": "robot",
+      "accentKey": "green",
+      "examples": [
+        {
+          "code": "claude --agents '{\"reviewer\":{\"description\":\"Reviews code\",\"prompt\":\"You are a code reviewer\"}}'",
+          "title": "وكيل مراجعة"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:agents",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-output-format",
+      "slug": "claude-flag-output-format",
+      "itemType": "setting",
+      "title": "--output-format",
+      "toolSlug": "claude-code",
+      "shortDescription": "تحديد صيغة المخرجات في وضع الطباعة.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "automation"
+      ],
+      "categories": [
+        "cli-commands"
+      ],
+      "tags": [
+        "cli"
+      ],
+      "aliases": [
+        "صيغة المخرجات",
+        "json output"
+      ],
+      "syntax": "claude -p --output-format <format>",
+      "iconKey": "code",
+      "accentKey": "blue",
+      "examples": [
+        {
+          "code": "claude -p \"query\" --output-format json"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-max-budget",
+      "slug": "claude-flag-max-budget",
+      "itemType": "setting",
+      "title": "--max-budget-usd",
+      "toolSlug": "claude-code",
+      "shortDescription": "تحديد سقف للإنفاق على استدعاءات الواجهة البرمجية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "automation"
+      ],
+      "categories": [
+        "config"
+      ],
+      "tags": [
+        "config"
+      ],
+      "aliases": [
+        "حد التكلفة",
+        "الميزانية",
+        "budget"
+      ],
+      "syntax": "claude -p --max-budget-usd <amount>",
+      "iconKey": "shield",
+      "accentKey": "orange",
+      "examples": [
+        {
+          "code": "claude -p --max-budget-usd 5.00 \"query\""
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-safe-mode",
+      "slug": "claude-flag-safe-mode",
+      "itemType": "setting",
+      "title": "--safe-mode",
+      "toolSlug": "claude-code",
+      "shortDescription": "بدء الجلسة مع تعطيل كل التخصيصات.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "troubleshooting"
+      ],
+      "categories": [
+        "troubleshoot"
+      ],
+      "tags": [
+        "cli"
+      ],
+      "aliases": [
+        "الوضع الآمن",
+        "safe mode",
+        "تعطيل التخصيصات"
+      ],
+      "syntax": "claude --safe-mode",
+      "whenToUse": "عند الشك في أن إضافة أو إعدادًا مخصصًا يسبب مشكلة.",
+      "iconKey": "shield",
+      "accentKey": "red",
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:flag-dangerous-skip",
+      "slug": "claude-flag-dangerous-skip",
+      "itemType": "setting",
+      "title": "--dangerously-skip-permissions",
+      "toolSlug": "claude-code",
+      "shortDescription": "تخطّي مطالبات الإذن بالكامل.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "permissions"
+      ],
+      "categories": [
+        "config-permissions"
+      ],
+      "tags": [
+        "security"
+      ],
+      "aliases": [
+        "تخطي الأذونات",
+        "skip permissions",
+        "بدون أذونات"
+      ],
+      "syntax": "claude --dangerously-skip-permissions",
+      "warningText": "يلغي كل مطالبات الإذن. لا تستخدمه إلا في بيئة معزولة تثق بها تمامًا.",
+      "iconKey": "warning",
+      "accentKey": "red",
+      "sources": [
+        {
+          "sourceKey": "claude-code-cli-reference",
+          "url": "https://code.claude.com/docs/en/cli-reference",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:flag-permission-mode",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-init",
+      "slug": "claude-cmd-init",
+      "itemType": "slash_command",
+      "title": "/init",
+      "toolSlug": "claude-code",
+      "shortDescription": "تهيئة المشروع بإنشاء دليل CLAUDE.md.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "project-config",
+        "setup"
+      ],
+      "categories": [
+        "slash-commands",
+        "config-project"
+      ],
+      "tags": [
+        "config"
+      ],
+      "aliases": [
+        "تهيئة المشروع",
+        "init",
+        "إنشاء claude.md"
+      ],
+      "syntax": "/init",
+      "whenToUse": "عند بدء العمل على مستودع لأول مرة.",
+      "expectedResult": "يُنشأ ملف CLAUDE.md يحوي وصف المشروع وقواعده.",
+      "iconKey": "folder",
+      "accentKey": "teal",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-clear",
+      "slug": "claude-cmd-clear",
+      "itemType": "slash_command",
+      "title": "/clear",
+      "toolSlug": "claude-code",
+      "shortDescription": "بدء محادثة جديدة بسياق فارغ.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "memory-context",
+        "sessions"
+      ],
+      "categories": [
+        "slash-commands",
+        "context"
+      ],
+      "tags": [
+        "session"
+      ],
+      "aliases": [
+        "مسح السياق",
+        "محادثة جديدة",
+        "clear"
+      ],
+      "syntax": "/clear [name]",
+      "whenToUse": "عند الانتقال إلى موضوع مختلف تمامًا.",
+      "iconKey": "close",
+      "accentKey": "orange",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:cmd-compact",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-compact",
+      "slug": "claude-cmd-compact",
+      "itemType": "slash_command",
+      "title": "/compact",
+      "toolSlug": "claude-code",
+      "shortDescription": "تفريغ مساحة من السياق عبر تلخيص المحادثة.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "memory-context"
+      ],
+      "categories": [
+        "slash-commands",
+        "context"
+      ],
+      "tags": [
+        "session"
+      ],
+      "aliases": [
+        "ضغط السياق",
+        "تلخيص المحادثة",
+        "compact"
+      ],
+      "syntax": "/compact [instructions]",
+      "whenToUse": "عند امتلاء السياق مع الرغبة في الاحتفاظ بالخلاصة.",
+      "iconKey": "brain",
+      "accentKey": "orange",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:cmd-clear",
+          "relationshipType": "related"
+        },
+        {
+          "toExternalKey": "claude-code:cmd-context",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-context",
+      "slug": "claude-cmd-context",
+      "itemType": "slash_command",
+      "title": "/context",
+      "toolSlug": "claude-code",
+      "shortDescription": "عرض استهلاك السياق الحالي.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "memory-context"
+      ],
+      "categories": [
+        "slash-commands",
+        "context"
+      ],
+      "tags": [
+        "session"
+      ],
+      "aliases": [
+        "حجم السياق",
+        "كم بقي من السياق",
+        "context usage"
+      ],
+      "syntax": "/context [all]",
+      "iconKey": "brain",
+      "accentKey": "orange",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-memory",
+      "slug": "claude-cmd-memory",
+      "itemType": "slash_command",
+      "title": "/memory",
+      "toolSlug": "claude-code",
+      "shortDescription": "تحرير ملفات CLAUDE.md وإدارة الذاكرة التلقائية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "memory-context",
+        "project-config"
+      ],
+      "categories": [
+        "slash-commands",
+        "context-files"
+      ],
+      "tags": [
+        "config"
+      ],
+      "aliases": [
+        "الذاكرة",
+        "تعديل claude.md",
+        "memory"
+      ],
+      "syntax": "/memory",
+      "iconKey": "brain",
+      "accentKey": "orange",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-model",
+      "slug": "claude-cmd-model",
+      "itemType": "slash_command",
+      "title": "/model",
+      "toolSlug": "claude-code",
+      "shortDescription": "تبديل النموذج أثناء الجلسة.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "model-selection"
+      ],
+      "categories": [
+        "slash-commands"
+      ],
+      "tags": [
+        "models"
+      ],
+      "aliases": [
+        "تبديل النموذج",
+        "غيّر النموذج"
+      ],
+      "syntax": "/model [model]",
+      "iconKey": "sparkle",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:flag-model",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-plan",
+      "slug": "claude-cmd-plan",
+      "itemType": "slash_command",
+      "title": "/plan",
+      "toolSlug": "claude-code",
+      "shortDescription": "الدخول في وضع التخطيط قبل تنفيذ أي تعديل.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "permissions",
+        "prompting"
+      ],
+      "categories": [
+        "slash-commands",
+        "config-permissions"
+      ],
+      "tags": [
+        "security"
+      ],
+      "aliases": [
+        "وضع التخطيط",
+        "خطة",
+        "plan mode"
+      ],
+      "syntax": "/plan [description]",
+      "whenToUse": "قبل تغيير كبير تريد مراجعته أولًا.",
+      "iconKey": "target",
+      "accentKey": "teal",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-permissions",
+      "slug": "claude-cmd-permissions",
+      "itemType": "slash_command",
+      "title": "/permissions",
+      "toolSlug": "claude-code",
+      "shortDescription": "إدارة قواعد السماح والسؤال والمنع لأذونات الأدوات.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "permissions"
+      ],
+      "categories": [
+        "slash-commands",
+        "config-permissions"
+      ],
+      "tags": [
+        "security",
+        "config"
+      ],
+      "aliases": [
+        "الأذونات",
+        "صلاحيات",
+        "permissions"
+      ],
+      "syntax": "/permissions",
+      "iconKey": "shield",
+      "accentKey": "teal",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-agents",
+      "slug": "claude-cmd-agents",
+      "itemType": "slash_command",
+      "title": "/agents",
+      "toolSlug": "claude-code",
+      "shortDescription": "تذكير بطلب إنشاء أو إدارة الوكلاء الفرعيين من Claude.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "agents"
+      ],
+      "categories": [
+        "slash-commands",
+        "agents-manage"
+      ],
+      "tags": [
+        "agents"
+      ],
+      "aliases": [
+        "الوكلاء الفرعيون",
+        "subagents"
+      ],
+      "syntax": "/agents",
+      "iconKey": "robot",
+      "accentKey": "green",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-background",
+      "slug": "claude-cmd-background",
+      "itemType": "slash_command",
+      "title": "/background",
+      "toolSlug": "claude-code",
+      "shortDescription": "فصل الجلسة الحالية لتعمل كوكيل في الخلفية.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "background-work"
+      ],
+      "categories": [
+        "slash-commands",
+        "agents-background"
+      ],
+      "tags": [
+        "agents"
+      ],
+      "aliases": [
+        "إلى الخلفية",
+        "background"
+      ],
+      "syntax": "/background [prompt]",
+      "iconKey": "clock",
+      "accentKey": "green",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-batch",
+      "slug": "claude-cmd-batch",
+      "itemType": "slash_command",
+      "title": "/batch",
+      "toolSlug": "claude-code",
+      "shortDescription": "تنسيق تغييرات واسعة عبر قاعدة الكود بالتوازي.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "agents",
+        "background-work"
+      ],
+      "categories": [
+        "slash-commands",
+        "agents-parallel"
+      ],
+      "tags": [
+        "agents"
+      ],
+      "aliases": [
+        "تغيير جماعي",
+        "بالتوازي",
+        "batch"
+      ],
+      "syntax": "/batch <instruction>",
+      "whenToUse": "عند تنفيذ تعديل متكرر على عدد كبير من الملفات.",
+      "iconKey": "grid",
+      "accentKey": "green",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-code-review",
+      "slug": "claude-cmd-code-review",
+      "itemType": "slash_command",
+      "title": "/code-review",
+      "toolSlug": "claude-code",
+      "shortDescription": "مراجعة تغييرات أو طلب سحب.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "git-workflow",
+        "testing"
+      ],
+      "categories": [
+        "slash-commands",
+        "workflow-git"
+      ],
+      "tags": [
+        "git"
+      ],
+      "aliases": [
+        "مراجعة الكود",
+        "review",
+        "راجع التغييرات"
+      ],
+      "syntax": "/code-review [level] [--fix] [--comment] [pr#|branch|path]",
+      "iconKey": "check",
+      "accentKey": "orange",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-diff",
+      "slug": "claude-cmd-diff",
+      "itemType": "slash_command",
+      "title": "/diff",
+      "toolSlug": "claude-code",
+      "shortDescription": "فتح عارض تفاعلي للفروق.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "git-workflow"
+      ],
+      "categories": [
+        "slash-commands",
+        "workflow-git"
+      ],
+      "tags": [
+        "git"
+      ],
+      "aliases": [
+        "الفروق",
+        "diff",
+        "شوف التغييرات"
+      ],
+      "syntax": "/diff",
+      "iconKey": "git",
+      "accentKey": "orange",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-debug",
+      "slug": "claude-cmd-debug",
+      "itemType": "slash_command",
+      "title": "/debug",
+      "toolSlug": "claude-code",
+      "shortDescription": "تفعيل سجلات التشخيص ومعالجة المشكلات.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "debugging",
+        "troubleshooting"
+      ],
+      "categories": [
+        "slash-commands",
+        "troubleshoot"
+      ],
+      "tags": [
+        "cli"
+      ],
+      "aliases": [
+        "تشخيص",
+        "debug",
+        "مشكلة"
+      ],
+      "syntax": "/debug [description]",
+      "iconKey": "bug",
+      "accentKey": "red",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-doctor",
+      "slug": "claude-cmd-doctor",
+      "itemType": "slash_command",
+      "title": "/doctor",
+      "toolSlug": "claude-code",
+      "shortDescription": "فحص الإعداد وتشخيص المشكلات.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "troubleshooting"
+      ],
+      "categories": [
+        "slash-commands",
+        "troubleshoot"
+      ],
+      "tags": [
+        "cli"
+      ],
+      "aliases": [
+        "فحص",
+        "doctor"
+      ],
+      "syntax": "/doctor",
+      "iconKey": "warning",
+      "accentKey": "red",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:doctor",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-hooks",
+      "slug": "claude-cmd-hooks",
+      "itemType": "slash_command",
+      "title": "/hooks",
+      "toolSlug": "claude-code",
+      "shortDescription": "عرض إعدادات الخطافات لأحداث الأدوات.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "automation",
+        "project-config"
+      ],
+      "categories": [
+        "slash-commands",
+        "config-project"
+      ],
+      "tags": [
+        "config"
+      ],
+      "aliases": [
+        "الخطافات",
+        "hooks",
+        "أتمتة"
+      ],
+      "syntax": "/hooks",
+      "iconKey": "settings",
+      "accentKey": "teal",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-mcp",
+      "slug": "claude-cmd-mcp",
+      "itemType": "slash_command",
+      "title": "/mcp",
+      "toolSlug": "claude-code",
+      "shortDescription": "إدارة اتصالات خوادم MCP.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "project-config"
+      ],
+      "categories": [
+        "slash-commands",
+        "config"
+      ],
+      "tags": [
+        "config"
+      ],
+      "aliases": [
+        "mcp",
+        "خوادم"
+      ],
+      "syntax": "/mcp [reconnect <server>|enable|disable [<server>|all]]",
+      "iconKey": "link",
+      "accentKey": "teal",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-export",
+      "slug": "claude-cmd-export",
+      "itemType": "slash_command",
+      "title": "/export",
+      "toolSlug": "claude-code",
+      "shortDescription": "تصدير المحادثة الحالية كنص عادي.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "sessions"
+      ],
+      "categories": [
+        "slash-commands"
+      ],
+      "tags": [
+        "session"
+      ],
+      "aliases": [
+        "تصدير المحادثة",
+        "export"
+      ],
+      "syntax": "/export [filename]",
+      "iconKey": "download",
+      "accentKey": "blue",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-loop",
+      "slug": "claude-cmd-loop",
+      "itemType": "slash_command",
+      "title": "/loop",
+      "toolSlug": "claude-code",
+      "shortDescription": "تشغيل طلب بشكل متكرر طالما الجلسة مفتوحة.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "automation",
+        "background-work"
+      ],
+      "categories": [
+        "slash-commands"
+      ],
+      "tags": [
+        "agents"
+      ],
+      "aliases": [
+        "تكرار",
+        "loop",
+        "كل فترة"
+      ],
+      "syntax": "/loop [interval] [prompt]",
+      "iconKey": "refresh",
+      "accentKey": "green",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-add-dir",
+      "slug": "claude-cmd-add-dir",
+      "itemType": "slash_command",
+      "title": "/add-dir",
+      "toolSlug": "claude-code",
+      "shortDescription": "إضافة مجلد عمل للوصول إلى ملفاته خلال الجلسة.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "project-config"
+      ],
+      "categories": [
+        "slash-commands",
+        "config-project"
+      ],
+      "tags": [
+        "config"
+      ],
+      "aliases": [
+        "أضف مجلد",
+        "add dir"
+      ],
+      "syntax": "/add-dir <path>",
+      "iconKey": "folder",
+      "accentKey": "teal",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "claude-code:flag-add-dir",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-install-github-app",
+      "slug": "claude-cmd-install-github-app",
+      "itemType": "slash_command",
+      "title": "/install-github-app",
+      "toolSlug": "claude-code",
+      "shortDescription": "تثبيت تطبيق Claude على GitHub لمستودع.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "git-workflow",
+        "setup"
+      ],
+      "categories": [
+        "slash-commands",
+        "workflow-git"
+      ],
+      "tags": [
+        "git"
+      ],
+      "aliases": [
+        "github app",
+        "ربط github"
+      ],
+      "syntax": "/install-github-app",
+      "iconKey": "git",
+      "accentKey": "orange",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "claude-code:cmd-help",
+      "slug": "claude-cmd-help",
+      "itemType": "slash_command",
+      "title": "/help",
+      "toolSlug": "claude-code",
+      "shortDescription": "عرض المساعدة والأوامر المتاحة.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "slash-commands"
+      ],
+      "tags": [
+        "cli"
+      ],
+      "aliases": [
+        "مساعدة",
+        "help",
+        "الأوامر"
+      ],
+      "syntax": "/help",
+      "iconKey": "question",
+      "accentKey": "blue",
+      "sources": [
+        {
+          "sourceKey": "claude-code-commands",
+          "url": "https://code.claude.com/docs/en/commands",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    }
+  ]
+}

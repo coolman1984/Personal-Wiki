@@ -1,0 +1,337 @@
+{
+  "schemaVersion": "1.0",
+  "batch": {
+    "producer": "opencode-repo-research",
+    "generatedAt": "2026-08-21T00:00:00Z",
+    "summary": "تثبيت OpenCode ووكلاؤه المدمجون من المستودع الرسمي.",
+    "notes": "منقول من README الرسمي لمستودع OpenCode."
+  },
+  "sources": [
+    {
+      "key": "opencode-repo",
+      "name": "OpenCode — official repository",
+      "sourceType": "official_repo",
+      "url": "https://github.com/anomalyco/opencode",
+      "isOfficial": true,
+      "toolSlug": "opencode",
+      "syncStrategy": "agent"
+    }
+  ],
+  "items": [
+    {
+      "externalKey": "opencode:install-script",
+      "slug": "opencode-install-script",
+      "itemType": "cli_command",
+      "title": "تثبيت OpenCode",
+      "toolSlug": "opencode",
+      "shortDescription": "تثبيت OpenCode عبر سكربت التثبيت الرسمي.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install",
+        "getting-started"
+      ],
+      "tags": [
+        "setup",
+        "cli"
+      ],
+      "aliases": [
+        "تثبيت opencode",
+        "install opencode"
+      ],
+      "syntax": "curl -fsSL https://opencode.ai/install | bash",
+      "warningText": "أزل الإصدارات الأقدم من 0.1.x قبل التثبيت.",
+      "iconKey": "download",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "opencode-repo",
+          "url": "https://github.com/anomalyco/opencode",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "opencode:install-npm",
+      "slug": "opencode-install-npm",
+      "itemType": "cli_command",
+      "title": "npm i -g opencode-ai@latest",
+      "toolSlug": "opencode",
+      "shortDescription": "تثبيت OpenCode عبر npm.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install"
+      ],
+      "tags": [
+        "setup"
+      ],
+      "aliases": [
+        "npm opencode"
+      ],
+      "syntax": "npm i -g opencode-ai@latest",
+      "iconKey": "download",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "opencode-repo",
+          "url": "https://github.com/anomalyco/opencode",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "opencode:install-windows",
+      "slug": "opencode-install-windows",
+      "itemType": "cli_command",
+      "title": "تثبيت OpenCode على Windows",
+      "toolSlug": "opencode",
+      "shortDescription": "تثبيت OpenCode عبر Scoop أو Chocolatey.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install"
+      ],
+      "tags": [
+        "setup"
+      ],
+      "aliases": [
+        "opencode ويندوز",
+        "scoop opencode",
+        "choco opencode"
+      ],
+      "syntax": "scoop install opencode",
+      "iconKey": "download",
+      "accentKey": "purple",
+      "examples": [
+        {
+          "code": "scoop install opencode",
+          "title": "Scoop"
+        },
+        {
+          "code": "choco install opencode",
+          "title": "Chocolatey"
+        }
+      ],
+      "sources": [
+        {
+          "sourceKey": "opencode-repo",
+          "url": "https://github.com/anomalyco/opencode",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "opencode:install-dir",
+      "slug": "opencode-install-dir",
+      "itemType": "setting",
+      "title": "OPENCODE_INSTALL_DIR",
+      "toolSlug": "opencode",
+      "shortDescription": "تحديد مجلد التثبيت الذي يستخدمه سكربت التثبيت.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "setup"
+      ],
+      "categories": [
+        "install",
+        "config"
+      ],
+      "tags": [
+        "setup",
+        "config"
+      ],
+      "aliases": [
+        "مجلد التثبيت",
+        "install dir"
+      ],
+      "fullDescription": "يحترم سكربت التثبيت هذا الترتيب: OPENCODE_INSTALL_DIR ثم XDG_BIN_DIR ثم $HOME/bin ثم $HOME/.opencode/bin.",
+      "syntax": "OPENCODE_INSTALL_DIR=/usr/local/bin curl -fsSL https://opencode.ai/install | bash",
+      "iconKey": "folder",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "opencode-repo",
+          "url": "https://github.com/anomalyco/opencode",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "opencode:agent-build",
+      "slug": "opencode-agent-build",
+      "itemType": "concept",
+      "title": "الوكيل build",
+      "toolSlug": "opencode",
+      "shortDescription": "الوكيل الافتراضي في OpenCode بصلاحيات كاملة لأعمال التطوير.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "agents"
+      ],
+      "categories": [
+        "agents-hub",
+        "agents-manage"
+      ],
+      "tags": [
+        "agents",
+        "ai"
+      ],
+      "aliases": [
+        "وكيل البناء",
+        "build agent",
+        "الوكيل الافتراضي"
+      ],
+      "fullDescription": "OpenCode يتضمّن وكيلين مدمجين يمكن التبديل بينهما بمفتاح Tab. الوكيل build هو الافتراضي ويملك صلاحية كاملة للعمل على الكود.",
+      "whenToUse": "عند تنفيذ تعديلات فعلية على المشروع.",
+      "iconKey": "robot",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "opencode-repo",
+          "url": "https://github.com/anomalyco/opencode",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "opencode:agent-plan",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "opencode:agent-plan",
+      "slug": "opencode-agent-plan",
+      "itemType": "concept",
+      "title": "الوكيل plan",
+      "toolSlug": "opencode",
+      "shortDescription": "وكيل للقراءة فقط مخصص للتحليل واستكشاف الكود.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "agents",
+        "permissions"
+      ],
+      "categories": [
+        "agents-hub",
+        "config-permissions"
+      ],
+      "tags": [
+        "agents",
+        "security"
+      ],
+      "aliases": [
+        "وكيل التخطيط",
+        "plan agent",
+        "قراءة فقط",
+        "read only"
+      ],
+      "fullDescription": "يرفض تعديل الملفات افتراضيًا، ويطلب الإذن قبل تشغيل أوامر bash. مناسب لاستكشاف قاعدة كود غير مألوفة أو للتخطيط قبل التنفيذ.",
+      "whenToUse": "عند استكشاف مشروع جديد.\nعند التخطيط لتغيير قبل تنفيذه.",
+      "iconKey": "shield",
+      "accentKey": "teal",
+      "sources": [
+        {
+          "sourceKey": "opencode-repo",
+          "url": "https://github.com/anomalyco/opencode",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "relationships": [
+        {
+          "toExternalKey": "opencode:agent-build",
+          "relationshipType": "related"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "opencode:subagent-general",
+      "slug": "opencode-subagent-general",
+      "itemType": "concept",
+      "title": "الوكيل الفرعي general",
+      "toolSlug": "opencode",
+      "shortDescription": "وكيل فرعي للبحث المعقّد والمهام متعددة الخطوات، يُستدعى بكتابة @general.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "agents",
+        "search"
+      ],
+      "categories": [
+        "agents-hub",
+        "agents-create"
+      ],
+      "tags": [
+        "agents"
+      ],
+      "aliases": [
+        "وكيل فرعي",
+        "general subagent",
+        "بحث معقد"
+      ],
+      "syntax": "@general",
+      "whenToUse": "عند الحاجة إلى بحث موسّع أو مهمة متعددة الخطوات داخل رسالة.",
+      "iconKey": "robot",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "opencode-repo",
+          "url": "https://github.com/anomalyco/opencode",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    },
+    {
+      "externalKey": "opencode:switch-agent",
+      "slug": "opencode-switch-agent",
+      "itemType": "shortcut",
+      "title": "Tab — التبديل بين الوكلاء",
+      "toolSlug": "opencode",
+      "shortDescription": "مفتاح Tab يبدّل بين الوكيلين المدمجين build و plan.",
+      "verificationStatus": "official",
+      "lifecycleStatus": "active",
+      "tasks": [
+        "agents"
+      ],
+      "categories": [
+        "agents-manage"
+      ],
+      "tags": [
+        "agents"
+      ],
+      "aliases": [
+        "تبديل الوكيل",
+        "switch agent",
+        "tab"
+      ],
+      "syntax": "Tab",
+      "iconKey": "sliders",
+      "accentKey": "purple",
+      "sources": [
+        {
+          "sourceKey": "opencode-repo",
+          "url": "https://github.com/anomalyco/opencode",
+          "verifiedAt": "2026-08-21T00:00:00Z"
+        }
+      ],
+      "lastVerifiedAt": "2026-08-21T00:00:00Z"
+    }
+  ]
+}

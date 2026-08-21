@@ -1,0 +1,740 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://personalwiki.app/schemas/knowledge-pack-1.0.json",
+  "title": "Personal Wiki Knowledge Pack",
+  "description": "The only supported way for an external agent to propose changes to Personal Wiki. A pack is validated, staged, diffed and reviewed by a human before anything is written to the trusted database. Structural validation here mirrors crates/pw-core/src/pack.rs, which is authoritative and additionally enforces cross-references, category cycles and official-provenance rules.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "batch"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "batch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "producer",
+        "generatedAt"
+      ],
+      "properties": {
+        "producer": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Who produced this pack, e.g. \"claude-code\" or \"codex-cli\"."
+        },
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 4000
+        }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/tool"
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/task"
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/category"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/tag"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "removals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/removal"
+      },
+      "description": "Entities a source no longer mentions. These become remove_candidate changes that a human must approve; nothing is ever hard-deleted."
+    }
+  },
+  "$defs": {
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "name"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "externalKey": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "shortName": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "iconKey": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "accentKey": {
+          "enum": [
+            "blue",
+            "green",
+            "purple",
+            "orange",
+            "teal",
+            "red",
+            "slate"
+          ]
+        },
+        "officialHomeUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://[^\\s]+$"
+        },
+        "sortOrder": {
+          "type": "integer"
+        }
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "name"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "externalKey": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "iconKey": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "sortOrder": {
+          "type": "integer"
+        }
+      }
+    },
+    "category": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "name"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "externalKey": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "iconKey": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "accentKey": {
+          "enum": [
+            "blue",
+            "green",
+            "purple",
+            "orange",
+            "teal",
+            "red",
+            "slate"
+          ]
+        },
+        "parentSlug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[\\w\\u0600-\\u06FF-]+$",
+          "description": "Parent category slug. Any depth is allowed; cycles are rejected."
+        },
+        "sortOrder": {
+          "type": "integer"
+        }
+      }
+    },
+    "tag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "name"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "accentKey": {
+          "enum": [
+            "blue",
+            "green",
+            "purple",
+            "orange",
+            "teal",
+            "red",
+            "slate"
+          ]
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "name",
+        "sourceType"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[\\w\\u0600-\\u06FF-]+$",
+          "description": "Stable key referenced by items[].sources[].sourceKey."
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "sourceType": {
+          "enum": [
+            "official_docs",
+            "official_repo",
+            "official_changelog",
+            "official_blog",
+            "community",
+            "local_file",
+            "manual",
+            "agent_managed"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://[^\\s]+$"
+        },
+        "isOfficial": {
+          "type": "boolean"
+        },
+        "toolSlug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+        },
+        "syncStrategy": {
+          "enum": [
+            "agent",
+            "manual",
+            "local_file"
+          ]
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 20000
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "externalKey",
+        "slug",
+        "itemType",
+        "title"
+      ],
+      "properties": {
+        "externalKey": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200,
+          "pattern": "^[^:]+:.+$",
+          "description": "Stable namespaced identity used to match this item across refreshes, e.g. \"codex-cli:agent-create\". Never derive it from a mutable title."
+        },
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+        },
+        "itemType": {
+          "enum": [
+            "command",
+            "slash_command",
+            "cli_command",
+            "setting",
+            "shortcut",
+            "workflow",
+            "link",
+            "extension",
+            "concept",
+            "note",
+            "snippet",
+            "troubleshooting"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "toolSlug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+        },
+        "subtitle": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "shortDescription": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "fullDescription": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "syntax": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "whenToUse": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "expectedResult": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "warningText": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "resultDiagram": {
+          "$ref": "#/$defs/resultDiagram"
+        },
+        "verificationStatus": {
+          "enum": [
+            "official",
+            "verified",
+            "community",
+            "unverified",
+            "demo"
+          ],
+          "description": "\"official\" requires at least one referenced source that is official and has a valid url."
+        },
+        "lifecycleStatus": {
+          "enum": [
+            "active",
+            "experimental",
+            "deprecated",
+            "removed"
+          ]
+        },
+        "difficulty": {
+          "enum": [
+            "beginner",
+            "intermediate",
+            "advanced"
+          ]
+        },
+        "iconKey": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "accentKey": {
+          "enum": [
+            "blue",
+            "green",
+            "purple",
+            "orange",
+            "teal",
+            "red",
+            "slate"
+          ]
+        },
+        "sortOrder": {
+          "type": "integer"
+        },
+        "lastVerifiedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": "Natural-language phrases a person might search for. These drive alias-boosted search."
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+          }
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/example"
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/itemSource"
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relationship"
+          }
+        }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "expectedOutput": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "sortOrder": {
+          "type": "integer"
+        }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "isRequired": {
+          "type": "boolean"
+        },
+        "defaultValue": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "valueHint": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "sortOrder": {
+          "type": "integer"
+        }
+      }
+    },
+    "itemSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceKey"
+      ],
+      "properties": {
+        "sourceKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[\\w\\u0600-\\u06FF-]+$"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://[^\\s]+$"
+        },
+        "anchor": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "version": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "verifiedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "toExternalKey",
+        "relationshipType"
+      ],
+      "properties": {
+        "toExternalKey": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "relationshipType": {
+          "enum": [
+            "related",
+            "alternative",
+            "prerequisite",
+            "replaced_by",
+            "similar_to",
+            "follows",
+            "part_of"
+          ]
+        }
+      }
+    },
+    "removal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entityType",
+        "externalKey"
+      ],
+      "properties": {
+        "entityType": {
+          "enum": [
+            "item",
+            "tool",
+            "task",
+            "category"
+          ]
+        },
+        "externalKey": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      }
+    },
+    "resultDiagram": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "nodes"
+      ],
+      "description": "A tiny, closed diagram contract. Nodes and edges only — no HTML, SVG or any other markup is ever accepted.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "flow",
+            "fan_out"
+          ]
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "label"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 60
+              },
+              "label": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "sublabel": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "accentKey": {
+                "enum": [
+                  "blue",
+                  "green",
+                  "purple",
+                  "orange",
+                  "teal",
+                  "red",
+                  "slate"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "ok",
+                  "pending",
+                  "warning"
+                ]
+              }
+            }
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "to"
+            ],
+            "properties": {
+              "from": {
+                "type": "string",
+                "maxLength": 60
+              },
+              "to": {
+                "type": "string",
+                "maxLength": 60
+              },
+              "label": {
+                "type": "string",
+                "maxLength": 120
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
