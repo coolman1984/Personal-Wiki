@@ -1,11 +1,12 @@
 # Personal Wiki
 
-A local-first Windows 11 desktop knowledge base for command-line and AI development
-tools — Claude Code, Codex CLI, Gemini CLI, OpenCode, Git, VS Code, and anything
-added later — organised by **what you want to do**, not by which manual it lives in.
+A shared Arabic-first knowledge application for desktop and mobile web. This
+repository now contains both the original product contract and the working web
+application, so ChatGPT and Claude work on exactly the same source.
 
-This repository currently holds the **build contract**: the specification a coding
-agent implements from. The application source is built against these documents.
+The current web build is functional but still contains demo content and navigation
+shortcuts that must be repaired. The authoritative implementation plan is
+`docs/LUNA_MAX_PERSONAL_WIKI_REPAIR_PLAN.md`.
 
 ## The one rule everything follows
 
@@ -25,6 +26,9 @@ database schema produce a new build.
 | `CLAUDE.md` | Persistent project rules, loaded automatically by Claude Code. |
 | `references/` | Six UI reference images (see below). |
 | `docs/BUILD_PACK_README.md` | Original build-pack notes. |
+| `docs/LUNA_MAX_PERSONAL_WIKI_REPAIR_PLAN.md` | Current audited repair plan and completion gates. |
+| `docs/WEBAPP_README.md` | Web application setup, build, and hosting notes. |
+| `app/`, `server/`, `db/` | Current web interface, server logic, and data model. |
 
 ## Reference images
 
@@ -41,16 +45,19 @@ Layout and interaction in these images are the design contract. Command text
 inside them is illustrative — verify every command against an official source
 before storing it as official.
 
-## How to start a build
+## How an agent starts work
 
-1. Open `START_HERE_PROMPT.md` and give its contents to the coding agent.
-2. Make sure the agent can read this whole repository, including `references/`.
-3. The agent reads `PERSONAL_WIKI_MASTER_GUIDE.md`, then `docs/UI_SPEC.md`, then builds.
+1. Read `CLAUDE.md`.
+2. Read `docs/LUNA_MAX_PERSONAL_WIKI_REPAIR_PLAN.md` completely.
+3. Inspect the current web app and run its existing checks before changing code.
+4. Implement the repair phases in order and do not deploy without a separate user request.
 
-## Target stack
+## Current web stack
 
-Tauri 2 · Svelte 5 · TypeScript (strict) · SQLite + FTS5 · Rust (MSVC) · pnpm ·
-Vitest · Playwright. Light theme only. Arabic RTL first, localisation-ready.
+Vinext/React with TypeScript, D1 data storage, R2 backup storage, and ChatGPT
+authentication. The original Tauri/SQLite desktop target remains a future portable
+shell; it must reuse the same domain and Knowledge Pack rules instead of creating a
+second conflicting product.
 
 ## Safety model
 
