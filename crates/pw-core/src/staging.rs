@@ -110,10 +110,28 @@ fn item_json(i: &PackItem) -> Value {
 /// Rebuild the canonical JSON of what is *currently* stored, so the reviewer sees
 /// a real before/after and unchanged entities produce no staged row at all.
 fn current_item_json(conn: &Connection, external_key: &str) -> Result<Option<Value>> {
-    let row: Option<(String, String, Option<String>, String, String, Option<String>, Option<String>,
-                     Option<String>, Option<String>, Option<String>, Option<String>, Option<String>,
-                     Option<String>, String, String, Option<String>, Option<String>, Option<String>,
-                     i64, Option<String>)> = conn
+    let row: Option<(
+        String,
+        String,
+        Option<String>,
+        String,
+        String,
+        Option<String>,
+        Option<String>,
+        Option<String>,
+        Option<String>,
+        Option<String>,
+        Option<String>,
+        Option<String>,
+        Option<String>,
+        String,
+        String,
+        Option<String>,
+        Option<String>,
+        Option<String>,
+        i64,
+        Option<String>,
+    )> = conn
         .query_row(
             "SELECT i.id, i.slug, t.slug, i.item_type, i.title, i.subtitle, i.short_description,
                     i.full_description, i.syntax, i.when_to_use, i.expected_result, i.warning_text,
@@ -123,9 +141,28 @@ fn current_item_json(conn: &Connection, external_key: &str) -> Result<Option<Val
              WHERE i.external_key = ?1",
             params![external_key],
             |r| {
-                Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?, r.get(6)?,
-                    r.get(7)?, r.get(8)?, r.get(9)?, r.get(10)?, r.get(11)?, r.get(12)?, r.get(13)?,
-                    r.get(14)?, r.get(15)?, r.get(16)?, r.get(17)?, r.get(18)?, r.get(19)?))
+                Ok((
+                    r.get(0)?,
+                    r.get(1)?,
+                    r.get(2)?,
+                    r.get(3)?,
+                    r.get(4)?,
+                    r.get(5)?,
+                    r.get(6)?,
+                    r.get(7)?,
+                    r.get(8)?,
+                    r.get(9)?,
+                    r.get(10)?,
+                    r.get(11)?,
+                    r.get(12)?,
+                    r.get(13)?,
+                    r.get(14)?,
+                    r.get(15)?,
+                    r.get(16)?,
+                    r.get(17)?,
+                    r.get(18)?,
+                    r.get(19)?,
+                ))
             },
         )
         .ok();
@@ -186,7 +223,11 @@ fn current_item_json(conn: &Connection, external_key: &str) -> Result<Option<Val
     })))
 }
 
-fn current_simple_json(conn: &Connection, table: &str, external_key: &str) -> Result<Option<Value>> {
+fn current_simple_json(
+    conn: &Connection,
+    table: &str,
+    external_key: &str,
+) -> Result<Option<Value>> {
     let sql = match table {
         "tools" => "SELECT slug, name, short_name, description, icon_key, accent_key, official_home_url, sort_order FROM tools WHERE external_key = ?1",
         "tasks" => "SELECT slug, name, description, icon_key, sort_order FROM tasks WHERE external_key = ?1",
@@ -240,23 +281,56 @@ pub fn stage_pack(store: &Store, pack: &KnowledgePack, created_by: &str) -> Resu
     let mut rows: Vec<Row> = Vec::new();
 
     for tool in &pack.tools {
-        let key = tool.external_key.clone().unwrap_or_else(|| format!("tool:{}", tool.slug));
+        let key = tool
+            .external_key
+            .clone()
+            .unwrap_or_else(|| format!("tool:{}", tool.slug));
         let after = tool_json(tool);
         let before = current_simple_json(conn, "tools", &key)?;
-        push_change(&mut rows, "tool", key, tool.name.clone(), None, before, after);
+        push_change(
+            &mut rows,
+            "tool",
+            key,
+            tool.name.clone(),
+            None,
+            before,
+            after,
+        );
     }
     for task in &pack.tasks {
-        let key = task.external_key.clone().unwrap_or_else(|| format!("task:{}", task.slug));
+        let key = task
+            .external_key
+            .clone()
+            .unwrap_or_else(|| format!("task:{}", task.slug));
         let after = task_json(task);
         let before = current_simple_json(conn, "tasks", &key)?;
-        push_change(&mut rows, "task", key, task.name.clone(), None, before, after);
+        push_change(
+            &mut rows,
+            "task",
+            key,
+            task.name.clone(),
+            None,
+            before,
+            after,
+        );
     }
     for cat in &pack.categories {
-        let key = cat.external_key.clone().unwrap_or_else(|| format!("category:{}", cat.slug));
+        let key = cat
+            .external_key
+            .clone()
+            .unwrap_or_else(|| format!("category:{}", cat.slug));
         let after = category_json(cat);
         let before = current_simple_json(conn, "categories", &key)?;
         let detail = cat.parent_slug.as_ref().map(|p| format!("under {p}"));
-        push_change(&mut rows, "category", key, cat.name.clone(), detail, before, after);
+        push_change(
+            &mut rows,
+            "category",
+            key,
+            cat.name.clone(),
+            detail,
+            before,
+            after,
+        );
     }
     for tag in &pack.tags {
         let key = format!("tag:{}", tag.slug);
@@ -353,18 +427,23 @@ pub fn stage_pack(store: &Store, pack: &KnowledgePack, created_by: &str) -> Resu
         });
     }
 
-    let summary = pack.batch.summary.clone().unwrap_or_else(|| {
-        format!(
-            "{} change(s) from {}",
-            rows.len(),
-            pack.batch.producer
-        )
-    });
+    let summary = pack
+        .batch
+        .summary
+        .clone()
+        .unwrap_or_else(|| format!("{} change(s) from {}", rows.len(), pack.batch.producer));
 
     conn.execute(
         "INSERT INTO update_batches (id, created_by, producer, summary, notes, status, created_at)
          VALUES (?1, ?2, ?3, ?4, ?5, 'pending', ?6)",
-        params![batch_id, created_by, pack.batch.producer, summary, pack.batch.notes, now],
+        params![
+            batch_id,
+            created_by,
+            pack.batch.producer,
+            summary,
+            pack.batch.notes,
+            now
+        ],
     )?;
 
     for row in &rows {
@@ -374,8 +453,13 @@ pub fn stage_pack(store: &Store, pack: &KnowledgePack, created_by: &str) -> Resu
                 before_json, after_json, status, detected_at)
              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, 'pending', ?10)",
             params![
-                ulid(), batch_id, row.entity_type, row.entity_key, row.change_type,
-                row.title, row.detail,
+                ulid(),
+                batch_id,
+                row.entity_type,
+                row.entity_key,
+                row.change_type,
+                row.title,
+                row.detail,
                 row.before.as_ref().map(|v| v.to_string()),
                 row.after.as_ref().map(|v| v.to_string()),
                 now
@@ -414,7 +498,15 @@ fn push_change(
             "update"
         }
     };
-    rows.push(Row { entity_type, entity_key: key, change_type, title, detail, before, after: Some(after) });
+    rows.push(Row {
+        entity_type,
+        entity_key: key,
+        change_type,
+        title,
+        detail,
+        before,
+        after: Some(after),
+    });
 }
 
 /// Compare an item's stored form to the incoming one, ignoring the fields the
@@ -459,7 +551,11 @@ fn field_diff(before: Option<&Value>, after: Option<&Value>) -> Vec<FieldDiff> {
                 other => Some(other.to_string()),
             }
         };
-        out.push(FieldDiff { field: key.clone(), before: render(bv), after: render(av) });
+        out.push(FieldDiff {
+            field: key.clone(),
+            before: render(bv),
+            after: render(av),
+        });
     }
     out
 }
@@ -509,7 +605,11 @@ pub fn get_batch(store: &Store, batch_id: &str) -> Result<UpdateBatch> {
         .ok_or_else(|| crate::CoreError::NotFound(format!("batch {batch_id}")))
 }
 
-pub fn list_changes(store: &Store, batch_id: Option<&str>, status: Option<&str>) -> Result<Vec<StagedChange>> {
+pub fn list_changes(
+    store: &Store,
+    batch_id: Option<&str>,
+    status: Option<&str>,
+) -> Result<Vec<StagedChange>> {
     let mut sql = String::from(
         "SELECT id, batch_id, entity_type, entity_key, change_type, title, detail,
                 before_json, after_json, status, confidence, error_text, detected_at
@@ -560,7 +660,9 @@ pub fn set_review_status(
     status: &str,
 ) -> Result<usize> {
     if !matches!(status, "approved" | "rejected" | "pending") {
-        return Err(crate::CoreError::Invalid(format!("unknown review status {status}")));
+        return Err(crate::CoreError::Invalid(format!(
+            "unknown review status {status}"
+        )));
     }
     let now = now_iso();
     let changed = match change_ids {

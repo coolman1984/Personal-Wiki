@@ -43,8 +43,14 @@ fn a_new_tool_appears_on_home_and_in_the_tool_browser() {
 
     let cards = repo::tool_cards(&store).unwrap();
     assert_eq!(cards.len(), before + 1);
-    let card = cards.iter().find(|c| c.tool.slug == "powershell").expect("new tool card");
-    assert_eq!(card.item_count, 1, "the card's counter is a query, not a stored number");
+    let card = cards
+        .iter()
+        .find(|c| c.tool.slug == "powershell")
+        .expect("new tool card");
+    assert_eq!(
+        card.item_count, 1,
+        "the card's counter is a query, not a stored number"
+    );
 
     // The home summary is what the first screen actually renders.
     let home = repo::home_summary(&store).unwrap();
@@ -63,7 +69,10 @@ fn nested_categories_render_at_arbitrary_depth() {
 
     // Three levels deep, built from parent_id at runtime.
     let tree = repo::category_tree(&store, None).unwrap();
-    let automation = tree.iter().find(|n| n.category.slug == "automation").expect("root");
+    let automation = tree
+        .iter()
+        .find(|n| n.category.slug == "automation")
+        .expect("root");
     let scheduled = automation
         .children
         .iter()
@@ -86,7 +95,10 @@ fn nested_categories_render_at_arbitrary_depth() {
 
     // The tool page's section tabs are pruned to branches that hold its items.
     let page = repo::tool_page(&store, "powershell").unwrap();
-    assert!(page.sections.iter().any(|n| n.category.slug == "automation"));
+    assert!(page
+        .sections
+        .iter()
+        .any(|n| n.category.slug == "automation"));
 }
 
 #[test]
@@ -94,8 +106,13 @@ fn a_category_query_includes_the_whole_subtree() {
     let mut store = support::store();
     support::install(&mut store, TOOL_PACK);
 
-    let items = repo::items_for_category(&store, "automation", repo::ItemSort::Recent, 100).unwrap();
-    assert_eq!(items.len(), 1, "an ancestor category shows items stored on its descendants");
+    let items =
+        repo::items_for_category(&store, "automation", repo::ItemSort::Recent, 100).unwrap();
+    assert_eq!(
+        items.len(),
+        1,
+        "an ancestor category shows items stored on its descendants"
+    );
 }
 
 #[test]
@@ -118,13 +135,18 @@ fn one_item_can_belong_to_several_tasks_without_being_duplicated() {
     support::install(&mut store, pack);
 
     let agents = repo::items_for_task(&store, "agents", repo::ItemSort::Recent, 100).unwrap();
-    let background = repo::items_for_task(&store, "background-work", repo::ItemSort::Recent, 100).unwrap();
+    let background =
+        repo::items_for_task(&store, "background-work", repo::ItemSort::Recent, 100).unwrap();
     assert!(agents.iter().any(|i| i.slug == "shared-item"));
     assert!(background.iter().any(|i| i.slug == "shared-item"));
 
     let stored: i64 = store
         .conn()
-        .query_row("SELECT COUNT(*) FROM items WHERE slug = 'shared-item'", [], |r| r.get(0))
+        .query_row(
+            "SELECT COUNT(*) FROM items WHERE slug = 'shared-item'",
+            [],
+            |r| r.get(0),
+        )
         .unwrap();
     assert_eq!(stored, 1, "linked to two tasks, stored once");
 }
@@ -151,17 +173,27 @@ fn deactivating_a_record_hides_it_without_deleting_anything() {
     pw_core::edit::set_active(&store, "tool", &target.id, false).unwrap();
 
     let visible = repo::tool_cards(&store).unwrap();
-    assert!(!visible.iter().any(|c| c.tool.id == target.id), "hidden from browsing");
+    assert!(
+        !visible.iter().any(|c| c.tool.id == target.id),
+        "hidden from browsing"
+    );
 
     let rows: i64 = store
         .conn()
-        .query_row("SELECT COUNT(*) FROM tools WHERE id = ?1", [&target.id], |r| r.get(0))
+        .query_row(
+            "SELECT COUNT(*) FROM tools WHERE id = ?1",
+            [&target.id],
+            |r| r.get(0),
+        )
         .unwrap();
     assert_eq!(rows, 1, "the record is retained, not deleted");
 
     // And it comes back.
     pw_core::edit::set_active(&store, "tool", &target.id, true).unwrap();
-    assert!(repo::tool_cards(&store).unwrap().iter().any(|c| c.tool.id == target.id));
+    assert!(repo::tool_cards(&store)
+        .unwrap()
+        .iter()
+        .any(|c| c.tool.id == target.id));
 }
 
 #[test]

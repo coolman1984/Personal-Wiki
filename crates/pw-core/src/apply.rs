@@ -19,16 +19,26 @@ use serde_json::{json, Value};
 use std::collections::HashSet;
 
 fn s(value: &Value, key: &str) -> Option<String> {
-    value.get(key).and_then(|v| v.as_str()).map(|v| v.to_string())
+    value
+        .get(key)
+        .and_then(|v| v.as_str())
+        .map(|v| v.to_string())
 }
 fn i(value: &Value, key: &str, default: i64) -> i64 {
     value.get(key).and_then(|v| v.as_i64()).unwrap_or(default)
 }
 fn arr<'a>(value: &'a Value, key: &str) -> Vec<&'a Value> {
-    value.get(key).and_then(|v| v.as_array()).map(|a| a.iter().collect()).unwrap_or_default()
+    value
+        .get(key)
+        .and_then(|v| v.as_array())
+        .map(|a| a.iter().collect())
+        .unwrap_or_default()
 }
 fn strings(value: &Value, key: &str) -> Vec<String> {
-    arr(value, key).iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect()
+    arr(value, key)
+        .iter()
+        .filter_map(|v| v.as_str().map(|s| s.to_string()))
+        .collect()
 }
 
 /// Apply every approved change in a batch. Returns the outcome; on failure the
@@ -36,7 +46,9 @@ fn strings(value: &Value, key: &str) -> Vec<String> {
 pub fn apply_batch(store: &mut Store, batch_id: &str, actor: &str) -> Result<ApplyOutcome> {
     let batch = staging::get_batch(store, batch_id)?;
     if batch.status == "applied" {
-        return Err(CoreError::Refused(format!("batch {batch_id} is already applied")));
+        return Err(CoreError::Refused(format!(
+            "batch {batch_id} is already applied"
+        )));
     }
     if batch.approved_count == 0 {
         return Err(CoreError::Refused(format!(
@@ -56,7 +68,10 @@ pub fn apply_batch(store: &mut Store, batch_id: &str, actor: &str) -> Result<App
         // relationships after every item exists.
         let order = ["tool", "task", "category", "tag", "source", "item"];
         for entity_type in order {
-            let mut group: Vec<_> = changes.iter().filter(|c| c.entity_type == entity_type).collect();
+            let mut group: Vec<_> = changes
+                .iter()
+                .filter(|c| c.entity_type == entity_type)
+                .collect();
             if entity_type == "category" {
                 // parents first, so a child never references a missing parent
                 group.sort_by_key(|c| {
@@ -93,7 +108,11 @@ pub fn apply_batch(store: &mut Store, batch_id: &str, actor: &str) -> Result<App
             "UPDATE update_batches SET status = ?2, applied_at = ?3, backup_id = ?4 WHERE id = ?1",
             params![
                 batch_id,
-                if batch.pending_count > 0 || batch.rejected_count > 0 { "partially_applied" } else { "applied" },
+                if batch.pending_count > 0 || batch.rejected_count > 0 {
+                    "partially_applied"
+                } else {
+                    "applied"
+                },
                 now_iso(),
                 snapshot.id
             ],
@@ -175,16 +194,17 @@ fn apply_one(
                 _ => return Ok(()),
             };
             tx.execute(
-                &format!("UPDATE {table} SET is_active = 0, updated_at = ?2 WHERE external_key = ?1"),
+                &format!(
+                    "UPDATE {table} SET is_active = 0, updated_at = ?2 WHERE external_key = ?1"
+                ),
                 params![change.entity_key, now_iso()],
             )?;
             Ok(())
         }
         ("item", _) => {
-            let after = change
-                .after_json
-                .as_ref()
-                .ok_or_else(|| CoreError::Invalid(format!("staged item {} has no payload", change.entity_key)))?;
+            let after = change.after_json.as_ref().ok_or_else(|| {
+                CoreError::Invalid(format!("staged item {} has no payload", change.entity_key))
+            })?;
             let id = upsert_item(tx, after)?;
             touched.insert(id);
             Ok(())
@@ -194,15 +214,19 @@ fn apply_one(
         ("category", _) => upsert_category(tx, payload(change)?),
         ("tag", _) => upsert_tag(tx, payload(change)?),
         ("source", _) => upsert_source(tx, payload(change)?),
-        (other, _) => Err(CoreError::Invalid(format!("cannot apply entity type {other}"))),
+        (other, _) => Err(CoreError::Invalid(format!(
+            "cannot apply entity type {other}"
+        ))),
     }
 }
 
 fn payload(change: &crate::models::StagedChange) -> Result<&Value> {
-    change
-        .after_json
-        .as_ref()
-        .ok_or_else(|| CoreError::Invalid(format!("staged change {} has no payload", change.entity_key)))
+    change.after_json.as_ref().ok_or_else(|| {
+        CoreError::Invalid(format!(
+            "staged change {} has no payload",
+            change.entity_key
+        ))
+    })
 }
 
 fn item_id_for_key(tx: &Transaction, external_key: &str) -> Result<Option<String>> {
@@ -232,10 +256,19 @@ fn upsert_tool(tx: &Transaction, v: &Value) -> Result<()> {
                 "UPDATE tools SET slug=?2, name=?3, short_name=?4, description=?5, icon_key=?6,
                         accent_key=?7, official_home_url=?8, sort_order=?9, external_key=?10,
                         managed_by='pack', is_active=1, updated_at=?11 WHERE id=?1",
-                params![id, slug, s(v,"name"), s(v,"shortName"), s(v,"description"),
-                        s(v,"iconKey").unwrap_or_else(|| "book".into()),
-                        s(v,"accentKey").unwrap_or_else(|| "blue".into()),
-                        s(v,"officialHomeUrl"), i(v,"sortOrder",100), key, now],
+                params![
+                    id,
+                    slug,
+                    s(v, "name"),
+                    s(v, "shortName"),
+                    s(v, "description"),
+                    s(v, "iconKey").unwrap_or_else(|| "book".into()),
+                    s(v, "accentKey").unwrap_or_else(|| "blue".into()),
+                    s(v, "officialHomeUrl"),
+                    i(v, "sortOrder", 100),
+                    key,
+                    now
+                ],
             )?;
         }
         None => {
@@ -258,15 +291,27 @@ fn upsert_task(tx: &Transaction, v: &Value) -> Result<()> {
     let key = s(v, "externalKey");
     let slug = s(v, "slug").ok_or_else(|| CoreError::Invalid("task payload has no slug".into()))?;
     let existing: Option<String> = tx
-        .query_row("SELECT id FROM tasks WHERE external_key = ?1 OR slug = ?2", params![key, slug], |r| r.get(0))
+        .query_row(
+            "SELECT id FROM tasks WHERE external_key = ?1 OR slug = ?2",
+            params![key, slug],
+            |r| r.get(0),
+        )
         .ok();
     match existing {
         Some(id) => {
             tx.execute(
                 "UPDATE tasks SET slug=?2, name=?3, description=?4, icon_key=?5, sort_order=?6,
                         external_key=?7, managed_by='pack', is_active=1, updated_at=?8 WHERE id=?1",
-                params![id, slug, s(v,"name"), s(v,"description"),
-                        s(v,"iconKey").unwrap_or_else(|| "target".into()), i(v,"sortOrder",100), key, now],
+                params![
+                    id,
+                    slug,
+                    s(v, "name"),
+                    s(v, "description"),
+                    s(v, "iconKey").unwrap_or_else(|| "target".into()),
+                    i(v, "sortOrder", 100),
+                    key,
+                    now
+                ],
             )?;
         }
         None => {
@@ -274,8 +319,16 @@ fn upsert_task(tx: &Transaction, v: &Value) -> Result<()> {
                 "INSERT INTO tasks (id, slug, name, description, icon_key, sort_order, is_active,
                         external_key, managed_by, created_at, updated_at)
                  VALUES (?1,?2,?3,?4,?5,?6,1,?7,'pack',?8,?8)",
-                params![ulid(), slug, s(v,"name"), s(v,"description"),
-                        s(v,"iconKey").unwrap_or_else(|| "target".into()), i(v,"sortOrder",100), key, now],
+                params![
+                    ulid(),
+                    slug,
+                    s(v, "name"),
+                    s(v, "description"),
+                    s(v, "iconKey").unwrap_or_else(|| "target".into()),
+                    i(v, "sortOrder", 100),
+                    key,
+                    now
+                ],
             )?;
         }
     }
@@ -285,21 +338,34 @@ fn upsert_task(tx: &Transaction, v: &Value) -> Result<()> {
 fn upsert_category(tx: &Transaction, v: &Value) -> Result<()> {
     let now = now_iso();
     let key = s(v, "externalKey");
-    let slug = s(v, "slug").ok_or_else(|| CoreError::Invalid("category payload has no slug".into()))?;
+    let slug =
+        s(v, "slug").ok_or_else(|| CoreError::Invalid("category payload has no slug".into()))?;
     let parent_id: Option<String> = match s(v, "parentSlug") {
         Some(parent_slug) => Some(
-            tx.query_row("SELECT id FROM categories WHERE slug = ?1", params![parent_slug], |r| r.get(0))
-                .map_err(|_| CoreError::Invalid(format!("parent category {parent_slug:?} does not exist")))?,
+            tx.query_row(
+                "SELECT id FROM categories WHERE slug = ?1",
+                params![parent_slug],
+                |r| r.get(0),
+            )
+            .map_err(|_| {
+                CoreError::Invalid(format!("parent category {parent_slug:?} does not exist"))
+            })?,
         ),
         None => None,
     };
     let existing: Option<String> = tx
-        .query_row("SELECT id FROM categories WHERE external_key = ?1 OR slug = ?2", params![key, slug], |r| r.get(0))
+        .query_row(
+            "SELECT id FROM categories WHERE external_key = ?1 OR slug = ?2",
+            params![key, slug],
+            |r| r.get(0),
+        )
         .ok();
     match existing {
         Some(id) => {
             if parent_id.as_deref() == Some(id.as_str()) {
-                return Err(CoreError::Invalid("a category cannot be its own parent".into()));
+                return Err(CoreError::Invalid(
+                    "a category cannot be its own parent".into(),
+                ));
             }
             tx.execute(
                 "UPDATE categories SET slug=?2, name=?3, description=?4, icon_key=?5, accent_key=?6,
@@ -331,7 +397,12 @@ fn upsert_tag(tx: &Transaction, v: &Value) -> Result<()> {
     tx.execute(
         "INSERT INTO tags (id, slug, name, accent_key) VALUES (?1,?2,?3,?4)
          ON CONFLICT(slug) DO UPDATE SET name=?3, accent_key=?4",
-        params![ulid(), slug, s(v,"name"), s(v,"accentKey").unwrap_or_else(|| "blue".into())],
+        params![
+            ulid(),
+            slug,
+            s(v, "name"),
+            s(v, "accentKey").unwrap_or_else(|| "blue".into())
+        ],
     )?;
     Ok(())
 }
@@ -340,20 +411,40 @@ fn upsert_source(tx: &Transaction, v: &Value) -> Result<()> {
     let now = now_iso();
     let key = format!("source:{}", s(v, "key").unwrap_or_default());
     let tool_id: Option<String> = match s(v, "toolSlug") {
-        Some(slug) => tx.query_row("SELECT id FROM tools WHERE slug = ?1", params![slug], |r| r.get(0)).ok(),
+        Some(slug) => tx
+            .query_row("SELECT id FROM tools WHERE slug = ?1", params![slug], |r| {
+                r.get(0)
+            })
+            .ok(),
         None => None,
     };
     let existing: Option<String> = tx
-        .query_row("SELECT id FROM sources WHERE external_key = ?1", params![key], |r| r.get(0))
+        .query_row(
+            "SELECT id FROM sources WHERE external_key = ?1",
+            params![key],
+            |r| r.get(0),
+        )
         .ok();
-    let is_official = v.get("isOfficial").and_then(|x| x.as_bool()).unwrap_or(false) as i64;
+    let is_official = v
+        .get("isOfficial")
+        .and_then(|x| x.as_bool())
+        .unwrap_or(false) as i64;
     match existing {
         Some(id) => {
             tx.execute(
                 "UPDATE sources SET tool_id=?2, name=?3, source_type=?4, url=?5, is_official=?6,
                         sync_strategy=?7, notes=?8, is_active=1, updated_at=?9 WHERE id=?1",
-                params![id, tool_id, s(v,"name"), s(v,"sourceType"), s(v,"url"), is_official,
-                        s(v,"syncStrategy").unwrap_or_else(|| "agent".into()), s(v,"notes"), now],
+                params![
+                    id,
+                    tool_id,
+                    s(v, "name"),
+                    s(v, "sourceType"),
+                    s(v, "url"),
+                    is_official,
+                    s(v, "syncStrategy").unwrap_or_else(|| "agent".into()),
+                    s(v, "notes"),
+                    now
+                ],
             )?;
         }
         None => {
@@ -377,19 +468,29 @@ fn upsert_item(tx: &Transaction, v: &Value) -> Result<String> {
 
     let tool_id: Option<String> = match s(v, "toolSlug") {
         Some(tool_slug) => Some(
-            tx.query_row("SELECT id FROM tools WHERE slug = ?1", params![tool_slug], |r| r.get(0))
-                .map_err(|_| CoreError::Invalid(format!("tool {tool_slug:?} does not exist")))?,
+            tx.query_row(
+                "SELECT id FROM tools WHERE slug = ?1",
+                params![tool_slug],
+                |r| r.get(0),
+            )
+            .map_err(|_| CoreError::Invalid(format!("tool {tool_slug:?} does not exist")))?,
         ),
         None => None,
     };
 
     let by_key: Option<String> = tx
-        .query_row("SELECT id FROM items WHERE external_key = ?1", params![external_key], |r| r.get(0))
+        .query_row(
+            "SELECT id FROM items WHERE external_key = ?1",
+            params![external_key],
+            |r| r.get(0),
+        )
         .ok();
     let by_slug: Option<(String, Option<String>)> = tx
-        .query_row("SELECT id, external_key FROM items WHERE slug = ?1", params![slug], |r| {
-            Ok((r.get(0)?, r.get(1)?))
-        })
+        .query_row(
+            "SELECT id, external_key FROM items WHERE slug = ?1",
+            params![slug],
+            |r| Ok((r.get(0)?, r.get(1)?)),
+        )
         .ok();
 
     // Identity rules: match on external_key first. A slug already owned by a
@@ -429,15 +530,33 @@ fn upsert_item(tx: &Transaction, v: &Value) -> Result<String> {
                 managed_by='pack', updated_at=?22
          WHERE id=?1",
         params![
-            id, tool_id, s(v,"itemType").unwrap_or_else(|| "concept".into()), slug, s(v,"title"),
-            s(v,"subtitle"), s(v,"shortDescription"), s(v,"fullDescription"), s(v,"syntax"),
-            s(v,"whenToUse"), s(v,"expectedResult"), s(v,"warningText"),
-            v.get("resultDiagram").filter(|d| !d.is_null()).map(|d| d.to_string()),
-            s(v,"verificationStatus").unwrap_or_else(|| "unverified".into()),
-            s(v,"lifecycleStatus").unwrap_or_else(|| "active".into()),
-            s(v,"difficulty"), s(v,"iconKey"), s(v,"accentKey"), i(v,"sortOrder",100),
-            s(v,"lastVerifiedAt"),
-            if s(v,"lifecycleStatus").as_deref() == Some("removed") { 0 } else { 1 },
+            id,
+            tool_id,
+            s(v, "itemType").unwrap_or_else(|| "concept".into()),
+            slug,
+            s(v, "title"),
+            s(v, "subtitle"),
+            s(v, "shortDescription"),
+            s(v, "fullDescription"),
+            s(v, "syntax"),
+            s(v, "whenToUse"),
+            s(v, "expectedResult"),
+            s(v, "warningText"),
+            v.get("resultDiagram")
+                .filter(|d| !d.is_null())
+                .map(|d| d.to_string()),
+            s(v, "verificationStatus").unwrap_or_else(|| "unverified".into()),
+            s(v, "lifecycleStatus").unwrap_or_else(|| "active".into()),
+            s(v, "difficulty"),
+            s(v, "iconKey"),
+            s(v, "accentKey"),
+            i(v, "sortOrder", 100),
+            s(v, "lastVerifiedAt"),
+            if s(v, "lifecycleStatus").as_deref() == Some("removed") {
+                0
+            } else {
+                1
+            },
             now
         ],
     )?;
@@ -469,37 +588,68 @@ fn upsert_item(tx: &Transaction, v: &Value) -> Result<String> {
             "INSERT OR REPLACE INTO parameters (id, item_id, name, description, is_required,
                      default_value, value_hint, sort_order)
              VALUES (?1,?2,?3,?4,?5,?6,?7,?8)",
-            params![ulid(), id, s(param,"name").unwrap_or_default(), s(param,"description"),
-                    param.get("isRequired").and_then(|b| b.as_bool()).unwrap_or(false) as i64,
-                    s(param,"defaultValue"), s(param,"valueHint"), i(param,"sortOrder",100)],
+            params![
+                ulid(),
+                id,
+                s(param, "name").unwrap_or_default(),
+                s(param, "description"),
+                param
+                    .get("isRequired")
+                    .and_then(|b| b.as_bool())
+                    .unwrap_or(false) as i64,
+                s(param, "defaultValue"),
+                s(param, "valueHint"),
+                i(param, "sortOrder", 100)
+            ],
         )?;
     }
 
     tx.execute("DELETE FROM item_tasks WHERE item_id = ?1", params![id])?;
     for task_slug in strings(v, "tasks") {
-        if let Ok(task_id) =
-            tx.query_row("SELECT id FROM tasks WHERE slug = ?1", params![task_slug], |r| r.get::<_, String>(0))
-        {
-            tx.execute("INSERT OR IGNORE INTO item_tasks (item_id, task_id) VALUES (?1,?2)", params![id, task_id])?;
+        if let Ok(task_id) = tx.query_row(
+            "SELECT id FROM tasks WHERE slug = ?1",
+            params![task_slug],
+            |r| r.get::<_, String>(0),
+        ) {
+            tx.execute(
+                "INSERT OR IGNORE INTO item_tasks (item_id, task_id) VALUES (?1,?2)",
+                params![id, task_id],
+            )?;
         } else {
-            return Err(CoreError::Invalid(format!("task {task_slug:?} does not exist")));
+            return Err(CoreError::Invalid(format!(
+                "task {task_slug:?} does not exist"
+            )));
         }
     }
 
-    tx.execute("DELETE FROM item_categories WHERE item_id = ?1", params![id])?;
+    tx.execute(
+        "DELETE FROM item_categories WHERE item_id = ?1",
+        params![id],
+    )?;
     for cat_slug in strings(v, "categories") {
-        if let Ok(cat_id) =
-            tx.query_row("SELECT id FROM categories WHERE slug = ?1", params![cat_slug], |r| r.get::<_, String>(0))
-        {
-            tx.execute("INSERT OR IGNORE INTO item_categories (item_id, category_id) VALUES (?1,?2)", params![id, cat_id])?;
+        if let Ok(cat_id) = tx.query_row(
+            "SELECT id FROM categories WHERE slug = ?1",
+            params![cat_slug],
+            |r| r.get::<_, String>(0),
+        ) {
+            tx.execute(
+                "INSERT OR IGNORE INTO item_categories (item_id, category_id) VALUES (?1,?2)",
+                params![id, cat_id],
+            )?;
         } else {
-            return Err(CoreError::Invalid(format!("category {cat_slug:?} does not exist")));
+            return Err(CoreError::Invalid(format!(
+                "category {cat_slug:?} does not exist"
+            )));
         }
     }
 
     tx.execute("DELETE FROM item_tags WHERE item_id = ?1", params![id])?;
     for tag_slug in strings(v, "tags") {
-        let tag_id: String = match tx.query_row("SELECT id FROM tags WHERE slug = ?1", params![tag_slug], |r| r.get(0)) {
+        let tag_id: String = match tx.query_row(
+            "SELECT id FROM tags WHERE slug = ?1",
+            params![tag_slug],
+            |r| r.get(0),
+        ) {
             Ok(existing) => existing,
             Err(_) => {
                 let new_id = ulid();
@@ -510,15 +660,20 @@ fn upsert_item(tx: &Transaction, v: &Value) -> Result<String> {
                 new_id
             }
         };
-        tx.execute("INSERT OR IGNORE INTO item_tags (item_id, tag_id) VALUES (?1,?2)", params![id, tag_id])?;
+        tx.execute(
+            "INSERT OR IGNORE INTO item_tags (item_id, tag_id) VALUES (?1,?2)",
+            params![id, tag_id],
+        )?;
     }
 
     tx.execute("DELETE FROM item_sources WHERE item_id = ?1", params![id])?;
     for src in arr(v, "sources") {
         let key = format!("source:{}", s(src, "sourceKey").unwrap_or_default());
-        if let Ok(source_id) =
-            tx.query_row("SELECT id FROM sources WHERE external_key = ?1", params![key], |r| r.get::<_, String>(0))
-        {
+        if let Ok(source_id) = tx.query_row(
+            "SELECT id FROM sources WHERE external_key = ?1",
+            params![key],
+            |r| r.get::<_, String>(0),
+        ) {
             tx.execute(
                 "INSERT OR REPLACE INTO item_sources (item_id, source_id, source_url, source_anchor,
                         source_version, verified_at) VALUES (?1,?2,?3,?4,?5,?6)",
@@ -531,18 +686,32 @@ fn upsert_item(tx: &Transaction, v: &Value) -> Result<String> {
 }
 
 fn link_relationships(tx: &Transaction, external_key: &str, v: &Value) -> Result<()> {
-    let Some(from_id) = item_id_for_key(tx, external_key)? else { return Ok(()) };
-    tx.execute("DELETE FROM relationships WHERE from_item_id = ?1", params![from_id])?;
+    let Some(from_id) = item_id_for_key(tx, external_key)? else {
+        return Ok(());
+    };
+    tx.execute(
+        "DELETE FROM relationships WHERE from_item_id = ?1",
+        params![from_id],
+    )?;
     for rel in arr(v, "relationships") {
-        let Some(target_key) = s(rel, "toExternalKey") else { continue };
-        let Some(to_id) = item_id_for_key(tx, &target_key)? else { continue };
+        let Some(target_key) = s(rel, "toExternalKey") else {
+            continue;
+        };
+        let Some(to_id) = item_id_for_key(tx, &target_key)? else {
+            continue;
+        };
         if to_id == from_id {
             continue;
         }
         tx.execute(
             "INSERT OR IGNORE INTO relationships (id, from_item_id, to_item_id, relationship_type)
              VALUES (?1,?2,?3,?4)",
-            params![ulid(), from_id, to_id, s(rel,"relationshipType").unwrap_or_else(|| "related".into())],
+            params![
+                ulid(),
+                from_id,
+                to_id,
+                s(rel, "relationshipType").unwrap_or_else(|| "related".into())
+            ],
         )?;
     }
     Ok(())
@@ -585,7 +754,9 @@ pub fn revert_batch(store: &mut Store, batch_id: &str, actor: &str) -> Result<Ap
                     _ => "categories",
                 };
                 tx.execute(
-                    &format!("UPDATE {table} SET is_active = 0, updated_at = ?2 WHERE external_key = ?1"),
+                    &format!(
+                        "UPDATE {table} SET is_active = 0, updated_at = ?2 WHERE external_key = ?1"
+                    ),
                     params![change.entity_key, now_iso()],
                 )?;
             }

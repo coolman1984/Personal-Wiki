@@ -12,11 +12,26 @@ use crate::{apply, pack, staging, Store};
 /// content packs then reference it by slug.
 pub const STARTER_PACKS: &[(&str, &str)] = &[
     ("taxonomy", include_str!("../../../seed/starter-pack.json")),
-    ("claude-code", include_str!("../../../seed/packs/claude-code.json")),
-    ("codex-cli", include_str!("../../../seed/packs/codex-cli.json")),
-    ("opencode", include_str!("../../../seed/packs/opencode.json")),
-    ("gemini-cli", include_str!("../../../seed/packs/gemini-cli.json")),
-    ("git-github", include_str!("../../../seed/packs/git-github.json")),
+    (
+        "claude-code",
+        include_str!("../../../seed/packs/claude-code.json"),
+    ),
+    (
+        "codex-cli",
+        include_str!("../../../seed/packs/codex-cli.json"),
+    ),
+    (
+        "opencode",
+        include_str!("../../../seed/packs/opencode.json"),
+    ),
+    (
+        "gemini-cli",
+        include_str!("../../../seed/packs/gemini-cli.json"),
+    ),
+    (
+        "git-github",
+        include_str!("../../../seed/packs/git-github.json"),
+    ),
 ];
 
 /// Install a pack immediately (used for seeding a fresh database and by
@@ -40,7 +55,11 @@ pub fn ensure_seeded(store: &mut Store) -> Result<bool> {
         install_pack(store, json, "seed").map_err(|err| match err {
             crate::CoreError::Validation(issues) => crate::CoreError::Invalid(format!(
                 "seed pack {name} is invalid: {}",
-                issues.iter().map(|i| i.to_string()).collect::<Vec<_>>().join("; ")
+                issues
+                    .iter()
+                    .map(|i| i.to_string())
+                    .collect::<Vec<_>>()
+                    .join("; ")
             )),
             other => other,
         })?;

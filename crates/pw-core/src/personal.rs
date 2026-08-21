@@ -21,7 +21,9 @@ pub fn set_favorite(store: &Store, item_id: &str, favorite: bool) -> Result<bool
             params![item_id, now_iso()],
         )?;
     } else {
-        store.conn().execute("DELETE FROM favorites WHERE item_id = ?1", params![item_id])?;
+        store
+            .conn()
+            .execute("DELETE FROM favorites WHERE item_id = ?1", params![item_id])?;
     }
     Ok(favorite)
 }
@@ -34,15 +36,19 @@ pub fn set_pin(store: &Store, item_id: &str, pinned: bool) -> Result<bool> {
             params![item_id, now_iso()],
         )?;
     } else {
-        store.conn().execute("DELETE FROM pins WHERE item_id = ?1", params![item_id])?;
+        store
+            .conn()
+            .execute("DELETE FROM pins WHERE item_id = ?1", params![item_id])?;
     }
     Ok(pinned)
 }
 
 fn ensure_item_exists(store: &Store, item_id: &str) -> Result<()> {
-    let n: i64 = store
-        .conn()
-        .query_row("SELECT COUNT(*) FROM items WHERE id = ?1", params![item_id], |r| r.get(0))?;
+    let n: i64 = store.conn().query_row(
+        "SELECT COUNT(*) FROM items WHERE id = ?1",
+        params![item_id],
+        |r| r.get(0),
+    )?;
     if n == 0 {
         return Err(CoreError::NotFound(format!("item {item_id}")));
     }
@@ -73,19 +79,22 @@ fn note_from_row(r: &rusqlite::Row) -> rusqlite::Result<Note> {
     })
 }
 
-const NOTE_SQL: &str = "SELECT n.id, n.item_id, i.title, n.title, n.body, n.created_at, n.updated_at
+const NOTE_SQL: &str =
+    "SELECT n.id, n.item_id, i.title, n.title, n.body, n.created_at, n.updated_at
      FROM notes n LEFT JOIN items i ON i.id = n.item_id";
 
 pub fn list_notes(store: &Store) -> Result<Vec<Note>> {
-    let mut stmt = store.conn().prepare(&format!("{NOTE_SQL} ORDER BY n.updated_at DESC"))?;
+    let mut stmt = store
+        .conn()
+        .prepare(&format!("{NOTE_SQL} ORDER BY n.updated_at DESC"))?;
     let rows = stmt.query_map([], note_from_row)?;
     Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
 }
 
 pub fn notes_for_item(store: &Store, item_id: &str) -> Result<Vec<Note>> {
-    let mut stmt = store
-        .conn()
-        .prepare(&format!("{NOTE_SQL} WHERE n.item_id = ?1 ORDER BY n.updated_at DESC"))?;
+    let mut stmt = store.conn().prepare(&format!(
+        "{NOTE_SQL} WHERE n.item_id = ?1 ORDER BY n.updated_at DESC"
+    ))?;
     let rows = stmt.query_map(params![item_id], note_from_row)?;
     Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
 }
@@ -122,12 +131,16 @@ pub fn save_note(
             new_id
         }
     };
-    let mut stmt = store.conn().prepare(&format!("{NOTE_SQL} WHERE n.id = ?1"))?;
+    let mut stmt = store
+        .conn()
+        .prepare(&format!("{NOTE_SQL} WHERE n.id = ?1"))?;
     Ok(stmt.query_row(params![id], note_from_row)?)
 }
 
 pub fn delete_note(store: &Store, id: &str) -> Result<()> {
-    let n = store.conn().execute("DELETE FROM notes WHERE id = ?1", params![id])?;
+    let n = store
+        .conn()
+        .execute("DELETE FROM notes WHERE id = ?1", params![id])?;
     if n == 0 {
         return Err(CoreError::NotFound(format!("note {id}")));
     }
@@ -156,9 +169,9 @@ const LINK_SQL: &str = "SELECT l.id, l.title, l.url, l.description, l.tool_id, t
      FROM saved_links l LEFT JOIN tools t ON t.id = l.tool_id";
 
 pub fn list_links(store: &Store) -> Result<Vec<SavedLink>> {
-    let mut stmt = store
-        .conn()
-        .prepare(&format!("{LINK_SQL} ORDER BY l.is_favorite DESC, l.sort_order, l.title"))?;
+    let mut stmt = store.conn().prepare(&format!(
+        "{LINK_SQL} ORDER BY l.is_favorite DESC, l.sort_order, l.title"
+    ))?;
     let rows = stmt.query_map([], link_from_row)?;
     Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
 }
@@ -184,7 +197,16 @@ pub fn save_link(
             let changed = store.conn().execute(
                 "UPDATE saved_links SET title = ?2, url = ?3, description = ?4, tool_id = ?5,
                         category_id = ?6, is_favorite = ?7, updated_at = ?8 WHERE id = ?1",
-                params![existing, title.trim(), safe_url, description, tool_id, category_id, is_favorite as i64, now],
+                params![
+                    existing,
+                    title.trim(),
+                    safe_url,
+                    description,
+                    tool_id,
+                    category_id,
+                    is_favorite as i64,
+                    now
+                ],
             )?;
             if changed == 0 {
                 return Err(CoreError::NotFound(format!("link {existing}")));
@@ -197,17 +219,30 @@ pub fn save_link(
                 "INSERT INTO saved_links (id, title, url, description, tool_id, category_id,
                         is_favorite, sort_order, created_at, updated_at)
                  VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, 100, ?8, ?8)",
-                params![new_id, title.trim(), safe_url, description, tool_id, category_id, is_favorite as i64, now],
+                params![
+                    new_id,
+                    title.trim(),
+                    safe_url,
+                    description,
+                    tool_id,
+                    category_id,
+                    is_favorite as i64,
+                    now
+                ],
             )?;
             new_id
         }
     };
-    let mut stmt = store.conn().prepare(&format!("{LINK_SQL} WHERE l.id = ?1"))?;
+    let mut stmt = store
+        .conn()
+        .prepare(&format!("{LINK_SQL} WHERE l.id = ?1"))?;
     Ok(stmt.query_row(params![id], link_from_row)?)
 }
 
 pub fn delete_link(store: &Store, id: &str) -> Result<()> {
-    let n = store.conn().execute("DELETE FROM saved_links WHERE id = ?1", params![id])?;
+    let n = store
+        .conn()
+        .execute("DELETE FROM saved_links WHERE id = ?1", params![id])?;
     if n == 0 {
         return Err(CoreError::NotFound(format!("link {id}")));
     }
@@ -219,7 +254,11 @@ pub fn delete_link(store: &Store, id: &str) -> Result<()> {
 pub fn get_setting(store: &Store, key: &str) -> Result<Option<serde_json::Value>> {
     let raw: Option<String> = store
         .conn()
-        .query_row("SELECT value_json FROM app_settings WHERE key = ?1", params![key], |r| r.get(0))
+        .query_row(
+            "SELECT value_json FROM app_settings WHERE key = ?1",
+            params![key],
+            |r| r.get(0),
+        )
         .ok();
     Ok(match raw {
         Some(text) => Some(serde_json::from_str(&text)?),
@@ -237,27 +276,46 @@ pub fn set_setting(store: &Store, key: &str, value: &serde_json::Value) -> Resul
 }
 
 pub fn all_settings(store: &Store) -> Result<serde_json::Map<String, serde_json::Value>> {
-    let mut stmt = store.conn().prepare("SELECT key, value_json FROM app_settings")?;
+    let mut stmt = store
+        .conn()
+        .prepare("SELECT key, value_json FROM app_settings")?;
     let rows = stmt.query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)))?;
     let mut map = serde_json::Map::new();
     for row in rows {
         let (key, raw) = row?;
-        map.insert(key, serde_json::from_str(&raw).unwrap_or(serde_json::Value::Null));
+        map.insert(
+            key,
+            serde_json::from_str(&raw).unwrap_or(serde_json::Value::Null),
+        );
     }
     Ok(map)
 }
 
 // ------------------------------------------------------------ searches
 
-pub fn record_search(store: &Store, query: &str, filters: &SearchFilters, result_count: i64) -> Result<()> {
+pub fn record_search(
+    store: &Store,
+    query: &str,
+    filters: &SearchFilters,
+    result_count: i64,
+) -> Result<()> {
     if query.trim().is_empty() {
         return Ok(());
     }
-    store.conn().execute("DELETE FROM search_history WHERE query = ?1", params![query])?;
+    store.conn().execute(
+        "DELETE FROM search_history WHERE query = ?1",
+        params![query],
+    )?;
     store.conn().execute(
         "INSERT INTO search_history (id, query, filters_json, result_count, executed_at)
          VALUES (?1, ?2, ?3, ?4, ?5)",
-        params![ulid(), query, serde_json::to_string(filters)?, result_count, now_iso()],
+        params![
+            ulid(),
+            query,
+            serde_json::to_string(filters)?,
+            result_count,
+            now_iso()
+        ],
     )?;
     // Keep history small; it is a convenience, not an archive.
     store.conn().execute(
@@ -308,7 +366,12 @@ pub fn list_saved_searches(store: &Store) -> Result<Vec<SavedSearch>> {
     Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
 }
 
-pub fn save_search(store: &Store, name: &str, query: &str, filters: &SearchFilters) -> Result<SavedSearch> {
+pub fn save_search(
+    store: &Store,
+    name: &str,
+    query: &str,
+    filters: &SearchFilters,
+) -> Result<SavedSearch> {
     if name.trim().is_empty() {
         return Err(CoreError::Invalid("saved search needs a name".into()));
     }
@@ -327,7 +390,9 @@ pub fn save_search(store: &Store, name: &str, query: &str, filters: &SearchFilte
 }
 
 pub fn delete_saved_search(store: &Store, id: &str) -> Result<()> {
-    let n = store.conn().execute("DELETE FROM saved_searches WHERE id = ?1", params![id])?;
+    let n = store
+        .conn()
+        .execute("DELETE FROM saved_searches WHERE id = ?1", params![id])?;
     if n == 0 {
         return Err(CoreError::NotFound(format!("saved search {id}")));
     }

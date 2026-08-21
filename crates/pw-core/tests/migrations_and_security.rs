@@ -9,7 +9,10 @@ fn a_clean_install_reaches_the_latest_schema_with_foreign_keys_on() {
     let store = Store::open_in_memory().unwrap();
     assert_eq!(store.schema_version().unwrap(), db::latest_schema_version());
     assert_eq!(store.integrity_check().unwrap(), "ok");
-    let fk: i64 = store.conn().query_row("PRAGMA foreign_keys", [], |r| r.get(0)).unwrap();
+    let fk: i64 = store
+        .conn()
+        .query_row("PRAGMA foreign_keys", [], |r| r.get(0))
+        .unwrap();
     assert_eq!(fk, 1, "foreign keys must be enforced");
 }
 
@@ -34,15 +37,25 @@ fn migrating_is_idempotent_and_upgrades_an_existing_database() {
         .conn()
         .query_row("SELECT COUNT(*) FROM schema_migrations", [], |r| r.get(0))
         .unwrap();
-    assert_eq!(applied, db::latest_schema_version(), "each migration is recorded once");
+    assert_eq!(
+        applied,
+        db::latest_schema_version(),
+        "each migration is recorded once"
+    );
 }
 
 #[test]
 fn every_migration_version_is_unique_and_ordered() {
     let mut seen = Vec::new();
     for (version, name, sql) in db::MIGRATIONS {
-        assert!(!seen.contains(version), "duplicate migration version {version}");
-        assert!(seen.last().map(|last| last < version).unwrap_or(true), "{name} is out of order");
+        assert!(
+            !seen.contains(version),
+            "duplicate migration version {version}"
+        );
+        assert!(
+            seen.last().map(|last| last < version).unwrap_or(true),
+            "{name} is out of order"
+        );
         assert!(!sql.trim().is_empty(), "{name} is empty");
         seen.push(*version);
     }
@@ -55,41 +68,94 @@ fn deleting_an_item_cascades_to_its_children_but_never_to_a_tool() {
     let id = item.summary.id.clone();
     assert!(!item.parameters.is_empty());
 
-    store.conn().execute("DELETE FROM items WHERE id = ?1", [&id]).unwrap();
+    store
+        .conn()
+        .execute("DELETE FROM items WHERE id = ?1", [&id])
+        .unwrap();
 
-    for table in ["aliases", "examples", "parameters", "item_tasks", "item_categories", "item_tags"] {
+    for table in [
+        "aliases",
+        "examples",
+        "parameters",
+        "item_tasks",
+        "item_categories",
+        "item_tags",
+    ] {
         let left: i64 = store
             .conn()
-            .query_row(&format!("SELECT COUNT(*) FROM {table} WHERE item_id = ?1"), [&id], |r| r.get(0))
+            .query_row(
+                &format!("SELECT COUNT(*) FROM {table} WHERE item_id = ?1"),
+                [&id],
+                |r| r.get(0),
+            )
             .unwrap();
         assert_eq!(left, 0, "{table} should cascade");
     }
-    assert!(repo::tool_by_slug(&store, "claude-code").is_ok(), "the tool is untouched");
+    assert!(
+        repo::tool_by_slug(&store, "claude-code").is_ok(),
+        "the tool is untouched"
+    );
     assert_eq!(store.foreign_key_check().unwrap(), 0);
 }
 
 #[test]
 fn only_absolute_http_urls_are_accepted() {
-    for good in ["https://example.com/docs", "http://localhost:3000/x", "https://a.b.c/d?e=f#g"] {
-        assert!(url::validate_web_url(good).is_ok(), "{good} should be accepted");
+    for good in [
+        "https://example.com/docs",
+        "http://localhost:3000/x",
+        "https://a.b.c/d?e=f#g",
+    ] {
+        assert!(
+            url::validate_web_url(good).is_ok(),
+            "{good} should be accepted"
+        );
     }
     for bad in [
-        "javascript:alert(1)", "JavaScript:alert(1)", "data:text/html,<script>",
-        "file:///etc/passwd", "vbscript:msgbox", "//evil.example", "https://", "", "   ",
-        "https://has space/x", "https://nohost",
+        "javascript:alert(1)",
+        "JavaScript:alert(1)",
+        "data:text/html,<script>",
+        "file:///etc/passwd",
+        "vbscript:msgbox",
+        "//evil.example",
+        "https://",
+        "",
+        "   ",
+        "https://has space/x",
+        "https://nohost",
     ] {
-        assert!(url::validate_web_url(bad).is_err(), "{bad:?} should be refused");
+        assert!(
+            url::validate_web_url(bad).is_err(),
+            "{bad:?} should be refused"
+        );
     }
 }
 
 #[test]
 fn a_saved_link_with_an_unsafe_url_is_refused() {
     let store = support::store();
-    let refused = personal::save_link(&store, None, "خبيث", "javascript:alert(1)", None, None, None, false);
+    let refused = personal::save_link(
+        &store,
+        None,
+        "خبيث",
+        "javascript:alert(1)",
+        None,
+        None,
+        None,
+        false,
+    );
     assert!(refused.is_err());
     assert!(personal::list_links(&store).unwrap().is_empty());
 
-    let ok = personal::save_link(&store, None, "توثيق", "https://example.com/docs", None, None, None, false);
+    let ok = personal::save_link(
+        &store,
+        None,
+        "توثيق",
+        "https://example.com/docs",
+        None,
+        None,
+        None,
+        false,
+    );
     assert!(ok.is_ok());
     assert_eq!(personal::list_links(&store).unwrap().len(), 1);
 }
@@ -120,14 +186,31 @@ fn personal_crud_round_trips() {
 
     // notes
     let note = personal::save_note(&store, None, Some(&item.summary.id), "عنوان", "نص").unwrap();
-    let edited = personal::save_note(&store, Some(&note.id), Some(&item.summary.id), "عنوان", "نص محدّث").unwrap();
+    let edited = personal::save_note(
+        &store,
+        Some(&note.id),
+        Some(&item.summary.id),
+        "عنوان",
+        "نص محدّث",
+    )
+    .unwrap();
     assert_eq!(edited.body, "نص محدّث");
     assert_eq!(personal::list_notes(&store).unwrap().len(), 1);
     personal::delete_note(&store, &note.id).unwrap();
     assert!(personal::list_notes(&store).unwrap().is_empty());
 
     // links
-    let link = personal::save_link(&store, None, "رابط", "https://example.com", None, None, None, true).unwrap();
+    let link = personal::save_link(
+        &store,
+        None,
+        "رابط",
+        "https://example.com",
+        None,
+        None,
+        None,
+        true,
+    )
+    .unwrap();
     personal::delete_link(&store, &link.id).unwrap();
     assert!(personal::list_links(&store).unwrap().is_empty());
 
@@ -180,6 +263,10 @@ fn diagnostics_reports_a_healthy_database() {
     assert_eq!(report.foreign_key_violations, 0);
     assert_eq!(report.fts_status, "ok");
     assert_eq!(report.schema_version, report.expected_schema_version);
-    assert!(report.problems.is_empty(), "unexpected problems: {:?}", report.problems);
+    assert!(
+        report.problems.is_empty(),
+        "unexpected problems: {:?}",
+        report.problems
+    );
     assert!(report.counts.get("items").copied().unwrap_or(0) > 0);
 }

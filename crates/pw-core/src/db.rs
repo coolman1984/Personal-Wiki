@@ -5,10 +5,26 @@ use std::path::{Path, PathBuf};
 
 /// Numbered, deterministic migrations. Never edit a released entry: append.
 pub const MIGRATIONS: &[(i64, &str, &str)] = &[
-    (1, "001_initial", include_str!("../migrations/001_initial.sql")),
-    (2, "002_update_engine", include_str!("../migrations/002_update_engine.sql")),
-    (3, "003_personal_and_app_state", include_str!("../migrations/003_personal_and_app_state.sql")),
-    (4, "004_search_fts5", include_str!("../migrations/004_search_fts5.sql")),
+    (
+        1,
+        "001_initial",
+        include_str!("../migrations/001_initial.sql"),
+    ),
+    (
+        2,
+        "002_update_engine",
+        include_str!("../migrations/002_update_engine.sql"),
+    ),
+    (
+        3,
+        "003_personal_and_app_state",
+        include_str!("../migrations/003_personal_and_app_state.sql"),
+    ),
+    (
+        4,
+        "004_search_fts5",
+        include_str!("../migrations/004_search_fts5.sql"),
+    ),
 ];
 
 pub fn latest_schema_version() -> i64 {
@@ -42,7 +58,10 @@ impl Store {
     /// In-memory store, used by tests and by `doctor --dry-run`.
     pub fn open_in_memory() -> Result<Self> {
         let conn = Connection::open_in_memory()?;
-        let mut store = Store { conn, path: PathBuf::from(":memory:") };
+        let mut store = Store {
+            conn,
+            path: PathBuf::from(":memory:"),
+        };
         store.configure()?;
         store.migrate()?;
         Ok(store)
@@ -81,18 +100,19 @@ impl Store {
                applied_at TEXT NOT NULL
              );",
         )?;
-        let current: i64 = self
-            .conn
-            .query_row("SELECT COALESCE(MAX(version), 0) FROM schema_migrations", [], |r| r.get(0))?;
+        let current: i64 = self.conn.query_row(
+            "SELECT COALESCE(MAX(version), 0) FROM schema_migrations",
+            [],
+            |r| r.get(0),
+        )?;
 
         for (version, name, sql) in MIGRATIONS {
             if *version <= current {
                 continue;
             }
             let tx = self.conn.transaction()?;
-            tx.execute_batch(sql).map_err(|e| {
-                CoreError::Invalid(format!("migration {name} failed: {e}"))
-            })?;
+            tx.execute_batch(sql)
+                .map_err(|e| CoreError::Invalid(format!("migration {name} failed: {e}")))?;
             tx.execute(
                 "INSERT INTO schema_migrations (version, name, applied_at) VALUES (?1, ?2, ?3)",
                 rusqlite::params![version, name, now_iso()],
@@ -103,13 +123,17 @@ impl Store {
     }
 
     pub fn schema_version(&self) -> Result<i64> {
-        Ok(self
-            .conn
-            .query_row("SELECT COALESCE(MAX(version), 0) FROM schema_migrations", [], |r| r.get(0))?)
+        Ok(self.conn.query_row(
+            "SELECT COALESCE(MAX(version), 0) FROM schema_migrations",
+            [],
+            |r| r.get(0),
+        )?)
     }
 
     pub fn integrity_check(&self) -> Result<String> {
-        Ok(self.conn.query_row("PRAGMA integrity_check", [], |r| r.get::<_, String>(0))?)
+        Ok(self
+            .conn
+            .query_row("PRAGMA integrity_check", [], |r| r.get::<_, String>(0))?)
     }
 
     pub fn foreign_key_check(&self) -> Result<usize> {
@@ -120,6 +144,8 @@ impl Store {
 
     pub fn count(&self, table: &str) -> Result<i64> {
         // `table` is never user input: callers pass literals from this crate.
-        Ok(self.conn.query_row(&format!("SELECT COUNT(*) FROM {table}"), [], |r| r.get(0))?)
+        Ok(self
+            .conn
+            .query_row(&format!("SELECT COUNT(*) FROM {table}"), [], |r| r.get(0))?)
     }
 }

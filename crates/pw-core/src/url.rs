@@ -13,11 +13,16 @@ pub fn validate_web_url(raw: &str) -> Result<String> {
     if trimmed.is_empty() {
         return Err(CoreError::Invalid("url is empty".into()));
     }
-    if trimmed.chars().any(|c| c.is_control() || c == '\u{2028}' || c == '\u{2029}') {
+    if trimmed
+        .chars()
+        .any(|c| c.is_control() || c == '\u{2028}' || c == '\u{2029}')
+    {
         return Err(CoreError::Invalid("url contains control characters".into()));
     }
     if trimmed.starts_with("//") {
-        return Err(CoreError::Invalid("url must be absolute with an http(s) scheme".into()));
+        return Err(CoreError::Invalid(
+            "url must be absolute with an http(s) scheme".into(),
+        ));
     }
     let lower = trimmed.to_ascii_lowercase();
     let scheme_ok = ALLOWED_SCHEMES.iter().any(|s| lower.starts_with(s));
@@ -34,7 +39,9 @@ pub fn validate_web_url(raw: &str) -> Result<String> {
     let host = host.rsplit('@').next().unwrap_or(host);
     let host_no_port = host.split(':').next().unwrap_or(host);
     if host_no_port.is_empty() || !host_no_port.contains('.') && host_no_port != "localhost" {
-        return Err(CoreError::Invalid(format!("url has no valid host: {trimmed:?}")));
+        return Err(CoreError::Invalid(format!(
+            "url has no valid host: {trimmed:?}"
+        )));
     }
     if host_no_port.contains(' ') {
         return Err(CoreError::Invalid("url host contains a space".into()));

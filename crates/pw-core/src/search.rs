@@ -134,8 +134,17 @@ fn write_row(conn: &Connection, row: &IndexRow) -> Result<()> {
             task_phrases, tags, syntax, examples, tool, category)
          VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11)",
         params![
-            row.item_id, row.title, row.aliases, row.short_description, row.full_description,
-            row.task_phrases, row.tags, row.syntax, row.examples, row.tool, row.category
+            row.item_id,
+            row.title,
+            row.aliases,
+            row.short_description,
+            row.full_description,
+            row.task_phrases,
+            row.tags,
+            row.syntax,
+            row.examples,
+            row.tool,
+            row.category
         ],
     )?;
     Ok(())
@@ -183,7 +192,9 @@ pub fn health(conn: &Connection) -> (String, i64) {
     if indexed < 0 {
         return ("unavailable".into(), 0);
     }
-    let items: i64 = conn.query_row("SELECT COUNT(*) FROM items", [], |r| r.get(0)).unwrap_or(0);
+    let items: i64 = conn
+        .query_row("SELECT COUNT(*) FROM items", [], |r| r.get(0))
+        .unwrap_or(0);
     let status = if indexed == items { "ok" } else { "stale" };
     (status.into(), indexed)
 }
@@ -203,8 +214,7 @@ fn match_expression(normalized: &str, all_terms: bool) -> Option<String> {
     Some(tokens.join(if all_terms { " AND " } else { " OR " }))
 }
 
-const BM25_WEIGHTS: &str =
-    "0.0, 10.0, 8.0, 4.0, 2.0, 5.0, 3.0, 6.0, 2.0, 2.0, 2.0";
+const BM25_WEIGHTS: &str = "0.0, 10.0, 8.0, 4.0, 2.0, 5.0, 3.0, 6.0, 2.0, 2.0, 2.0";
 
 fn candidate_scores(conn: &Connection, expr: &str) -> Result<Vec<(String, f64)>> {
     let sql = format!(
@@ -212,7 +222,9 @@ fn candidate_scores(conn: &Connection, expr: &str) -> Result<Vec<(String, f64)>>
          FROM items_fts WHERE items_fts MATCH ?1 ORDER BY rank LIMIT 500"
     );
     let mut stmt = conn.prepare(&sql)?;
-    let rows = stmt.query_map(params![expr], |r| Ok((r.get::<_, String>(0)?, r.get::<_, f64>(1)?)))?;
+    let rows = stmt.query_map(params![expr], |r| {
+        Ok((r.get::<_, String>(0)?, r.get::<_, f64>(1)?))
+    })?;
     Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
 }
 
@@ -263,7 +275,9 @@ pub fn search(
 
     let mut hits: Vec<SearchHit> = Vec::with_capacity(summaries.len());
     for (id, bm25) in &candidates {
-        let Some(summary) = summaries.get(id) else { continue };
+        let Some(summary) = summaries.get(id) else {
+            continue;
+        };
 
         // bm25() returns a negative number; more negative means a better match.
         let mut score = -bm25;
@@ -317,10 +331,19 @@ pub fn search(
             _ => {}
         }
 
-        hits.push(SearchHit { item: summary.clone(), score, relevance: 0, matched_alias });
+        hits.push(SearchHit {
+            item: summary.clone(),
+            score,
+            relevance: 0,
+            matched_alias,
+        });
     }
 
-    hits.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(std::cmp::Ordering::Equal));
+    hits.sort_by(|a, b| {
+        b.score
+            .partial_cmp(&a.score)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
     let best = hits.first().map(|h| h.score).unwrap_or(1.0).max(1.0);
     for hit in &mut hits {
         let pct = (hit.score / best * 98.0).round() as i64;

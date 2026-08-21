@@ -54,13 +54,20 @@ pub struct BatchMeta {
 pub struct PackTool {
     pub slug: String,
     pub name: String,
-    #[serde(default)] pub external_key: Option<String>,
-    #[serde(default)] pub short_name: Option<String>,
-    #[serde(default)] pub description: Option<String>,
-    #[serde(default)] pub icon_key: Option<String>,
-    #[serde(default)] pub accent_key: Option<String>,
-    #[serde(default)] pub official_home_url: Option<String>,
-    #[serde(default)] pub sort_order: Option<i64>,
+    #[serde(default)]
+    pub external_key: Option<String>,
+    #[serde(default)]
+    pub short_name: Option<String>,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub icon_key: Option<String>,
+    #[serde(default)]
+    pub accent_key: Option<String>,
+    #[serde(default)]
+    pub official_home_url: Option<String>,
+    #[serde(default)]
+    pub sort_order: Option<i64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -68,10 +75,14 @@ pub struct PackTool {
 pub struct PackTask {
     pub slug: String,
     pub name: String,
-    #[serde(default)] pub external_key: Option<String>,
-    #[serde(default)] pub description: Option<String>,
-    #[serde(default)] pub icon_key: Option<String>,
-    #[serde(default)] pub sort_order: Option<i64>,
+    #[serde(default)]
+    pub external_key: Option<String>,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub icon_key: Option<String>,
+    #[serde(default)]
+    pub sort_order: Option<i64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -79,12 +90,18 @@ pub struct PackTask {
 pub struct PackCategory {
     pub slug: String,
     pub name: String,
-    #[serde(default)] pub external_key: Option<String>,
-    #[serde(default)] pub description: Option<String>,
-    #[serde(default)] pub icon_key: Option<String>,
-    #[serde(default)] pub accent_key: Option<String>,
-    #[serde(default)] pub parent_slug: Option<String>,
-    #[serde(default)] pub sort_order: Option<i64>,
+    #[serde(default)]
+    pub external_key: Option<String>,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub icon_key: Option<String>,
+    #[serde(default)]
+    pub accent_key: Option<String>,
+    #[serde(default)]
+    pub parent_slug: Option<String>,
+    #[serde(default)]
+    pub sort_order: Option<i64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -92,7 +109,8 @@ pub struct PackCategory {
 pub struct PackTag {
     pub slug: String,
     pub name: String,
-    #[serde(default)] pub accent_key: Option<String>,
+    #[serde(default)]
+    pub accent_key: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -102,11 +120,16 @@ pub struct PackSource {
     pub key: String,
     pub name: String,
     pub source_type: String,
-    #[serde(default)] pub url: Option<String>,
-    #[serde(default)] pub is_official: Option<bool>,
-    #[serde(default)] pub tool_slug: Option<String>,
-    #[serde(default)] pub sync_strategy: Option<String>,
-    #[serde(default)] pub notes: Option<String>,
+    #[serde(default)]
+    pub url: Option<String>,
+    #[serde(default)]
+    pub is_official: Option<bool>,
+    #[serde(default)]
+    pub tool_slug: Option<String>,
+    #[serde(default)]
+    pub sync_strategy: Option<String>,
+    #[serde(default)]
+    pub notes: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -118,51 +141,84 @@ pub struct PackItem {
     pub slug: String,
     pub item_type: String,
     pub title: String,
-    #[serde(default)] pub tool_slug: Option<String>,
-    #[serde(default)] pub subtitle: Option<String>,
-    #[serde(default)] pub short_description: Option<String>,
-    #[serde(default)] pub full_description: Option<String>,
-    #[serde(default)] pub syntax: Option<String>,
-    #[serde(default)] pub when_to_use: Option<String>,
-    #[serde(default)] pub expected_result: Option<String>,
-    #[serde(default)] pub warning_text: Option<String>,
-    #[serde(default)] pub result_diagram: Option<ResultDiagram>,
-    #[serde(default)] pub verification_status: Option<String>,
-    #[serde(default)] pub lifecycle_status: Option<String>,
-    #[serde(default)] pub difficulty: Option<String>,
-    #[serde(default)] pub icon_key: Option<String>,
-    #[serde(default)] pub accent_key: Option<String>,
-    #[serde(default)] pub sort_order: Option<i64>,
-    #[serde(default)] pub last_verified_at: Option<String>,
-    #[serde(default)] pub aliases: Vec<String>,
-    #[serde(default)] pub tasks: Vec<String>,
-    #[serde(default)] pub categories: Vec<String>,
-    #[serde(default)] pub tags: Vec<String>,
-    #[serde(default)] pub examples: Vec<PackExample>,
-    #[serde(default)] pub parameters: Vec<PackParameter>,
-    #[serde(default)] pub sources: Vec<PackItemSource>,
-    #[serde(default)] pub relationships: Vec<PackRelationship>,
+    #[serde(default)]
+    pub tool_slug: Option<String>,
+    #[serde(default)]
+    pub subtitle: Option<String>,
+    #[serde(default)]
+    pub short_description: Option<String>,
+    #[serde(default)]
+    pub full_description: Option<String>,
+    #[serde(default)]
+    pub syntax: Option<String>,
+    #[serde(default)]
+    pub when_to_use: Option<String>,
+    #[serde(default)]
+    pub expected_result: Option<String>,
+    #[serde(default)]
+    pub warning_text: Option<String>,
+    #[serde(default)]
+    pub result_diagram: Option<ResultDiagram>,
+    #[serde(default)]
+    pub verification_status: Option<String>,
+    #[serde(default)]
+    pub lifecycle_status: Option<String>,
+    #[serde(default)]
+    pub difficulty: Option<String>,
+    #[serde(default)]
+    pub icon_key: Option<String>,
+    #[serde(default)]
+    pub accent_key: Option<String>,
+    #[serde(default)]
+    pub sort_order: Option<i64>,
+    #[serde(default)]
+    pub last_verified_at: Option<String>,
+    #[serde(default)]
+    pub aliases: Vec<String>,
+    #[serde(default)]
+    pub tasks: Vec<String>,
+    #[serde(default)]
+    pub categories: Vec<String>,
+    #[serde(default)]
+    pub tags: Vec<String>,
+    #[serde(default)]
+    pub examples: Vec<PackExample>,
+    #[serde(default)]
+    pub parameters: Vec<PackParameter>,
+    #[serde(default)]
+    pub sources: Vec<PackItemSource>,
+    #[serde(default)]
+    pub relationships: Vec<PackRelationship>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PackExample {
     pub code: String,
-    #[serde(default)] pub title: Option<String>,
-    #[serde(default)] pub description: Option<String>,
-    #[serde(default)] pub expected_output: Option<String>,
-    #[serde(default)] pub sort_order: Option<i64>,
+    #[serde(default)]
+    pub title: Option<String>,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub expected_output: Option<String>,
+    #[serde(default)]
+    pub sort_order: Option<i64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PackParameter {
     pub name: String,
-    #[serde(default)] pub description: Option<String>,
-    #[serde(default)] pub is_required: Option<bool>,
-    #[serde(default)] pub default_value: Option<String>,
-    #[serde(default)] pub value_hint: Option<String>,
-    #[serde(default)] pub sort_order: Option<i64>,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub is_required: Option<bool>,
+    #[serde(default)]
+    pub default_value: Option<String>,
+    #[serde(default)]
+    pub value_hint: Option<String>,
+    #[serde(default)]
+    pub sort_order: Option<i64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -170,10 +226,14 @@ pub struct PackParameter {
 pub struct PackItemSource {
     /// References `sources[].key` in this pack.
     pub source_key: String,
-    #[serde(default)] pub url: Option<String>,
-    #[serde(default)] pub anchor: Option<String>,
-    #[serde(default)] pub version: Option<String>,
-    #[serde(default)] pub verified_at: Option<String>,
+    #[serde(default)]
+    pub url: Option<String>,
+    #[serde(default)]
+    pub anchor: Option<String>,
+    #[serde(default)]
+    pub version: Option<String>,
+    #[serde(default)]
+    pub verified_at: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -188,22 +248,47 @@ pub struct PackRelationship {
 pub struct PackRemoval {
     pub entity_type: String,
     pub external_key: String,
-    #[serde(default)] pub reason: Option<String>,
+    #[serde(default)]
+    pub reason: Option<String>,
 }
 
 pub const ITEM_TYPES: &[&str] = &[
-    "command", "slash_command", "cli_command", "setting", "shortcut", "workflow",
-    "link", "extension", "concept", "note", "snippet", "troubleshooting",
+    "command",
+    "slash_command",
+    "cli_command",
+    "setting",
+    "shortcut",
+    "workflow",
+    "link",
+    "extension",
+    "concept",
+    "note",
+    "snippet",
+    "troubleshooting",
 ];
-pub const VERIFICATION_STATUSES: &[&str] = &["official", "verified", "community", "unverified", "demo"];
+pub const VERIFICATION_STATUSES: &[&str] =
+    &["official", "verified", "community", "unverified", "demo"];
 pub const LIFECYCLE_STATUSES: &[&str] = &["active", "experimental", "deprecated", "removed"];
 pub const SOURCE_TYPES: &[&str] = &[
-    "official_docs", "official_repo", "official_changelog", "official_blog",
-    "community", "local_file", "manual", "agent_managed",
+    "official_docs",
+    "official_repo",
+    "official_changelog",
+    "official_blog",
+    "community",
+    "local_file",
+    "manual",
+    "agent_managed",
 ];
 pub const SYNC_STRATEGIES: &[&str] = &["agent", "manual", "local_file"];
-pub const RELATIONSHIP_TYPES: &[&str] =
-    &["related", "alternative", "prerequisite", "replaced_by", "similar_to", "follows", "part_of"];
+pub const RELATIONSHIP_TYPES: &[&str] = &[
+    "related",
+    "alternative",
+    "prerequisite",
+    "replaced_by",
+    "similar_to",
+    "follows",
+    "part_of",
+];
 pub const ACCENT_KEYS: &[&str] = &["blue", "green", "purple", "orange", "teal", "red", "slate"];
 
 /// Parse JSON text into a pack. Parse errors are validation issues with a path,
@@ -242,7 +327,11 @@ impl Ctx<'_> {
             return;
         }
         if value.len() > max {
-            self.add(path, "too_long", format!("must be at most {max} characters"));
+            self.add(
+                path,
+                "too_long",
+                format!("must be at most {max} characters"),
+            );
         }
         if value.contains('\0') {
             self.add(path, "unsafe_content", "text contains a NUL byte");
@@ -251,9 +340,21 @@ impl Ctx<'_> {
         // Item text is rendered as plain text, never as markup. Anything that looks
         // like injected markup or a script URL is refused rather than sanitized,
         // so a pack cannot smuggle active content through a display field.
-        for needle in ["<script", "</script", "javascript:", "data:text/html", "<iframe", "onerror=", "onload="] {
+        for needle in [
+            "<script",
+            "</script",
+            "javascript:",
+            "data:text/html",
+            "<iframe",
+            "onerror=",
+            "onload=",
+        ] {
             if lower.contains(needle) {
-                self.add(path, "unsafe_content", format!("text contains disallowed content: {needle}"));
+                self.add(
+                    path,
+                    "unsafe_content",
+                    format!("text contains disallowed content: {needle}"),
+                );
                 break;
             }
         }
@@ -271,7 +372,11 @@ impl Ctx<'_> {
             .chars()
             .all(|c| c.is_alphanumeric() || c == '-' || c == '_');
         if !ok {
-            self.add(path, "invalid_slug", "slug may contain letters, digits, '-' and '_' only");
+            self.add(
+                path,
+                "invalid_slug",
+                "slug may contain letters, digits, '-' and '_' only",
+            );
         }
     }
 
@@ -293,7 +398,11 @@ impl Ctx<'_> {
 
     fn timestamp(&mut self, path: &str, value: &str) {
         if clock::parse_iso(value).is_none() {
-            self.add(path, "invalid_timestamp", "must be an RFC3339 timestamp, e.g. 2026-08-21T12:00:00Z");
+            self.add(
+                path,
+                "invalid_timestamp",
+                "must be an RFC3339 timestamp, e.g. 2026-08-21T12:00:00Z",
+            );
         }
     }
 }
@@ -301,8 +410,14 @@ impl Ctx<'_> {
 /// Full validation. `store` is optional: when provided, references may also
 /// resolve against records already in the database (an incremental pack does not
 /// have to restate the whole taxonomy).
-pub fn validate(pack: &KnowledgePack, store: Option<&Store>) -> std::result::Result<(), Vec<ValidationIssue>> {
-    let mut ctx = Ctx { issues: Vec::new(), store };
+pub fn validate(
+    pack: &KnowledgePack,
+    store: Option<&Store>,
+) -> std::result::Result<(), Vec<ValidationIssue>> {
+    let mut ctx = Ctx {
+        issues: Vec::new(),
+        store,
+    };
 
     if !SUPPORTED_SCHEMA_VERSIONS.contains(&pack.schema_version.as_str()) {
         ctx.add(
@@ -334,7 +449,11 @@ pub fn validate(pack: &KnowledgePack, store: Option<&Store>) -> std::result::Res
             ctx.enum_value(&format!("{p}.accentKey"), accent, ACCENT_KEYS);
         }
         if !tool_slugs.insert(tool.slug.clone()) {
-            ctx.add(format!("{p}.slug"), "duplicate_key", format!("tool slug {:?} appears twice in this pack", tool.slug));
+            ctx.add(
+                format!("{p}.slug"),
+                "duplicate_key",
+                format!("tool slug {:?} appears twice in this pack", tool.slug),
+            );
         }
     }
 
@@ -344,7 +463,11 @@ pub fn validate(pack: &KnowledgePack, store: Option<&Store>) -> std::result::Res
         ctx.slug(&format!("{p}.slug"), &task.slug);
         ctx.text(&format!("{p}.name"), &task.name, MAX_TITLE, true);
         if !task_slugs.insert(task.slug.clone()) {
-            ctx.add(format!("{p}.slug"), "duplicate_key", format!("task slug {:?} appears twice", task.slug));
+            ctx.add(
+                format!("{p}.slug"),
+                "duplicate_key",
+                format!("task slug {:?} appears twice", task.slug),
+            );
         }
     }
 
@@ -355,11 +478,19 @@ pub fn validate(pack: &KnowledgePack, store: Option<&Store>) -> std::result::Res
         ctx.slug(&format!("{p}.slug"), &cat.slug);
         ctx.text(&format!("{p}.name"), &cat.name, MAX_TITLE, true);
         if !category_slugs.insert(cat.slug.clone()) {
-            ctx.add(format!("{p}.slug"), "duplicate_key", format!("category slug {:?} appears twice", cat.slug));
+            ctx.add(
+                format!("{p}.slug"),
+                "duplicate_key",
+                format!("category slug {:?} appears twice", cat.slug),
+            );
         }
         if let Some(parent) = &cat.parent_slug {
             if parent == &cat.slug {
-                ctx.add(format!("{p}.parentSlug"), "category_cycle", "a category cannot be its own parent");
+                ctx.add(
+                    format!("{p}.parentSlug"),
+                    "category_cycle",
+                    "a category cannot be its own parent",
+                );
             }
             parent_of.insert(cat.slug.clone(), parent.clone());
         }
@@ -418,7 +549,11 @@ pub fn validate(pack: &KnowledgePack, store: Option<&Store>) -> std::result::Res
             );
         }
         if !source_keys.insert(src.key.clone()) {
-            ctx.add(format!("{p}.key"), "duplicate_key", format!("source key {:?} appears twice", src.key));
+            ctx.add(
+                format!("{p}.key"),
+                "duplicate_key",
+                format!("source key {:?} appears twice", src.key),
+            );
         }
         official_sources.insert(src.key.clone(), is_official && has_url);
     }
@@ -428,25 +563,50 @@ pub fn validate(pack: &KnowledgePack, store: Option<&Store>) -> std::result::Res
     let mut item_slugs = HashSet::new();
     for (i, item) in pack.items.iter().enumerate() {
         let p = format!("$.items[{i}]");
-        validate_item(&mut ctx, &p, item, &tool_slugs, &task_slugs, &category_slugs, &tag_slugs, &source_keys, &official_sources);
+        validate_item(
+            &mut ctx,
+            &p,
+            item,
+            &tool_slugs,
+            &task_slugs,
+            &category_slugs,
+            &tag_slugs,
+            &source_keys,
+            &official_sources,
+        );
         if !item_keys.insert(item.external_key.clone()) {
             ctx.add(
                 format!("{p}.externalKey"),
                 "duplicate_external_key",
-                format!("external key {:?} appears more than once in this pack", item.external_key),
+                format!(
+                    "external key {:?} appears more than once in this pack",
+                    item.external_key
+                ),
             );
         }
         if !item_slugs.insert(item.slug.clone()) {
-            ctx.add(format!("{p}.slug"), "duplicate_key", format!("item slug {:?} appears twice", item.slug));
+            ctx.add(
+                format!("{p}.slug"),
+                "duplicate_key",
+                format!("item slug {:?} appears twice", item.slug),
+            );
         }
     }
     // Relationship targets must exist somewhere: in this pack or already stored.
     for (i, item) in pack.items.iter().enumerate() {
         for (j, rel) in item.relationships.iter().enumerate() {
             let p = format!("$.items[{i}].relationships[{j}]");
-            ctx.enum_value(&format!("{p}.relationshipType"), &rel.relationship_type, RELATIONSHIP_TYPES);
+            ctx.enum_value(
+                &format!("{p}.relationshipType"),
+                &rel.relationship_type,
+                RELATIONSHIP_TYPES,
+            );
             if rel.to_external_key == item.external_key {
-                ctx.add(format!("{p}.toExternalKey"), "self_reference", "an item cannot relate to itself");
+                ctx.add(
+                    format!("{p}.toExternalKey"),
+                    "self_reference",
+                    "an item cannot relate to itself",
+                );
                 continue;
             }
             let in_pack = item_keys.contains(&rel.to_external_key);
@@ -458,7 +618,10 @@ pub fn validate(pack: &KnowledgePack, store: Option<&Store>) -> std::result::Res
                 ctx.add(
                     format!("{p}.toExternalKey"),
                     "broken_reference",
-                    format!("no item with external key {:?} in this pack or in the database", rel.to_external_key),
+                    format!(
+                        "no item with external key {:?} in this pack or in the database",
+                        rel.to_external_key
+                    ),
                 );
             }
         }
@@ -471,7 +634,12 @@ pub fn validate(pack: &KnowledgePack, store: Option<&Store>) -> std::result::Res
             &removal.entity_type,
             &["item", "tool", "task", "category"],
         );
-        ctx.text(&format!("{p}.externalKey"), &removal.external_key, 200, true);
+        ctx.text(
+            &format!("{p}.externalKey"),
+            &removal.external_key,
+            200,
+            true,
+        );
     }
 
     if ctx.issues.is_empty() {
@@ -520,12 +688,24 @@ fn validate_item(
     }
 
     let verification = item.verification_status.as_deref().unwrap_or("unverified");
-    ctx.enum_value(&format!("{p}.verificationStatus"), verification, VERIFICATION_STATUSES);
+    ctx.enum_value(
+        &format!("{p}.verificationStatus"),
+        verification,
+        VERIFICATION_STATUSES,
+    );
     if let Some(lifecycle) = &item.lifecycle_status {
-        ctx.enum_value(&format!("{p}.lifecycleStatus"), lifecycle, LIFECYCLE_STATUSES);
+        ctx.enum_value(
+            &format!("{p}.lifecycleStatus"),
+            lifecycle,
+            LIFECYCLE_STATUSES,
+        );
     }
     if let Some(difficulty) = &item.difficulty {
-        ctx.enum_value(&format!("{p}.difficulty"), difficulty, &["beginner", "intermediate", "advanced"]);
+        ctx.enum_value(
+            &format!("{p}.difficulty"),
+            difficulty,
+            &["beginner", "intermediate", "advanced"],
+        );
     }
     if let Some(accent) = &item.accent_key {
         ctx.enum_value(&format!("{p}.accentKey"), accent, ACCENT_KEYS);
@@ -536,27 +716,58 @@ fn validate_item(
 
     if let Some(tool) = &item.tool_slug {
         let known = tool_slugs.contains(tool)
-            || ctx.store.map(|s| slug_exists(s, "tools", tool)).unwrap_or(false);
+            || ctx
+                .store
+                .map(|s| slug_exists(s, "tools", tool))
+                .unwrap_or(false);
         if !known {
-            ctx.add(format!("{p}.toolSlug"), "broken_reference", format!("unknown tool slug {tool:?}"));
+            ctx.add(
+                format!("{p}.toolSlug"),
+                "broken_reference",
+                format!("unknown tool slug {tool:?}"),
+            );
         }
     }
     for (j, task) in item.tasks.iter().enumerate() {
-        let known = task_slugs.contains(task) || ctx.store.map(|s| slug_exists(s, "tasks", task)).unwrap_or(false);
+        let known = task_slugs.contains(task)
+            || ctx
+                .store
+                .map(|s| slug_exists(s, "tasks", task))
+                .unwrap_or(false);
         if !known {
-            ctx.add(format!("{p}.tasks[{j}]"), "broken_reference", format!("unknown task slug {task:?}"));
+            ctx.add(
+                format!("{p}.tasks[{j}]"),
+                "broken_reference",
+                format!("unknown task slug {task:?}"),
+            );
         }
     }
     for (j, cat) in item.categories.iter().enumerate() {
-        let known = category_slugs.contains(cat) || ctx.store.map(|s| slug_exists(s, "categories", cat)).unwrap_or(false);
+        let known = category_slugs.contains(cat)
+            || ctx
+                .store
+                .map(|s| slug_exists(s, "categories", cat))
+                .unwrap_or(false);
         if !known {
-            ctx.add(format!("{p}.categories[{j}]"), "broken_reference", format!("unknown category slug {cat:?}"));
+            ctx.add(
+                format!("{p}.categories[{j}]"),
+                "broken_reference",
+                format!("unknown category slug {cat:?}"),
+            );
         }
     }
     for (j, tag) in item.tags.iter().enumerate() {
-        let known = tag_slugs.contains(tag) || ctx.store.map(|s| slug_exists(s, "tags", tag)).unwrap_or(false);
+        let known = tag_slugs.contains(tag)
+            || ctx
+                .store
+                .map(|s| slug_exists(s, "tags", tag))
+                .unwrap_or(false);
         if !known {
-            ctx.add(format!("{p}.tags[{j}]"), "broken_reference", format!("unknown tag slug {tag:?}"));
+            ctx.add(
+                format!("{p}.tags[{j}]"),
+                "broken_reference",
+                format!("unknown tag slug {tag:?}"),
+            );
         }
     }
 
@@ -564,7 +775,12 @@ fn validate_item(
         ctx.text(&format!("{p}.aliases[{j}]"), alias, 200, true);
     }
     for (j, example) in item.examples.iter().enumerate() {
-        ctx.text(&format!("{p}.examples[{j}].code"), &example.code, MAX_TEXT, true);
+        ctx.text(
+            &format!("{p}.examples[{j}].code"),
+            &example.code,
+            MAX_TEXT,
+            true,
+        );
         if let Some(title) = &example.title {
             ctx.text(&format!("{p}.examples[{j}].title"), title, MAX_TITLE, false);
         }
@@ -580,7 +796,10 @@ fn validate_item(
             ctx.add(
                 format!("{sp}.sourceKey"),
                 "broken_reference",
-                format!("no source with key {:?} declared in $.sources", src.source_key),
+                format!(
+                    "no source with key {:?} declared in $.sources",
+                    src.source_key
+                ),
             );
             continue;
         }
@@ -590,7 +809,11 @@ fn validate_item(
         if let Some(ts) = &src.verified_at {
             ctx.timestamp(&format!("{sp}.verifiedAt"), ts);
         }
-        if official_sources.get(&src.source_key).copied().unwrap_or(false) {
+        if official_sources
+            .get(&src.source_key)
+            .copied()
+            .unwrap_or(false)
+        {
             has_official_provenance = true;
         }
     }
@@ -607,23 +830,48 @@ fn validate_item(
     if let Some(diagram) = &item.result_diagram {
         let ids: HashSet<&str> = diagram.nodes.iter().map(|n| n.id.as_str()).collect();
         if diagram.nodes.is_empty() {
-            ctx.add(format!("{p}.resultDiagram.nodes"), "required", "a diagram needs at least one node");
+            ctx.add(
+                format!("{p}.resultDiagram.nodes"),
+                "required",
+                "a diagram needs at least one node",
+            );
         }
         if diagram.nodes.len() > 12 {
-            ctx.add(format!("{p}.resultDiagram.nodes"), "too_long", "a diagram may have at most 12 nodes");
+            ctx.add(
+                format!("{p}.resultDiagram.nodes"),
+                "too_long",
+                "a diagram may have at most 12 nodes",
+            );
         }
         for (j, node) in diagram.nodes.iter().enumerate() {
-            ctx.text(&format!("{p}.resultDiagram.nodes[{j}].label"), &node.label, 120, true);
+            ctx.text(
+                &format!("{p}.resultDiagram.nodes[{j}].label"),
+                &node.label,
+                120,
+                true,
+            );
             if let Some(accent) = &node.accent_key {
-                ctx.enum_value(&format!("{p}.resultDiagram.nodes[{j}].accentKey"), accent, ACCENT_KEYS);
+                ctx.enum_value(
+                    &format!("{p}.resultDiagram.nodes[{j}].accentKey"),
+                    accent,
+                    ACCENT_KEYS,
+                );
             }
         }
         for (j, edge) in diagram.edges.iter().enumerate() {
             if !ids.contains(edge.from.as_str()) {
-                ctx.add(format!("{p}.resultDiagram.edges[{j}].from"), "broken_reference", format!("unknown node id {:?}", edge.from));
+                ctx.add(
+                    format!("{p}.resultDiagram.edges[{j}].from"),
+                    "broken_reference",
+                    format!("unknown node id {:?}", edge.from),
+                );
             }
             if !ids.contains(edge.to.as_str()) {
-                ctx.add(format!("{p}.resultDiagram.edges[{j}].to"), "broken_reference", format!("unknown node id {:?}", edge.to));
+                ctx.add(
+                    format!("{p}.resultDiagram.edges[{j}].to"),
+                    "broken_reference",
+                    format!("unknown node id {:?}", edge.to),
+                );
             }
         }
     }
@@ -731,7 +979,13 @@ pub fn export_all(store: &Store) -> Result<KnowledgePack> {
 
     let mut stmt = conn.prepare("SELECT slug, name, accent_key FROM tags ORDER BY name")?;
     let tags = stmt
-        .query_map([], |r| Ok(PackTag { slug: r.get(0)?, name: r.get(1)?, accent_key: r.get(2)? }))?
+        .query_map([], |r| {
+            Ok(PackTag {
+                slug: r.get(0)?,
+                name: r.get(1)?,
+                accent_key: r.get(2)?,
+            })
+        })?
         .collect::<std::result::Result<Vec<_>, _>>()?;
 
     let mut stmt = conn.prepare(
@@ -742,7 +996,10 @@ pub fn export_all(store: &Store) -> Result<KnowledgePack> {
         .query_map([], |r| {
             let external: Option<String> = r.get(0)?;
             Ok(PackSource {
-                key: external.unwrap_or_default().trim_start_matches("source:").to_string(),
+                key: external
+                    .unwrap_or_default()
+                    .trim_start_matches("source:")
+                    .to_string(),
                 name: r.get(1)?,
                 source_type: r.get(2)?,
                 url: r.get(3)?,
@@ -859,7 +1116,10 @@ pub fn export_all(store: &Store) -> Result<KnowledgePack> {
             .query_map(params![id], |r| {
                 let key: Option<String> = r.get(0)?;
                 Ok(PackItemSource {
-                    source_key: key.unwrap_or_default().trim_start_matches("source:").to_string(),
+                    source_key: key
+                        .unwrap_or_default()
+                        .trim_start_matches("source:")
+                        .to_string(),
                     url: r.get(1)?,
                     anchor: r.get(2)?,
                     version: r.get(3)?,

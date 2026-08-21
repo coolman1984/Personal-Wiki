@@ -34,15 +34,23 @@ fn check_enum(value: &str, allowed: &[&str], field: &str) -> Result<()> {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ToolInput {
-    #[serde(default)] pub id: Option<String>,
+    #[serde(default)]
+    pub id: Option<String>,
     pub name: String,
-    #[serde(default)] pub slug: Option<String>,
-    #[serde(default)] pub short_name: Option<String>,
-    #[serde(default)] pub description: Option<String>,
-    #[serde(default)] pub icon_key: Option<String>,
-    #[serde(default)] pub accent_key: Option<String>,
-    #[serde(default)] pub official_home_url: Option<String>,
-    #[serde(default)] pub sort_order: Option<i64>,
+    #[serde(default)]
+    pub slug: Option<String>,
+    #[serde(default)]
+    pub short_name: Option<String>,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub icon_key: Option<String>,
+    #[serde(default)]
+    pub accent_key: Option<String>,
+    #[serde(default)]
+    pub official_home_url: Option<String>,
+    #[serde(default)]
+    pub sort_order: Option<i64>,
 }
 
 pub fn save_tool(store: &Store, input: ToolInput) -> Result<Tool> {
@@ -83,7 +91,15 @@ pub fn save_tool(store: &Store, input: ToolInput) -> Result<Tool> {
             id
         }
     };
-    audit::record(store.conn(), "user", "tool.save", Some("tool"), Some(&id), None, None)?;
+    audit::record(
+        store.conn(),
+        "user",
+        "tool.save",
+        Some("tool"),
+        Some(&id),
+        None,
+        None,
+    )?;
     repo::list_tools(store, true)?
         .into_iter()
         .find(|t| t.id == id)
@@ -93,12 +109,17 @@ pub fn save_tool(store: &Store, input: ToolInput) -> Result<Tool> {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskInput {
-    #[serde(default)] pub id: Option<String>,
+    #[serde(default)]
+    pub id: Option<String>,
     pub name: String,
-    #[serde(default)] pub slug: Option<String>,
-    #[serde(default)] pub description: Option<String>,
-    #[serde(default)] pub icon_key: Option<String>,
-    #[serde(default)] pub sort_order: Option<i64>,
+    #[serde(default)]
+    pub slug: Option<String>,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub icon_key: Option<String>,
+    #[serde(default)]
+    pub sort_order: Option<i64>,
 }
 
 pub fn save_task(store: &Store, input: TaskInput) -> Result<Task> {
@@ -137,14 +158,21 @@ pub fn save_task(store: &Store, input: TaskInput) -> Result<Task> {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CategoryInput {
-    #[serde(default)] pub id: Option<String>,
+    #[serde(default)]
+    pub id: Option<String>,
     pub name: String,
-    #[serde(default)] pub slug: Option<String>,
-    #[serde(default)] pub description: Option<String>,
-    #[serde(default)] pub icon_key: Option<String>,
-    #[serde(default)] pub accent_key: Option<String>,
-    #[serde(default)] pub parent_id: Option<String>,
-    #[serde(default)] pub sort_order: Option<i64>,
+    #[serde(default)]
+    pub slug: Option<String>,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub icon_key: Option<String>,
+    #[serde(default)]
+    pub accent_key: Option<String>,
+    #[serde(default)]
+    pub parent_id: Option<String>,
+    #[serde(default)]
+    pub sort_order: Option<i64>,
 }
 
 pub fn save_category(store: &Store, input: CategoryInput) -> Result<Category> {
@@ -160,13 +188,17 @@ pub fn save_category(store: &Store, input: CategoryInput) -> Result<Category> {
     // A category may not become its own ancestor.
     if let (Some(id), Some(parent)) = (&input.id, &input.parent_id) {
         if id == parent {
-            return Err(CoreError::Invalid("a category cannot be its own parent".into()));
+            return Err(CoreError::Invalid(
+                "a category cannot be its own parent".into(),
+            ));
         }
         let mut cursor = Some(parent.clone());
         let mut hops = 0;
         while let Some(current) = cursor {
             if &current == id {
-                return Err(CoreError::Invalid("that parent would create a cycle".into()));
+                return Err(CoreError::Invalid(
+                    "that parent would create a cycle".into(),
+                ));
             }
             hops += 1;
             if hops > 16 {
@@ -174,9 +206,11 @@ pub fn save_category(store: &Store, input: CategoryInput) -> Result<Category> {
             }
             cursor = store
                 .conn()
-                .query_row("SELECT parent_id FROM categories WHERE id = ?1", params![current], |r| {
-                    r.get::<_, Option<String>>(0)
-                })
+                .query_row(
+                    "SELECT parent_id FROM categories WHERE id = ?1",
+                    params![current],
+                    |r| r.get::<_, Option<String>>(0),
+                )
                 .ok()
                 .flatten();
         }
@@ -234,53 +268,86 @@ pub fn save_category(store: &Store, input: CategoryInput) -> Result<Category> {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ItemInput {
-    #[serde(default)] pub id: Option<String>,
+    #[serde(default)]
+    pub id: Option<String>,
     pub title: String,
     pub item_type: String,
-    #[serde(default)] pub slug: Option<String>,
-    #[serde(default)] pub tool_id: Option<String>,
-    #[serde(default)] pub subtitle: Option<String>,
-    #[serde(default)] pub short_description: Option<String>,
-    #[serde(default)] pub full_description: Option<String>,
-    #[serde(default)] pub syntax: Option<String>,
-    #[serde(default)] pub when_to_use: Option<String>,
-    #[serde(default)] pub expected_result: Option<String>,
-    #[serde(default)] pub warning_text: Option<String>,
-    #[serde(default)] pub verification_status: Option<String>,
-    #[serde(default)] pub lifecycle_status: Option<String>,
-    #[serde(default)] pub icon_key: Option<String>,
-    #[serde(default)] pub accent_key: Option<String>,
-    #[serde(default)] pub aliases: Vec<String>,
-    #[serde(default)] pub task_ids: Vec<String>,
-    #[serde(default)] pub category_ids: Vec<String>,
-    #[serde(default)] pub tag_slugs: Vec<String>,
-    #[serde(default)] pub examples: Vec<ExampleInput>,
-    #[serde(default)] pub parameters: Vec<ParameterInput>,
+    #[serde(default)]
+    pub slug: Option<String>,
+    #[serde(default)]
+    pub tool_id: Option<String>,
+    #[serde(default)]
+    pub subtitle: Option<String>,
+    #[serde(default)]
+    pub short_description: Option<String>,
+    #[serde(default)]
+    pub full_description: Option<String>,
+    #[serde(default)]
+    pub syntax: Option<String>,
+    #[serde(default)]
+    pub when_to_use: Option<String>,
+    #[serde(default)]
+    pub expected_result: Option<String>,
+    #[serde(default)]
+    pub warning_text: Option<String>,
+    #[serde(default)]
+    pub verification_status: Option<String>,
+    #[serde(default)]
+    pub lifecycle_status: Option<String>,
+    #[serde(default)]
+    pub icon_key: Option<String>,
+    #[serde(default)]
+    pub accent_key: Option<String>,
+    #[serde(default)]
+    pub aliases: Vec<String>,
+    #[serde(default)]
+    pub task_ids: Vec<String>,
+    #[serde(default)]
+    pub category_ids: Vec<String>,
+    #[serde(default)]
+    pub tag_slugs: Vec<String>,
+    #[serde(default)]
+    pub examples: Vec<ExampleInput>,
+    #[serde(default)]
+    pub parameters: Vec<ParameterInput>,
 }
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ExampleInput {
     pub code: String,
-    #[serde(default)] pub title: Option<String>,
-    #[serde(default)] pub description: Option<String>,
-    #[serde(default)] pub expected_output: Option<String>,
+    #[serde(default)]
+    pub title: Option<String>,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub expected_output: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ParameterInput {
     pub name: String,
-    #[serde(default)] pub description: Option<String>,
-    #[serde(default)] pub is_required: Option<bool>,
-    #[serde(default)] pub default_value: Option<String>,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub is_required: Option<bool>,
+    #[serde(default)]
+    pub default_value: Option<String>,
 }
 
 pub fn save_item(store: &Store, input: ItemInput) -> Result<ItemDetail> {
     let title = require(&input.title, "title")?;
     check_enum(&input.item_type, pack::ITEM_TYPES, "itemType")?;
-    let verification = input.verification_status.clone().unwrap_or_else(|| "unverified".into());
-    check_enum(&verification, pack::VERIFICATION_STATUSES, "verificationStatus")?;
+    let verification = input
+        .verification_status
+        .clone()
+        .unwrap_or_else(|| "unverified".into());
+    check_enum(
+        &verification,
+        pack::VERIFICATION_STATUSES,
+        "verificationStatus",
+    )?;
     // A locally authored item may not claim official status: provenance comes
     // from a source record, and this form does not collect one.
     if verification == "official" {
@@ -288,7 +355,10 @@ pub fn save_item(store: &Store, input: ItemInput) -> Result<ItemDetail> {
             "a manually created item cannot be marked official; import it through a Knowledge Pack with a source".into(),
         ));
     }
-    let lifecycle = input.lifecycle_status.clone().unwrap_or_else(|| "active".into());
+    let lifecycle = input
+        .lifecycle_status
+        .clone()
+        .unwrap_or_else(|| "active".into());
     check_enum(&lifecycle, pack::LIFECYCLE_STATUSES, "lifecycleStatus")?;
 
     let slug = match &input.slug {
@@ -330,15 +400,28 @@ pub fn save_item(store: &Store, input: ItemInput) -> Result<ItemDetail> {
     }
     conn.execute("DELETE FROM item_tasks WHERE item_id = ?1", params![id])?;
     for task_id in &input.task_ids {
-        conn.execute("INSERT OR IGNORE INTO item_tasks (item_id, task_id) VALUES (?1,?2)", params![id, task_id])?;
+        conn.execute(
+            "INSERT OR IGNORE INTO item_tasks (item_id, task_id) VALUES (?1,?2)",
+            params![id, task_id],
+        )?;
     }
-    conn.execute("DELETE FROM item_categories WHERE item_id = ?1", params![id])?;
+    conn.execute(
+        "DELETE FROM item_categories WHERE item_id = ?1",
+        params![id],
+    )?;
     for category_id in &input.category_ids {
-        conn.execute("INSERT OR IGNORE INTO item_categories (item_id, category_id) VALUES (?1,?2)", params![id, category_id])?;
+        conn.execute(
+            "INSERT OR IGNORE INTO item_categories (item_id, category_id) VALUES (?1,?2)",
+            params![id, category_id],
+        )?;
     }
     conn.execute("DELETE FROM item_tags WHERE item_id = ?1", params![id])?;
     for tag_slug in &input.tag_slugs {
-        let tag_id: String = match conn.query_row("SELECT id FROM tags WHERE slug = ?1", params![tag_slug], |r| r.get(0)) {
+        let tag_id: String = match conn.query_row(
+            "SELECT id FROM tags WHERE slug = ?1",
+            params![tag_slug],
+            |r| r.get(0),
+        ) {
             Ok(existing) => existing,
             Err(_) => {
                 let new_id = ulid();
@@ -349,7 +432,10 @@ pub fn save_item(store: &Store, input: ItemInput) -> Result<ItemDetail> {
                 new_id
             }
         };
-        conn.execute("INSERT OR IGNORE INTO item_tags (item_id, tag_id) VALUES (?1,?2)", params![id, tag_id])?;
+        conn.execute(
+            "INSERT OR IGNORE INTO item_tags (item_id, tag_id) VALUES (?1,?2)",
+            params![id, tag_id],
+        )?;
     }
     conn.execute("DELETE FROM examples WHERE item_id = ?1", params![id])?;
     for (index, example) in input.examples.iter().enumerate() {
@@ -370,7 +456,15 @@ pub fn save_item(store: &Store, input: ItemInput) -> Result<ItemDetail> {
     }
 
     search::reindex_item(conn, &id)?;
-    audit::record(conn, "user", "item.save", Some("item"), Some(&id), None, None)?;
+    audit::record(
+        conn,
+        "user",
+        "item.save",
+        Some("item"),
+        Some(&id),
+        None,
+        None,
+    )?;
     repo::item_detail(store, &slug)
 }
 
@@ -396,7 +490,11 @@ pub fn set_active(store: &Store, entity: &str, id: &str, active: bool) -> Result
     audit::record(
         store.conn(),
         "user",
-        if active { "entity.activate" } else { "entity.deactivate" },
+        if active {
+            "entity.activate"
+        } else {
+            "entity.deactivate"
+        },
         Some(entity),
         Some(id),
         None,

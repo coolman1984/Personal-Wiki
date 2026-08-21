@@ -9,8 +9,9 @@ test.describe('Global search', () => {
 
   test('an alias not present in the title still finds the item', async ({ open }) => {
     const page = await open('/search?q=' + encodeURIComponent('تشغيل وكيل في الخلفية'));
-    const hits = page.getByTestId('search-hit');
-    expect(await hits.count()).toBeGreaterThan(0);
+    // Search is debounced (~120ms) and resolved asynchronously, so wait for a
+    // result to actually appear rather than reading .count() synchronously.
+    await expect(page.getByTestId('search-hit').first()).toBeVisible();
   });
 
   test('filters narrow the result set and persist in the URL', async ({ open }) => {
@@ -25,7 +26,7 @@ test.describe('Global search', () => {
   });
 
   test('no results shows the empty state with guidance', async ({ open }) => {
-    const page = await open('/search?q=' + encodeURIComponent('زقموطة لا وجود لها'));
+    const page = await open('/search?q=' + encodeURIComponent('زقموطةزقموطةزقموطة'));
     await expect(page.getByTestId('empty-state')).toBeVisible();
   });
 

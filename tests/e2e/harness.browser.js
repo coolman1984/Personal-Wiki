@@ -13,9 +13,28 @@
 (function () {
   var responses = fixture.responses;
 
+  // Recorded keys were built from serde_json::Value, which (without the
+  // preserve_order feature) stores object fields in a BTreeMap and therefore
+  // serializes every object — including nested ones like `filters` — with
+  // alphabetically sorted keys. Mirror that here so a runtime call's argument
+  // object hashes to the same key regardless of the property order it was
+  // constructed in.
+  function sortKeysDeep(value) {
+    if (Array.isArray(value)) return value.map(sortKeysDeep);
+    if (value && typeof value === 'object') {
+      var sorted = {};
+      Object.keys(value)
+        .sort()
+        .forEach(function (key) {
+          sorted[key] = sortKeysDeep(value[key]);
+        });
+      return sorted;
+    }
+    return value;
+  }
+
   function canonical(args) {
-    var value = args || {};
-    return JSON.stringify(value, Object.keys(value).sort());
+    return JSON.stringify(sortKeysDeep(args || {}));
   }
 
   function lookup(cmd, args) {

@@ -9,7 +9,9 @@
 //!   4 refused (would be unsafe) · 5 internal/database error
 
 use pw_core::models::SearchFilters;
-use pw_core::{apply, backup, diagnostics, pack, paths, personal, repo, search, seed, staging, Store};
+use pw_core::{
+    apply, backup, diagnostics, pack, paths, personal, repo, search, seed, staging, Store,
+};
 use std::process::ExitCode;
 
 const USAGE: &str = r#"personal-wiki — Personal Wiki knowledge tool
@@ -65,7 +67,12 @@ fn parse_args() -> Args {
             other => rest.push(other.to_string()),
         }
     }
-    Args { json, db, rest, flags }
+    Args {
+        json,
+        db,
+        rest,
+        flags,
+    }
 }
 
 fn main() -> ExitCode {
@@ -88,8 +95,12 @@ fn main() -> ExitCode {
 fn report_error(err: &pw_core::CoreError, json: bool) {
     if let pw_core::CoreError::Validation(issues) = err {
         if json {
-            let payload = serde_json::json!({ "ok": false, "error": err.to_string(), "issues": issues });
-            println!("{}", serde_json::to_string_pretty(&payload).unwrap_or_default());
+            let payload =
+                serde_json::json!({ "ok": false, "error": err.to_string(), "issues": issues });
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&payload).unwrap_or_default()
+            );
         } else {
             eprintln!("✗ {err}");
             for issue in issues {
@@ -100,7 +111,10 @@ fn report_error(err: &pw_core::CoreError, json: bool) {
     }
     if json {
         let payload = serde_json::json!({ "ok": false, "error": err.to_string() });
-        println!("{}", serde_json::to_string_pretty(&payload).unwrap_or_default());
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&payload).unwrap_or_default()
+        );
     } else {
         eprintln!("✗ {err}");
     }
@@ -118,7 +132,10 @@ fn open_store(args: &Args) -> pw_core::Result<Store> {
 }
 
 fn print_json<T: serde::Serialize>(value: &T) {
-    println!("{}", serde_json::to_string_pretty(value).unwrap_or_else(|_| "{}".into()));
+    println!(
+        "{}",
+        serde_json::to_string_pretty(value).unwrap_or_else(|_| "{}".into())
+    );
 }
 
 fn run(args: &Args) -> pw_core::Result<ExitCode> {
@@ -143,14 +160,23 @@ fn run(args: &Args) -> pw_core::Result<ExitCode> {
             } else {
                 println!("Personal Wiki {}", diag.app_version);
                 println!("database   {}", diag.db_path);
-                println!("schema     v{} (expected v{})", diag.schema_version, diag.expected_schema_version);
+                println!(
+                    "schema     v{} (expected v{})",
+                    diag.schema_version, diag.expected_schema_version
+                );
                 println!("integrity  {}", diag.integrity);
-                println!("search     {} ({} rows)", diag.fts_status, diag.fts_row_count);
+                println!(
+                    "search     {} ({} rows)",
+                    diag.fts_status, diag.fts_row_count
+                );
                 for (table, count) in &diag.counts {
                     println!("  {table:<16} {count}");
                 }
                 if let Some(batch) = &diag.last_batch {
-                    println!("last batch {} [{}] {} pending", batch.id, batch.status, batch.pending_count);
+                    println!(
+                        "last batch {} [{}] {} pending",
+                        batch.id, batch.status, batch.pending_count
+                    );
                 }
             }
             Ok(ExitCode::SUCCESS)
@@ -272,7 +298,11 @@ fn run(args: &Args) -> pw_core::Result<ExitCode> {
             if args.json {
                 print_json(&summary);
             } else {
-                println!("✓ pack is valid — {} item(s) from {}", parsed.items.len(), parsed.batch.producer);
+                println!(
+                    "✓ pack is valid — {} item(s) from {}",
+                    parsed.items.len(),
+                    parsed.batch.producer
+                );
             }
             Ok(ExitCode::SUCCESS)
         }
@@ -295,9 +325,14 @@ fn run(args: &Args) -> pw_core::Result<ExitCode> {
             } else {
                 let changes = staging::list_changes(&store, Some(&batch_id), None)?;
                 if args.json {
-                    print_json(&serde_json::json!({ "ok": true, "batchId": batch_id, "staged": changes.len() }));
+                    print_json(
+                        &serde_json::json!({ "ok": true, "batchId": batch_id, "staged": changes.len() }),
+                    );
                 } else {
-                    println!("✓ staged {} change(s) for review — batch {batch_id}", changes.len());
+                    println!(
+                        "✓ staged {} change(s) for review — batch {batch_id}",
+                        changes.len()
+                    );
                     println!("  review:  personal-wiki changes diff {batch_id}");
                     println!("  approve: personal-wiki changes approve {batch_id}");
                 }
@@ -314,8 +349,12 @@ fn run(args: &Args) -> pw_core::Result<ExitCode> {
                 for batch in &batches {
                     println!(
                         "{}  {:<18} pending {:<4} approved {:<4} applied {:<4}  {}",
-                        batch.id, batch.status, batch.pending_count, batch.approved_count,
-                        batch.applied_count, batch.summary.clone().unwrap_or_default()
+                        batch.id,
+                        batch.status,
+                        batch.pending_count,
+                        batch.approved_count,
+                        batch.applied_count,
+                        batch.summary.clone().unwrap_or_default()
                     );
                 }
             }
@@ -337,8 +376,13 @@ fn run(args: &Args) -> pw_core::Result<ExitCode> {
                 for change in &changes {
                     println!(
                         "  {:<18} {:<10} {:<8} {}",
-                        change.change_type, change.entity_type, change.status,
-                        change.title.clone().unwrap_or_else(|| change.entity_key.clone())
+                        change.change_type,
+                        change.entity_type,
+                        change.status,
+                        change
+                            .title
+                            .clone()
+                            .unwrap_or_else(|| change.entity_key.clone())
                     );
                     for field in &change.field_diff {
                         println!(
@@ -360,10 +404,16 @@ fn run(args: &Args) -> pw_core::Result<ExitCode> {
             };
             let store = open_store(args)?;
             staging::get_batch(&store, batch_id)?;
-            let status = if action == "approve" { "approved" } else { "rejected" };
+            let status = if action == "approve" {
+                "approved"
+            } else {
+                "rejected"
+            };
             let n = staging::set_review_status(&store, batch_id, None, status)?;
             if args.json {
-                print_json(&serde_json::json!({ "ok": true, "batchId": batch_id, "changed": n, "status": status }));
+                print_json(
+                    &serde_json::json!({ "ok": true, "batchId": batch_id, "changed": n, "status": status }),
+                );
             } else {
                 println!("✓ {n} change(s) {status}");
             }
@@ -393,8 +443,9 @@ fn run(args: &Args) -> pw_core::Result<ExitCode> {
             let mut store = open_store(args)?;
             let batch_id = match third {
                 Some(id) => id.to_string(),
-                None => apply::last_applied_batch(&store)?
-                    .ok_or_else(|| pw_core::CoreError::NotFound("no applied batch to undo".into()))?,
+                None => apply::last_applied_batch(&store)?.ok_or_else(|| {
+                    pw_core::CoreError::NotFound("no applied batch to undo".into())
+                })?,
             };
             let outcome = apply::revert_batch(&mut store, &batch_id, "cli-user")?;
             if args.json {
@@ -438,7 +489,10 @@ fn run(args: &Args) -> pw_core::Result<ExitCode> {
             if args.json {
                 print_json(&record);
             } else {
-                println!("✓ restored backup {} ({} items)", record.id, record.item_count);
+                println!(
+                    "✓ restored backup {} ({} items)",
+                    record.id, record.item_count
+                );
             }
             Ok(ExitCode::SUCCESS)
         }
@@ -448,7 +502,9 @@ fn run(args: &Args) -> pw_core::Result<ExitCode> {
             let export = pw_core::pack::export_all(&store)?;
             std::fs::write(path, serde_json::to_string_pretty(&export)?)?;
             if args.json {
-                print_json(&serde_json::json!({ "ok": true, "path": path, "items": export.items.len() }));
+                print_json(
+                    &serde_json::json!({ "ok": true, "path": path, "items": export.items.len() }),
+                );
             } else {
                 println!("✓ exported {} item(s) to {path}", export.items.len());
             }
@@ -467,7 +523,10 @@ fn run(args: &Args) -> pw_core::Result<ExitCode> {
                 print_json(&serde_json::json!({ "diagnostics": diag, "repaired": fixed }));
             } else {
                 println!("Personal Wiki {} — {}", diag.app_version, diag.db_path);
-                println!("integrity {} · foreign keys {} · search {}", diag.integrity, diag.foreign_key_violations, diag.fts_status);
+                println!(
+                    "integrity {} · foreign keys {} · search {}",
+                    diag.integrity, diag.foreign_key_violations, diag.fts_status
+                );
                 for done in &fixed {
                     println!("  fixed: {done}");
                 }

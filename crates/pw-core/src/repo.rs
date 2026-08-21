@@ -56,7 +56,12 @@ fn hydrate_tags(conn: &Connection, items: &mut [ItemSummary]) -> Result<()> {
     let rows = stmt.query_map(params_from_iter(ids.iter()), |r| {
         Ok((
             r.get::<_, String>(0)?,
-            Tag { id: r.get(1)?, slug: r.get(2)?, name: r.get(3)?, accent_key: r.get(4)? },
+            Tag {
+                id: r.get(1)?,
+                slug: r.get(2)?,
+                name: r.get(3)?,
+                accent_key: r.get(4)?,
+            },
         ))
     })?;
     let mut map: HashMap<String, Vec<Tag>> = HashMap::new();
@@ -79,7 +84,11 @@ pub fn list_tools(store: &Store, include_inactive: bool) -> Result<Vec<Tool>> {
         "SELECT id, slug, name, short_name, description, icon_key, accent_key,
                 official_home_url, sort_order, is_active, external_key, managed_by, updated_at
          FROM tools {} ORDER BY sort_order, name",
-        if include_inactive { "" } else { "WHERE is_active = 1" }
+        if include_inactive {
+            ""
+        } else {
+            "WHERE is_active = 1"
+        }
     );
     let mut stmt = store.conn().prepare(&sql)?;
     let rows = stmt.query_map([], |r| {
@@ -111,7 +120,15 @@ fn tool_stats(conn: &Connection, tool_id: &str) -> Result<ToolStats> {
            (SELECT COUNT(*) FROM sources s WHERE s.tool_id = ?1),
            (SELECT MAX(i.updated_at) FROM items i WHERE i.tool_id = ?1)",
         params![tool_id],
-        |r| Ok((r.get::<_, i64>(0)?, r.get::<_, i64>(1)?, r.get::<_, i64>(2)?, r.get::<_, i64>(3)?, r.get::<_, Option<String>>(4)?)),
+        |r| {
+            Ok((
+                r.get::<_, i64>(0)?,
+                r.get::<_, i64>(1)?,
+                r.get::<_, i64>(2)?,
+                r.get::<_, i64>(3)?,
+                r.get::<_, Option<String>>(4)?,
+            ))
+        },
     )?;
     Ok(ToolStats {
         item_count: row.0,
@@ -159,11 +176,21 @@ pub fn tool_page(store: &Store, slug: &str) -> Result<ToolPage> {
          WHERE i.tool_id = ?1 AND i.is_active = 1 ORDER BY tg.name",
     )?;
     let rows = stmt.query_map(params![tool.id], |r| {
-        Ok(Tag { id: r.get(0)?, slug: r.get(1)?, name: r.get(2)?, accent_key: r.get(3)? })
+        Ok(Tag {
+            id: r.get(0)?,
+            slug: r.get(1)?,
+            name: r.get(2)?,
+            accent_key: r.get(3)?,
+        })
     })?;
     let tags = rows.collect::<std::result::Result<Vec<_>, _>>()?;
 
-    Ok(ToolPage { tool, stats, sections, tags })
+    Ok(ToolPage {
+        tool,
+        stats,
+        sections,
+        tags,
+    })
 }
 
 // ---------------------------------------------------------------- tasks
@@ -172,7 +199,11 @@ pub fn list_tasks(store: &Store, include_inactive: bool) -> Result<Vec<Task>> {
     let sql = format!(
         "SELECT id, slug, name, description, icon_key, sort_order, is_active, external_key
          FROM tasks {} ORDER BY sort_order, name",
-        if include_inactive { "" } else { "WHERE is_active = 1" }
+        if include_inactive {
+            ""
+        } else {
+            "WHERE is_active = 1"
+        }
     );
     let mut stmt = store.conn().prepare(&sql)?;
     let rows = stmt.query_map([], |r| {
@@ -208,7 +239,12 @@ pub fn task_cards(store: &Store) -> Result<Vec<TaskCard>> {
         let icons = stmt
             .query_map(params![task.id], |r| r.get::<_, String>(0))?
             .collect::<std::result::Result<Vec<_>, _>>()?;
-        out.push(TaskCard { task, item_count, tool_count, tool_icons: icons });
+        out.push(TaskCard {
+            task,
+            item_count,
+            tool_count,
+            tool_icons: icons,
+        });
     }
     Ok(out)
 }
@@ -265,7 +301,9 @@ pub fn category_tree(store: &Store, tool_id: Option<&str>) -> Result<Vec<Categor
             Some(id) => vec![id],
             None => vec![],
         };
-        let rows = stmt.query_map(args.as_slice(), |r| Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?)))?;
+        let rows = stmt.query_map(args.as_slice(), |r| {
+            Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?))
+        })?;
         for row in rows {
             let (id, n) = row?;
             counts.insert(id, n);
@@ -294,7 +332,11 @@ pub fn category_tree(store: &Store, tool_id: Option<&str>) -> Result<Vec<Categor
                         let kids = build(Some(cat.id.clone()), children, counts, depth + 1);
                         let own = counts.get(&cat.id).copied().unwrap_or(0);
                         let total = own + kids.iter().map(|k| k.item_count).sum::<i64>();
-                        CategoryNode { category: cat.clone(), item_count: total, children: kids }
+                        CategoryNode {
+                            category: cat.clone(),
+                            item_count: total,
+                            children: kids,
+                        }
                     })
                     .collect()
             })
@@ -396,7 +438,11 @@ impl ItemSort {
     }
 }
 
-fn run_item_query(store: &Store, sql: &str, args: &[&dyn rusqlite::ToSql]) -> Result<Vec<ItemSummary>> {
+fn run_item_query(
+    store: &Store,
+    sql: &str,
+    args: &[&dyn rusqlite::ToSql],
+) -> Result<Vec<ItemSummary>> {
     let mut stmt = store.conn().prepare(sql)?;
     let rows = stmt.query_map(args, item_summary_from_row)?;
     let mut items = rows.collect::<std::result::Result<Vec<_>, _>>()?;
@@ -446,7 +492,12 @@ pub fn items_for_tool(
     }
 }
 
-pub fn items_for_category(store: &Store, slug: &str, sort: ItemSort, limit: i64) -> Result<Vec<ItemSummary>> {
+pub fn items_for_category(
+    store: &Store,
+    slug: &str,
+    sort: ItemSort,
+    limit: i64,
+) -> Result<Vec<ItemSummary>> {
     let ids = category_subtree_ids(store.conn(), slug)?;
     if ids.is_empty() {
         return Ok(vec![]);
@@ -469,7 +520,12 @@ pub fn items_for_category(store: &Store, slug: &str, sort: ItemSort, limit: i64)
     run_item_query(store, &sql, &args)
 }
 
-pub fn items_for_task(store: &Store, slug: &str, sort: ItemSort, limit: i64) -> Result<Vec<ItemSummary>> {
+pub fn items_for_task(
+    store: &Store,
+    slug: &str,
+    sort: ItemSort,
+    limit: i64,
+) -> Result<Vec<ItemSummary>> {
     let task = task_by_slug(store, slug)?;
     let sql = format!(
         "SELECT {ITEM_COLS} FROM items i LEFT JOIN tools t ON t.id = i.tool_id
@@ -489,21 +545,35 @@ pub fn items_by_ids(
         return Ok(HashMap::new());
     }
     let placeholders = vec!["?"; ids.len()].join(",");
-    let mut clauses = vec![format!("i.id IN ({placeholders})"), "i.is_active = 1".to_string()];
+    let mut clauses = vec![
+        format!("i.id IN ({placeholders})"),
+        "i.is_active = 1".to_string(),
+    ];
 
     let mut extra: Vec<String> = Vec::new();
-    let push_in = |column: &str, values: &[String], clauses: &mut Vec<String>, extra: &mut Vec<String>| {
-        if values.is_empty() {
-            return;
-        }
-        let marks = vec!["?"; values.len()].join(",");
-        clauses.push(format!("{column} IN ({marks})"));
-        extra.extend(values.iter().cloned());
-    };
+    let push_in =
+        |column: &str, values: &[String], clauses: &mut Vec<String>, extra: &mut Vec<String>| {
+            if values.is_empty() {
+                return;
+            }
+            let marks = vec!["?"; values.len()].join(",");
+            clauses.push(format!("{column} IN ({marks})"));
+            extra.extend(values.iter().cloned());
+        };
     push_in("t.slug", &filters.tool_slugs, &mut clauses, &mut extra);
     push_in("i.item_type", &filters.item_types, &mut clauses, &mut extra);
-    push_in("i.verification_status", &filters.verification_statuses, &mut clauses, &mut extra);
-    push_in("i.lifecycle_status", &filters.lifecycle_statuses, &mut clauses, &mut extra);
+    push_in(
+        "i.verification_status",
+        &filters.verification_statuses,
+        &mut clauses,
+        &mut extra,
+    );
+    push_in(
+        "i.lifecycle_status",
+        &filters.lifecycle_statuses,
+        &mut clauses,
+        &mut extra,
+    );
 
     if !filters.task_slugs.is_empty() {
         let marks = vec!["?"; filters.task_slugs.len()].join(",");
@@ -547,7 +617,9 @@ pub fn items_by_ids(
 }
 
 pub fn aliases_for(store: &Store, item_id: &str) -> Result<Vec<String>> {
-    let mut stmt = store.conn().prepare("SELECT alias FROM aliases WHERE item_id = ?1")?;
+    let mut stmt = store
+        .conn()
+        .prepare("SELECT alias FROM aliases WHERE item_id = ?1")?;
     let rows = stmt.query_map(params![item_id], |r| r.get::<_, String>(0))?;
     Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
 }
@@ -581,8 +653,18 @@ pub fn item_detail(store: &Store, slug: &str) -> Result<ItemDetail> {
                 i.result_diagram, i.difficulty, i.last_verified_at, i.managed_by
          FROM items i LEFT JOIN tools t ON t.id = i.tool_id WHERE i.slug = ?1"
     );
-    let (mut summary, full_description, when_to_use, expected_result, warning_text, diagram_json, difficulty, last_verified_at, managed_by) =
-        conn.query_row(&sql, params![slug], |r| {
+    let (
+        mut summary,
+        full_description,
+        when_to_use,
+        expected_result,
+        warning_text,
+        diagram_json,
+        difficulty,
+        last_verified_at,
+        managed_by,
+    ) = conn
+        .query_row(&sql, params![slug], |r| {
             Ok((
                 item_summary_from_row(r)?,
                 r.get::<_, Option<String>>(19)?,
@@ -597,14 +679,31 @@ pub fn item_detail(store: &Store, slug: &str) -> Result<ItemDetail> {
         })
         .map_err(|_| CoreError::NotFound(format!("item {slug}")))?;
 
-    let mut one = vec![std::mem::replace(&mut summary, ItemSummary {
-        id: String::new(), slug: String::new(), title: String::new(), subtitle: None,
-        short_description: None, item_type: String::new(), syntax: None,
-        verification_status: String::new(), lifecycle_status: String::new(), icon_key: None,
-        accent_key: None, tool_id: None, tool_slug: None, tool_name: None, tags: vec![],
-        is_favorite: false, is_pinned: false, has_examples: false, has_sources: false,
-        updated_at: String::new(),
-    })];
+    let mut one = vec![std::mem::replace(
+        &mut summary,
+        ItemSummary {
+            id: String::new(),
+            slug: String::new(),
+            title: String::new(),
+            subtitle: None,
+            short_description: None,
+            item_type: String::new(),
+            syntax: None,
+            verification_status: String::new(),
+            lifecycle_status: String::new(),
+            icon_key: None,
+            accent_key: None,
+            tool_id: None,
+            tool_slug: None,
+            tool_name: None,
+            tags: vec![],
+            is_favorite: false,
+            is_pinned: false,
+            has_examples: false,
+            has_sources: false,
+            updated_at: String::new(),
+        },
+    )];
     hydrate_tags(conn, &mut one)?;
     let summary = one.remove(0);
     let item_id = summary.id.clone();
@@ -755,7 +854,12 @@ pub fn list_tags(store: &Store) -> Result<Vec<Tag>> {
         .conn()
         .prepare("SELECT id, slug, name, accent_key FROM tags ORDER BY name")?;
     let rows = stmt.query_map([], |r| {
-        Ok(Tag { id: r.get(0)?, slug: r.get(1)?, name: r.get(2)?, accent_key: r.get(3)? })
+        Ok(Tag {
+            id: r.get(0)?,
+            slug: r.get(1)?,
+            name: r.get(2)?,
+            accent_key: r.get(3)?,
+        })
     })?;
     Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
 }
@@ -770,7 +874,11 @@ pub fn list_item_types(store: &Store) -> Result<Vec<String>> {
     Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
 }
 
-fn derive_health(is_active: bool, last_success: &Option<String>, last_failure: &Option<String>) -> String {
+fn derive_health(
+    is_active: bool,
+    last_success: &Option<String>,
+    last_failure: &Option<String>,
+) -> String {
     if !is_active {
         return "disabled".into();
     }
@@ -864,10 +972,15 @@ pub fn home_summary(store: &Store) -> Result<HomeSummary> {
         })?
         .collect::<std::result::Result<Vec<_>, _>>()?;
 
-    let pending_changes: i64 =
-        conn.query_row("SELECT COUNT(*) FROM staged_changes WHERE status = 'pending'", [], |r| r.get(0))?;
+    let pending_changes: i64 = conn.query_row(
+        "SELECT COUNT(*) FROM staged_changes WHERE status = 'pending'",
+        [],
+        |r| r.get(0),
+    )?;
     let total_items: i64 =
-        conn.query_row("SELECT COUNT(*) FROM items WHERE is_active = 1", [], |r| r.get(0))?;
+        conn.query_row("SELECT COUNT(*) FROM items WHERE is_active = 1", [], |r| {
+            r.get(0)
+        })?;
     let total_examples: i64 = conn.query_row("SELECT COUNT(*) FROM examples", [], |r| r.get(0))?;
     let last_sync: Option<(String, String)> = conn
         .query_row(
@@ -893,9 +1006,25 @@ pub fn home_summary(store: &Store) -> Result<HomeSummary> {
 /// Counts used by Diagnostics and by `personal-wiki status`.
 pub fn table_counts(store: &Store) -> Result<BTreeMap<String, i64>> {
     let tables = [
-        "tools", "tasks", "categories", "items", "examples", "parameters", "aliases", "tags",
-        "sources", "item_sources", "relationships", "favorites", "pins", "notes", "saved_links",
-        "update_batches", "staged_changes", "backups", "audit_log",
+        "tools",
+        "tasks",
+        "categories",
+        "items",
+        "examples",
+        "parameters",
+        "aliases",
+        "tags",
+        "sources",
+        "item_sources",
+        "relationships",
+        "favorites",
+        "pins",
+        "notes",
+        "saved_links",
+        "update_batches",
+        "staged_changes",
+        "backups",
+        "audit_log",
     ];
     let mut map = BTreeMap::new();
     for table in tables {

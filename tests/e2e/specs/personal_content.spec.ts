@@ -6,7 +6,11 @@ test.describe('Personal content', () => {
     await expect(page.getByTestId('route-content')).toBeVisible();
     const empty = page.getByTestId('empty-state');
     const grid = page.getByTestId('item-grid');
-    expect((await empty.count()) + (await grid.count())).toBeGreaterThan(0);
+    // Favorites load via an async query; poll until either the empty state
+    // or the grid actually renders instead of counting synchronously.
+    await expect
+      .poll(async () => (await empty.count()) + (await grid.count()))
+      .toBeGreaterThan(0);
   });
 
   test('notes shows the recorded note and its linked item', async ({ open }) => {

@@ -5,7 +5,10 @@
 //! filesystem except through the single Knowledge Pack picker below.
 
 use pw_core::models::*;
-use pw_core::{apply, audit, backup, diagnostics, edit, pack, paths, personal, repo, search, seed, staging, url as safe_url, Store};
+use pw_core::{
+    apply, audit, backup, diagnostics, edit, pack, paths, personal, repo, search, seed, staging,
+    url as safe_url, Store,
+};
 use serde::Serialize;
 use std::sync::Mutex;
 use tauri::{Manager, State};
@@ -37,7 +40,10 @@ fn with_store<T, F>(state: &State<AppState>, action: F) -> CmdResult<T>
 where
     F: FnOnce(&Store) -> pw_core::Result<T>,
 {
-    let store = state.store.lock().map_err(|_| "قاعدة البيانات مشغولة".to_string())?;
+    let store = state
+        .store
+        .lock()
+        .map_err(|_| "قاعدة البيانات مشغولة".to_string())?;
     action(&store).map_err(to_message)
 }
 
@@ -45,7 +51,10 @@ fn with_store_mut<T, F>(state: &State<AppState>, action: F) -> CmdResult<T>
 where
     F: FnOnce(&mut Store) -> pw_core::Result<T>,
 {
-    let mut store = state.store.lock().map_err(|_| "قاعدة البيانات مشغولة".to_string())?;
+    let mut store = state
+        .store
+        .lock()
+        .map_err(|_| "قاعدة البيانات مشغولة".to_string())?;
     action(&mut store).map_err(to_message)
 }
 
@@ -99,19 +108,33 @@ fn items_for_tool(
     sort: Option<String>,
 ) -> CmdResult<Vec<ItemSummary>> {
     with_store(&state, |store| {
-        repo::items_for_tool(store, &slug, section.as_deref(), repo::ItemSort::parse(sort.as_deref()), 500)
+        repo::items_for_tool(
+            store,
+            &slug,
+            section.as_deref(),
+            repo::ItemSort::parse(sort.as_deref()),
+            500,
+        )
     })
 }
 
 #[tauri::command]
-fn items_for_task(state: State<AppState>, slug: String, sort: Option<String>) -> CmdResult<Vec<ItemSummary>> {
+fn items_for_task(
+    state: State<AppState>,
+    slug: String,
+    sort: Option<String>,
+) -> CmdResult<Vec<ItemSummary>> {
     with_store(&state, |store| {
         repo::items_for_task(store, &slug, repo::ItemSort::parse(sort.as_deref()), 500)
     })
 }
 
 #[tauri::command]
-fn items_for_category(state: State<AppState>, slug: String, sort: Option<String>) -> CmdResult<Vec<ItemSummary>> {
+fn items_for_category(
+    state: State<AppState>,
+    slug: String,
+    sort: Option<String>,
+) -> CmdResult<Vec<ItemSummary>> {
     with_store(&state, |store| {
         repo::items_for_category(store, &slug, repo::ItemSort::parse(sort.as_deref()), 500)
     })
@@ -159,7 +182,13 @@ fn search(
 ) -> CmdResult<SearchResponse> {
     let filters = filters.unwrap_or_default();
     with_store(&state, |store| {
-        let response = search::search(store, &query, &filters, limit.unwrap_or(25), offset.unwrap_or(0))?;
+        let response = search::search(
+            store,
+            &query,
+            &filters,
+            limit.unwrap_or(25),
+            offset.unwrap_or(0),
+        )?;
         personal::record_search(store, &query, &filters, response.total)?;
         Ok(response)
     })
@@ -193,7 +222,9 @@ fn save_search(
     filters: Option<SearchFilters>,
 ) -> CmdResult<SavedSearch> {
     let filters = filters.unwrap_or_default();
-    with_store(&state, |store| personal::save_search(store, &name, &query, &filters))
+    with_store(&state, |store| {
+        personal::save_search(store, &name, &query, &filters)
+    })
 }
 
 #[tauri::command]
@@ -205,7 +236,9 @@ fn delete_saved_search(state: State<AppState>, id: String) -> CmdResult<()> {
 
 #[tauri::command]
 fn set_favorite(state: State<AppState>, item_id: String, favorite: bool) -> CmdResult<bool> {
-    with_store(&state, |store| personal::set_favorite(store, &item_id, favorite))
+    with_store(&state, |store| {
+        personal::set_favorite(store, &item_id, favorite)
+    })
 }
 
 #[tauri::command]
@@ -296,7 +329,9 @@ fn save_item(state: State<AppState>, input: edit::ItemInput) -> CmdResult<ItemDe
 
 #[tauri::command]
 fn set_active(state: State<AppState>, entity: String, id: String, active: bool) -> CmdResult<()> {
-    with_store(&state, |store| edit::set_active(store, &entity, &id, active))
+    with_store(&state, |store| {
+        edit::set_active(store, &entity, &id, active)
+    })
 }
 
 // ---------------------------------------------------------------- updates
@@ -317,7 +352,9 @@ fn list_changes(
     batch_id: Option<String>,
     status: Option<String>,
 ) -> CmdResult<Vec<StagedChange>> {
-    with_store(&state, |store| staging::list_changes(store, batch_id.as_deref(), status.as_deref()))
+    with_store(&state, |store| {
+        staging::list_changes(store, batch_id.as_deref(), status.as_deref())
+    })
 }
 
 #[tauri::command]
@@ -339,7 +376,9 @@ fn apply_batch(state: State<AppState>, batch_id: String) -> CmdResult<ApplyOutco
 
 #[tauri::command]
 fn revert_batch(state: State<AppState>, batch_id: String) -> CmdResult<ApplyOutcome> {
-    with_store_mut(&state, |store| apply::revert_batch(store, &batch_id, "user"))
+    with_store_mut(&state, |store| {
+        apply::revert_batch(store, &batch_id, "user")
+    })
 }
 
 #[derive(Serialize)]
@@ -359,7 +398,11 @@ pub struct ValidateOutcome {
 /// Import a Knowledge Pack the user picked. Staging is the default; applying is
 /// a separate, explicit decision made in the Update Center.
 #[tauri::command]
-fn import_pack_file(state: State<AppState>, path: String, apply: Option<bool>) -> CmdResult<ImportOutcome> {
+fn import_pack_file(
+    state: State<AppState>,
+    path: String,
+    apply: Option<bool>,
+) -> CmdResult<ImportOutcome> {
     let json = std::fs::read_to_string(&path).map_err(|e| format!("تعذّرت قراءة الملف: {e}"))?;
     with_store_mut(&state, |store| {
         let parsed = pack::parse_and_validate(&json, Some(store))?;
@@ -378,7 +421,10 @@ fn validate_pack_file(state: State<AppState>, path: String) -> CmdResult<Validat
     let json = std::fs::read_to_string(&path).map_err(|e| format!("تعذّرت قراءة الملف: {e}"))?;
     with_store(&state, |store| {
         let parsed = pack::parse_and_validate(&json, Some(store))?;
-        Ok(ValidateOutcome { items: parsed.items.len(), producer: parsed.batch.producer })
+        Ok(ValidateOutcome {
+            items: parsed.items.len(),
+            producer: parsed.batch.producer,
+        })
     })
 }
 
@@ -452,7 +498,9 @@ fn copy_text(app: tauri::AppHandle, text: String) -> CmdResult<()> {
 fn open_external(app: tauri::AppHandle, url: String) -> CmdResult<()> {
     use tauri_plugin_opener::OpenerExt;
     let safe = safe_url::validate_web_url(&url).map_err(to_message)?;
-    app.opener().open_url(safe, None::<&str>).map_err(|e| e.to_string())
+    app.opener()
+        .open_url(safe, None::<&str>)
+        .map_err(|e| e.to_string())
 }
 
 /// The only filesystem entry point: one picker, JSON only, chosen by the user.
@@ -479,20 +527,69 @@ pub fn run() {
             let db_path = paths::default_db_path();
             let mut store = Store::open(&db_path)?;
             seed::ensure_seeded(&mut store)?;
-            app.manage(AppState { store: Mutex::new(store) });
+            app.manage(AppState {
+                store: Mutex::new(store),
+            });
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            home_summary, list_tools, tool_page, list_tasks, category_tree, category_path,
-            task_detail, category_detail, items_for_tool, items_for_task, items_for_category,
-            item_detail, record_open, list_tags, list_item_types, list_favorites, list_pinned,
-            search, search_suggestions, search_history, clear_search_history, list_saved_searches,
-            save_search, delete_saved_search, set_favorite, set_pin, list_notes, save_note,
-            delete_note, list_links, save_link, delete_link, save_tool, save_task, save_category,
-            save_item, set_active, list_sources, list_batches, list_changes, review_changes,
-            apply_batch, revert_batch, import_pack_file, validate_pack_file, source_manifest,
-            list_backups, create_backup, restore_backup, list_audit, diagnostics,
-            rebuild_search_index, get_settings, set_setting, copy_text, open_external, pick_pack_file
+            home_summary,
+            list_tools,
+            tool_page,
+            list_tasks,
+            category_tree,
+            category_path,
+            task_detail,
+            category_detail,
+            items_for_tool,
+            items_for_task,
+            items_for_category,
+            item_detail,
+            record_open,
+            list_tags,
+            list_item_types,
+            list_favorites,
+            list_pinned,
+            search,
+            search_suggestions,
+            search_history,
+            clear_search_history,
+            list_saved_searches,
+            save_search,
+            delete_saved_search,
+            set_favorite,
+            set_pin,
+            list_notes,
+            save_note,
+            delete_note,
+            list_links,
+            save_link,
+            delete_link,
+            save_tool,
+            save_task,
+            save_category,
+            save_item,
+            set_active,
+            list_sources,
+            list_batches,
+            list_changes,
+            review_changes,
+            apply_batch,
+            revert_batch,
+            import_pack_file,
+            validate_pack_file,
+            source_manifest,
+            list_backups,
+            create_backup,
+            restore_backup,
+            list_audit,
+            diagnostics,
+            rebuild_search_index,
+            get_settings,
+            set_setting,
+            copy_text,
+            open_external,
+            pick_pack_file
         ])
         .run(tauri::generate_context!())
         .expect("Personal Wiki failed to start");

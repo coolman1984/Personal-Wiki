@@ -14,7 +14,9 @@ fn backup_dir_for(store: &Store) -> PathBuf {
     if db == Path::new(":memory:") {
         return paths::backups_dir();
     }
-    db.parent().map(|p| p.join("backups")).unwrap_or_else(paths::backups_dir)
+    db.parent()
+        .map(|p| p.join("backups"))
+        .unwrap_or_else(paths::backups_dir)
 }
 
 /// Create a snapshot and register it. `reason` explains why it exists
@@ -31,7 +33,9 @@ pub fn create(store: &Store, reason: &str, batch_id: Option<&str>) -> Result<Bac
         backup.run_to_completion(64, std::time::Duration::from_millis(10), None)?;
     }
 
-    let size = std::fs::metadata(&file).map(|m| m.len() as i64).unwrap_or(0);
+    let size = std::fs::metadata(&file)
+        .map(|m| m.len() as i64)
+        .unwrap_or(0);
     let schema_version = store.schema_version()?;
     let item_count = store.count("items")?;
     let record = BackupRecord {
@@ -100,7 +104,10 @@ pub fn restore(store: &mut Store, id: &str) -> Result<BackupRecord> {
     let record = get(store, id)?;
     let src_path = PathBuf::from(&record.path);
     if !src_path.exists() {
-        return Err(CoreError::NotFound(format!("backup file missing: {}", record.path)));
+        return Err(CoreError::NotFound(format!(
+            "backup file missing: {}",
+            record.path
+        )));
     }
     let safety = create(store, "pre_restore", None)?;
 

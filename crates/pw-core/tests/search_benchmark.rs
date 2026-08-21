@@ -15,10 +15,34 @@ const TARGET_ITEMS: usize = 10_000;
 fn build_large_store() -> Store {
     let mut store = support::store();
     let words = [
-        "session", "agent", "context", "install", "token", "branch", "review", "model",
-        "permission", "sandbox", "worktree", "prompt", "index", "backup", "diagnose",
+        "session",
+        "agent",
+        "context",
+        "install",
+        "token",
+        "branch",
+        "review",
+        "model",
+        "permission",
+        "sandbox",
+        "worktree",
+        "prompt",
+        "index",
+        "backup",
+        "diagnose",
     ];
-    let arabic = ["جلسة", "وكيل", "سياق", "تثبيت", "رمز", "فرع", "مراجعة", "نموذج", "صلاحية", "فهرس"];
+    let arabic = [
+        "جلسة",
+        "وكيل",
+        "سياق",
+        "تثبيت",
+        "رمز",
+        "فرع",
+        "مراجعة",
+        "نموذج",
+        "صلاحية",
+        "فهرس",
+    ];
 
     let mut items = Vec::with_capacity(TARGET_ITEMS);
     for i in 0..TARGET_ITEMS {
@@ -48,17 +72,20 @@ fn search_stays_fast_with_ten_thousand_items() {
     let build_ms = build_start.elapsed().as_secs_f64() * 1000.0;
 
     let total = store.count("items").unwrap();
-    assert!(total >= TARGET_ITEMS as i64, "expected a large database, got {total}");
+    assert!(
+        total >= TARGET_ITEMS as i64,
+        "expected a large database, got {total}"
+    );
     let (status, indexed) = search::health(store.conn());
     assert_eq!(status, "ok");
     assert_eq!(indexed, total);
 
     let queries = [
-        "session",           // common latin term, thousands of matches
-        "bench agent 4242",  // narrow multi-token
-        "جلسة",              // common arabic term
-        "وكيل 777",          // arabic + digits
-        "bench alias 9999",  // alias-only match
+        "session",          // common latin term, thousands of matches
+        "bench agent 4242", // narrow multi-token
+        "جلسة",             // common arabic term
+        "وكيل 777",         // arabic + digits
+        "bench alias 9999", // alias-only match
     ];
 
     let mut worst: f64 = 0.0;
@@ -83,5 +110,8 @@ fn search_stays_fast_with_ten_thousand_items() {
     // Loose ceiling: the point is to catch an order-of-magnitude regression,
     // not to fail because a CI runner was busy. The measured numbers are printed
     // above and quoted in the completion report.
-    assert!(worst < 1500.0, "search regressed badly: worst query took {worst:.1} ms");
+    assert!(
+        worst < 1500.0,
+        "search regressed badly: worst query took {worst:.1} ms"
+    );
 }

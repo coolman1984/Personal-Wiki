@@ -3,15 +3,18 @@ import { test, expect } from '../fixture';
 test.describe('Tool family screen', () => {
   test('shows identity, stat strip, section tabs, and item cards', async ({ open }) => {
     const page = await open('/tools/claude-code');
-    await expect(page.getByRole('heading', { name: 'Claude Code' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Claude Code', level: 1 })).toBeVisible();
     await expect(page.getByTestId('tool-stats')).toBeVisible();
     await expect(page.getByTestId('section-tabs')).toBeVisible();
-    const cards = page.getByTestId('item-card');
-    expect(await cards.count()).toBeGreaterThan(0);
+    // Items load via a separate async query; wait for the first card rather
+    // than reading .count() synchronously.
+    await expect(page.getByTestId('item-card').first()).toBeVisible();
+    expect(await page.getByTestId('item-card').count()).toBeGreaterThan(0);
   });
 
   test('selecting a section tab filters the item grid and updates the URL', async ({ open }) => {
     const page = await open('/tools/claude-code');
+    await expect(page.getByTestId('item-card').first()).toBeVisible();
     const before = await page.getByTestId('item-card').count();
     const tab = page.locator('[data-testid="section-tabs"] button[data-slug="agents-manage"]');
     if ((await tab.count()) > 0) {

@@ -5,7 +5,11 @@ use pw_core::models::SearchFilters;
 use pw_core::{repo, search};
 
 fn titles(response: &pw_core::models::SearchResponse) -> Vec<&str> {
-    response.hits.iter().map(|h| h.item.title.as_str()).collect()
+    response
+        .hits
+        .iter()
+        .map(|h| h.item.title.as_str())
+        .collect()
 }
 
 #[test]
@@ -35,16 +39,27 @@ fn an_alias_that_appears_nowhere_else_still_finds_its_item() {
     support::install(&mut store, &json);
 
     // The phrase is in no title, description or syntax — only in the alias.
-    let response = search::search(&store, "فرمتة السحابة الزرقاء", &SearchFilters::default(), 10, 0).unwrap();
+    let response = search::search(
+        &store,
+        "فرمتة السحابة الزرقاء",
+        &SearchFilters::default(),
+        10,
+        0,
+    )
+    .unwrap();
     assert!(!response.hits.is_empty(), "the alias must be searchable");
     assert_eq!(response.hits[0].item.slug, "alias-target");
-    assert_eq!(response.hits[0].matched_alias.as_deref(), Some("فرمتة السحابة الزرقاء"));
+    assert_eq!(
+        response.hits[0].matched_alias.as_deref(),
+        Some("فرمتة السحابة الزرقاء")
+    );
 }
 
 #[test]
 fn an_exact_title_match_outranks_a_body_mention() {
     let store = support::store();
-    let response = search::search(&store, "claude doctor", &SearchFilters::default(), 10, 0).unwrap();
+    let response =
+        search::search(&store, "claude doctor", &SearchFilters::default(), 10, 0).unwrap();
     assert!(!response.hits.is_empty());
     assert_eq!(response.hits[0].item.title, "claude doctor");
 }
@@ -65,8 +80,14 @@ fn a_deprecated_item_ranks_below_an_active_equivalent() {
 
     let response = search::search(&store, "widgetize", &SearchFilters::default(), 10, 0).unwrap();
     let slugs: Vec<_> = response.hits.iter().map(|h| h.item.slug.as_str()).collect();
-    let active = slugs.iter().position(|s| *s == "rank-active").expect("active hit");
-    let old = slugs.iter().position(|s| *s == "rank-old").expect("deprecated hit");
+    let active = slugs
+        .iter()
+        .position(|s| *s == "rank-active")
+        .expect("active hit");
+    let old = slugs
+        .iter()
+        .position(|s| *s == "rank-old")
+        .expect("deprecated hit");
     assert!(active < old, "active must outrank deprecated: {slugs:?}");
 }
 
@@ -81,12 +102,18 @@ fn filters_narrow_the_result_set() {
     let scoped = search::search(&store, "install", &filters, 50, 0).unwrap();
     assert!(scoped.total > 0);
     assert!(scoped.total < all.total);
-    assert!(scoped.hits.iter().all(|h| h.item.tool_slug.as_deref() == Some("codex-cli")));
+    assert!(scoped
+        .hits
+        .iter()
+        .all(|h| h.item.tool_slug.as_deref() == Some("codex-cli")));
 
     let mut type_filter = SearchFilters::default();
     type_filter.item_types = vec!["slash_command".into()];
     let slashes = search::search(&store, "claude", &type_filter, 50, 0).unwrap();
-    assert!(slashes.hits.iter().all(|h| h.item.item_type == "slash_command"));
+    assert!(slashes
+        .hits
+        .iter()
+        .all(|h| h.item.item_type == "slash_command"));
 }
 
 #[test]
@@ -106,9 +133,15 @@ fn a_favorites_filter_only_returns_favorites() {
 fn searching_an_arabic_task_phrase_finds_commands_from_several_tools() {
     let store = support::store();
     let response = search::search(&store, "تثبيت", &SearchFilters::default(), 30, 0).unwrap();
-    let tools: std::collections::HashSet<_> =
-        response.hits.iter().filter_map(|h| h.item.tool_slug.clone()).collect();
-    assert!(tools.len() >= 2, "a task phrase should cross tools, got {tools:?}");
+    let tools: std::collections::HashSet<_> = response
+        .hits
+        .iter()
+        .filter_map(|h| h.item.tool_slug.clone())
+        .collect();
+    assert!(
+        tools.len() >= 2,
+        "a task phrase should cross tools, got {tools:?}"
+    );
     assert!(!titles(&response).is_empty());
 }
 
@@ -122,26 +155,49 @@ fn the_index_is_maintained_on_write_and_can_be_rebuilt_after_damage() {
         "",
     );
     support::install(&mut store, &json);
-    assert!(!search::search(&store, "زقموط", &SearchFilters::default(), 5, 0).unwrap().hits.is_empty());
+    assert!(
+        !search::search(&store, "زقموط", &SearchFilters::default(), 5, 0)
+            .unwrap()
+            .hits
+            .is_empty()
+    );
 
     // Simulate a damaged index.
     store.conn().execute("DELETE FROM items_fts", []).unwrap();
     let (status, _) = search::health(store.conn());
     assert_eq!(status, "stale");
-    assert!(search::search(&store, "زقموط", &SearchFilters::default(), 5, 0).unwrap().hits.is_empty());
+    assert!(
+        search::search(&store, "زقموط", &SearchFilters::default(), 5, 0)
+            .unwrap()
+            .hits
+            .is_empty()
+    );
 
     let rebuilt = search::rebuild(store.conn()).unwrap();
     assert!(rebuilt > 0);
     let (status, rows) = search::health(store.conn());
     assert_eq!(status, "ok");
     assert_eq!(rows, store.count("items").unwrap());
-    assert!(!search::search(&store, "زقموط", &SearchFilters::default(), 5, 0).unwrap().hits.is_empty());
+    assert!(
+        !search::search(&store, "زقموط", &SearchFilters::default(), 5, 0)
+            .unwrap()
+            .hits
+            .is_empty()
+    );
 }
 
 #[test]
 fn a_query_full_of_punctuation_cannot_break_the_match_expression() {
     let store = support::store();
-    for hostile in ["\"", "AND OR NOT", "*", "a\" OR items_fts MATCH \"b", "()", "^^^", "--"] {
+    for hostile in [
+        "\"",
+        "AND OR NOT",
+        "*",
+        "a\" OR items_fts MATCH \"b",
+        "()",
+        "^^^",
+        "--",
+    ] {
         let response = search::search(&store, hostile, &SearchFilters::default(), 5, 0);
         assert!(response.is_ok(), "query {hostile:?} must not error");
     }

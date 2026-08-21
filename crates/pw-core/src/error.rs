@@ -33,7 +33,11 @@ pub struct ValidationIssue {
 
 impl ValidationIssue {
     pub fn new(path: impl Into<String>, code: &str, message: impl Into<String>) -> Self {
-        Self { path: path.into(), code: code.to_string(), message: message.into() }
+        Self {
+            path: path.into(),
+            code: code.to_string(),
+            message: message.into(),
+        }
     }
 }
 

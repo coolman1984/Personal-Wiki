@@ -8,11 +8,15 @@ pub const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub fn collect(store: &Store) -> Result<Diagnostics> {
     let schema_version = store.schema_version()?;
     let expected = db::latest_schema_version();
-    let integrity = store.integrity_check().unwrap_or_else(|e| format!("error: {e}"));
+    let integrity = store
+        .integrity_check()
+        .unwrap_or_else(|e| format!("error: {e}"));
     let fk_violations = store.foreign_key_check().unwrap_or(0) as i64;
     let (fts_status, fts_rows) = search::health(store.conn());
     let counts = repo::table_counts(store)?;
-    let db_size = std::fs::metadata(store.path()).map(|m| m.len() as i64).unwrap_or(0);
+    let db_size = std::fs::metadata(store.path())
+        .map(|m| m.len() as i64)
+        .unwrap_or(0);
 
     let mut problems = Vec::new();
     if integrity != "ok" {

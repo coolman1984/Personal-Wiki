@@ -22,7 +22,10 @@ fn malformed_json_is_rejected_with_a_useful_location() {
     let store = support::empty_store();
     let found = issues("{ not json", &store);
     assert_eq!(codes(&found), vec!["malformed_json"]);
-    assert!(found[0].path.starts_with("$"), "the error points at a place in the file");
+    assert!(
+        found[0].path.starts_with("$"),
+        "the error points at a place in the file"
+    );
 }
 
 #[test]
@@ -61,14 +64,25 @@ fn broken_references_are_rejected() {
         "",
     );
     let found = issues(&json, &store);
-    assert!(found.iter().filter(|i| i.code == "broken_reference").count() >= 3);
+    assert!(
+        found
+            .iter()
+            .filter(|i| i.code == "broken_reference")
+            .count()
+            >= 3
+    );
     assert!(found.iter().any(|i| i.path.ends_with(".toolSlug")));
 }
 
 #[test]
 fn an_unsafe_url_is_rejected() {
     let store = support::store();
-    for bad in ["javascript:alert(1)", "file:///etc/passwd", "data:text/html,<script>", "//evil.example"] {
+    for bad in [
+        "javascript:alert(1)",
+        "file:///etc/passwd",
+        "data:text/html,<script>",
+        "//evil.example",
+    ] {
         let json = format!(
             r#"{{ "schemaVersion": "1.0",
                   "batch": {{ "producer": "x", "generatedAt": "2026-08-21T12:00:00Z" }},
@@ -171,7 +185,10 @@ fn importing_stages_a_diff_and_changes_nothing_until_approval() {
     staging::set_review_status(&store, &batch_id, None, "approved").unwrap();
     let outcome = apply::apply_batch(&mut store, &batch_id, "test").unwrap();
     assert_eq!(outcome.applied, 1);
-    assert!(outcome.backup_id.is_some(), "a backup is taken before applying");
+    assert!(
+        outcome.backup_id.is_some(),
+        "a backup is taken before applying"
+    );
     assert_eq!(store.count("items").unwrap(), items_before + 1);
     assert!(repo::item_detail(&store, "staged-only").is_ok());
 }
@@ -190,7 +207,9 @@ fn an_update_produces_a_field_level_diff_and_no_row_for_unchanged_content() {
     // Re-importing the identical content is not a change.
     let parsed = pack::parse_and_validate(&first, Some(&store)).unwrap();
     let same_batch = staging::stage_pack(&store, &parsed, "test").unwrap();
-    assert!(staging::list_changes(&store, Some(&same_batch), None).unwrap().is_empty());
+    assert!(staging::list_changes(&store, Some(&same_batch), None)
+        .unwrap()
+        .is_empty());
 
     // A real edit produces an update with a field diff.
     let second = first.replace("\"title\": \"قبل\"", "\"title\": \"بعد\"");
@@ -239,7 +258,10 @@ fn a_failed_apply_rolls_back_and_keeps_the_backup() {
     assert!(result.is_err(), "the apply must fail");
 
     // Nothing from the batch landed — not even the change that would have worked.
-    assert_eq!(repo::table_counts(&store).unwrap().get("items"), before_counts.get("items"));
+    assert_eq!(
+        repo::table_counts(&store).unwrap().get("items"),
+        before_counts.get("items")
+    );
     assert!(repo::item_detail(&store, "ok-item").is_err());
     assert_eq!(store.integrity_check().unwrap(), "ok");
     assert_eq!(store.foreign_key_check().unwrap(), 0);
@@ -271,9 +293,16 @@ fn undo_reverses_an_applied_batch_and_rebuilds_the_index() {
     // Added rows are retired, never hard-deleted, and drop out of browsing.
     let detail = repo::item_detail(&store, "undo-me").unwrap();
     assert_eq!(detail.summary.lifecycle_status, "removed");
-    let listed = repo::items_for_tool(&store, "claude-code", None, repo::ItemSort::Recent, 500).unwrap();
-    assert!(!listed.iter().any(|i| i.slug == "undo-me"), "a retired item leaves browsing");
-    assert_eq!(staging::get_batch(&store, &batch_id).unwrap().status, "reverted");
+    let listed =
+        repo::items_for_tool(&store, "claude-code", None, repo::ItemSort::Recent, 500).unwrap();
+    assert!(
+        !listed.iter().any(|i| i.slug == "undo-me"),
+        "a retired item leaves browsing"
+    );
+    assert_eq!(
+        staging::get_batch(&store, &batch_id).unwrap().status,
+        "reverted"
+    );
     assert_eq!(store.integrity_check().unwrap(), "ok");
 }
 
@@ -293,7 +322,14 @@ fn personal_notes_favorites_and_pins_survive_an_official_refresh() {
     // The user makes it theirs.
     personal::set_favorite(&store, &item.summary.id, true).unwrap();
     personal::set_pin(&store, &item.summary.id, true).unwrap();
-    personal::save_note(&store, None, Some(&item.summary.id), "ملاحظتي", "أستخدمه هكذا").unwrap();
+    personal::save_note(
+        &store,
+        None,
+        Some(&item.summary.id),
+        "ملاحظتي",
+        "أستخدمه هكذا",
+    )
+    .unwrap();
 
     // The vendor content is refreshed on top of it.
     let second = first
@@ -303,7 +339,10 @@ fn personal_notes_favorites_and_pins_survive_an_official_refresh() {
     support::install(&mut store, &second);
 
     let after = repo::item_detail(&store, "overlay-item").unwrap();
-    assert_eq!(after.summary.title, "بعد التحديث", "official content did update");
+    assert_eq!(
+        after.summary.title, "بعد التحديث",
+        "official content did update"
+    );
     assert_eq!(after.summary.syntax.as_deref(), Some("tool --new"));
     assert!(after.summary.is_favorite, "the favorite survived");
     assert!(after.summary.is_pinned, "the pin survived");
@@ -332,7 +371,9 @@ fn a_removal_candidate_retires_an_item_instead_of_deleting_it() {
 
     let rows: i64 = store
         .conn()
-        .query_row("SELECT COUNT(*) FROM items WHERE id = ?1", [&id], |r| r.get(0))
+        .query_row("SELECT COUNT(*) FROM items WHERE id = ?1", [&id], |r| {
+            r.get(0)
+        })
         .unwrap();
     assert_eq!(rows, 1, "history is preserved");
     let detail = repo::item_detail(&store, "retire-me").unwrap();
@@ -362,5 +403,8 @@ fn a_backup_can_be_restored_and_the_database_stays_valid() {
 
     assert_eq!(store.count("items").unwrap(), items_at_snapshot);
     assert_eq!(store.integrity_check().unwrap(), "ok");
-    assert_eq!(store.schema_version().unwrap(), pw_core::latest_schema_version());
+    assert_eq!(
+        store.schema_version().unwrap(),
+        pw_core::latest_schema_version()
+    );
 }

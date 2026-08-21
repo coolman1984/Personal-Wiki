@@ -6,16 +6,23 @@ test.describe('Item detail (KnowledgeDetail)', () => {
     const detail = page.getByTestId('knowledge-detail');
     await expect(detail).toBeVisible();
 
-    const sections = ['purpose', 'when', 'syntax', 'parameters', 'example', 'sources'];
-    const order: number[] = [];
-    for (const name of sections) {
-      const el = detail.locator(`[data-section="${name}"]`);
-      await expect(el).toBeVisible();
-      const box = await el.boundingBox();
-      order.push(box?.y ?? 0);
-    }
-    for (let i = 1; i < order.length; i++) {
-      expect(order[i]!).toBeGreaterThan(order[i - 1]!);
+    // KnowledgeDetail lays out its sections in two columns (docs/UI_SPEC.md
+    // §7), so "in order" means top-to-bottom within each column, not across
+    // both — the two column checks below mirror that layout.
+    const leftColumn = ['purpose', 'when', 'syntax', 'parameters'];
+    const rightColumn = ['example', 'sources'];
+
+    for (const column of [leftColumn, rightColumn]) {
+      const order: number[] = [];
+      for (const name of column) {
+        const el = detail.locator(`[data-section="${name}"]`);
+        await expect(el).toBeVisible();
+        const box = await el.boundingBox();
+        order.push(box?.y ?? 0);
+      }
+      for (let i = 1; i < order.length; i++) {
+        expect(order[i]!).toBeGreaterThan(order[i - 1]!);
+      }
     }
   });
 

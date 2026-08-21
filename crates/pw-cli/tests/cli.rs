@@ -86,7 +86,10 @@ fn sources_manifest_gives_an_agent_what_it_needs_to_produce_a_pack() {
     // The rules an agent must follow travel with the manifest.
     let rules = manifest["rules"].to_string();
     assert!(rules.contains("official"));
-    assert!(manifest["taxonomy"]["itemTypes"].as_array().unwrap().contains(&Value::from("cli_command")));
+    assert!(manifest["taxonomy"]["itemTypes"]
+        .as_array()
+        .unwrap()
+        .contains(&Value::from("cli_command")));
 }
 
 const GOOD_PACK: &str = r#"{
@@ -127,7 +130,9 @@ fn validate_accepts_a_good_pack_and_rejects_a_bad_one_with_field_paths() {
     let issues = report["issues"].as_array().unwrap();
     assert!(issues.iter().any(|i| i["code"] == "invalid_enum"));
     assert!(issues.iter().any(|i| i["code"] == "broken_reference"));
-    assert!(issues.iter().any(|i| i["path"].as_str().unwrap().contains("$.items[0]")));
+    assert!(issues
+        .iter()
+        .any(|i| i["path"].as_str().unwrap().contains("$.items[0]")));
 }
 
 #[test]
@@ -142,10 +147,17 @@ fn import_stages_by_default_and_never_applies_silently() {
     assert_eq!(staged["staged"], 1);
 
     // Still not in the trusted data.
-    assert_eq!(cli.json(&["status"])["counts"]["items"].as_i64().unwrap(), before);
+    assert_eq!(
+        cli.json(&["status"])["counts"]["items"].as_i64().unwrap(),
+        before
+    );
     let hits = cli.json(&["search", "cli-test-item"]);
     assert!(
-        !hits["hits"].as_array().unwrap().iter().any(|h| h["slug"] == "cli-test-item"),
+        !hits["hits"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|h| h["slug"] == "cli-test-item"),
         "a staged item must not be searchable before it is approved"
     );
 
@@ -157,20 +169,39 @@ fn import_stages_by_default_and_never_applies_silently() {
     // Applying without approving is refused.
     let refused = cli.run(&["changes", "apply", &batch_id]);
     assert_eq!(code(&refused), 4, "refusals use exit code 4");
-    assert_eq!(cli.json(&["status"])["counts"]["items"].as_i64().unwrap(), before);
+    assert_eq!(
+        cli.json(&["status"])["counts"]["items"].as_i64().unwrap(),
+        before
+    );
 
     // Approve, apply, and now it is browsable and searchable.
     assert_eq!(code(&cli.run(&["changes", "approve", &batch_id])), 0);
     let applied = cli.json(&["changes", "apply", &batch_id]);
     assert_eq!(applied["applied"], 1);
-    assert!(applied["backupId"].is_string(), "a backup is taken before applying");
-    assert_eq!(cli.json(&["status"])["counts"]["items"].as_i64().unwrap(), before + 1);
-    assert!(cli.json(&["search", "عنصر اختبار سطر الأوامر"])["total"].as_i64().unwrap() > 0);
+    assert!(
+        applied["backupId"].is_string(),
+        "a backup is taken before applying"
+    );
+    assert_eq!(
+        cli.json(&["status"])["counts"]["items"].as_i64().unwrap(),
+        before + 1
+    );
+    assert!(
+        cli.json(&["search", "عنصر اختبار سطر الأوامر"])["total"]
+            .as_i64()
+            .unwrap()
+            > 0
+    );
 
     // And it can be undone.
     assert_eq!(code(&cli.run(&["changes", "undo", &batch_id])), 0);
     let batches = cli.json(&["changes", "list"]);
-    let batch = batches.as_array().unwrap().iter().find(|b| b["id"] == batch_id.as_str()).unwrap();
+    let batch = batches
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|b| b["id"] == batch_id.as_str())
+        .unwrap();
     assert_eq!(batch["status"], "reverted");
 }
 
@@ -185,7 +216,10 @@ fn reject_marks_a_batch_rejected_without_touching_trusted_data() {
         .to_string();
 
     assert_eq!(code(&cli.run(&["changes", "reject", &batch_id])), 0);
-    assert_eq!(cli.json(&["status"])["counts"]["items"].as_i64().unwrap(), before);
+    assert_eq!(
+        cli.json(&["status"])["counts"]["items"].as_i64().unwrap(),
+        before
+    );
     let diff = cli.json(&["changes", "diff", &batch_id]);
     assert_eq!(diff["changes"][0]["status"], "rejected");
 }
@@ -197,7 +231,11 @@ fn import_with_apply_is_explicit_and_immediate() {
     let applied = cli.json(&["import", pack.to_str().unwrap(), "--apply"]);
     assert_eq!(applied["applied"], 1);
     let hits = cli.json(&["search", "cli-test-item"]);
-    assert!(hits["hits"].as_array().unwrap().iter().any(|h| h["slug"] == "cli-test-item"));
+    assert!(hits["hits"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|h| h["slug"] == "cli-test-item"));
 }
 
 #[test]
@@ -213,11 +251,17 @@ fn backup_list_and_restore_round_trip() {
 
     assert_eq!(code(&cli.run(&["restore", &backup_id])), 0);
     let after_restore = cli.json(&["status"])["counts"]["items"].as_i64().unwrap();
-    assert!(after_restore < after_import, "restore rolled the knowledge back");
+    assert!(
+        after_restore < after_import,
+        "restore rolled the knowledge back"
+    );
     assert_eq!(cli.json(&["status"])["integrity"], "ok");
 
     let backups = cli.json(&["backups", "list"]);
-    assert!(backups.as_array().unwrap().len() >= 2, "a safety snapshot is taken before restoring");
+    assert!(
+        backups.as_array().unwrap().len() >= 2,
+        "a safety snapshot is taken before restoring"
+    );
 }
 
 #[test]
@@ -247,7 +291,11 @@ fn doctor_reports_a_clean_database_and_repairs_a_damaged_index() {
     drop(store);
 
     let broken = cli.run(&["doctor"]);
-    assert_eq!(code(&broken), 4, "problems are reported with a non-zero exit code");
+    assert_eq!(
+        code(&broken),
+        4,
+        "problems are reported with a non-zero exit code"
+    );
 
     let repaired = cli.json(&["doctor", "--repair"]);
     assert_eq!(repaired["diagnostics"]["ftsStatus"], "ok");

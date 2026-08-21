@@ -308,7 +308,6 @@ pub struct SearchFilters {
     pub favorites_only: bool,
 }}
 
-
 camel! {
 pub struct SearchHit {
     #[serde(flatten)]
