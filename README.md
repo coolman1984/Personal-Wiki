@@ -1,106 +1,67 @@
 # Personal Wiki
 
-A local-first Windows 11 desktop knowledge engine for command-line and AI
-development tools — Claude Code, Codex CLI, Gemini CLI, OpenCode, Git, VS Code,
-and anything added later — organised by **what you want to do**, not by which
-manual it lives in.
+A shared Arabic-first knowledge application for desktop and mobile web. This
+repository now contains both the original product contract and the working web
+application, so ChatGPT and Claude work on exactly the same source.
 
-> **The executable is stable. The knowledge is dynamic.** Every tool card,
-> section tab, category branch, command card, and detail panel is rendered
-> from SQLite at query time. Adding a tool, a task, a category, or a command
-> is a data change — a Knowledge Pack import, reviewed and approved by a
-> human. It never requires rebuilding the app.
+The current web build is functional but still contains demo content and navigation
+shortcuts that must be repaired. The authoritative implementation plan is
+`docs/LUNA_MAX_PERSONAL_WIKI_REPAIR_PLAN.md`.
 
-## What's here
+## The one rule everything follows
 
-This repository contains the finished V1 application, not just the design
-contract it was built from:
+> The executable is stable. The knowledge is dynamic.
 
-```text
-crates/pw-core/     shared Rust domain core — SQLite, migrations, FTS5 search,
-                     Knowledge Pack validation, staging/diff, transactional
-                     apply, backup/restore, audit, diagnostics
-crates/pw-cli/       the `personal-wiki` CLI — a thin shell over pw-core,
-                     built for AI agents to research and propose updates
-src-tauri/           the Tauri 2 desktop shell — typed commands, also a thin
-                     shell over pw-core
-src/                 the Svelte 5 + TypeScript frontend
-schemas/             the Knowledge Pack JSON Schema
-seed/                starter taxonomy + source-backed content (Claude Code,
-                     Codex CLI, Gemini CLI, OpenCode, Git — real commands
-                     from official docs, with provenance)
-tests/               Playwright E2E suite + Vitest unit tests
-crates/*/tests/      Rust integration and CLI end-to-end tests
-.github/workflows/   Windows CI: build, test, produce the installer
-docs/                the build contract, UI spec, developer notes, user guide
-references/          the six original UI reference images
-```
+Adding a tool, a category, a command, an example, or a link changes **data**.
+It never requires rebuilding the app. Only changes to application behaviour or
+database schema produce a new build.
 
-## For the non-technical user
-
-See `docs/USER_README.md` — install steps, first run, and how the update
-review flow works, in Arabic.
-
-## For a developer continuing this work
-
-See `docs/DEVELOPER_NOTES.md` for the actual architecture as built: why there
-is one Rust core behind two shells, how the update pipeline is wired end to
-end, how the Playwright suite is driven against a recording of the *real*
-core (not a second implementation), and how to add a new tool family with
-verified content.
-
-## The original design contract
-
-The documents this application was built from are still here, and remain the
-source of truth for product decisions and screen contracts:
+## Contents
 
 | File | What it is |
 | --- | --- |
-| `START_HERE_PROMPT.md` | The original one-shot implementation prompt. |
+| `START_HERE_PROMPT.md` | The one-shot implementation prompt. Send this to the coding agent. |
 | `PERSONAL_WIKI_MASTER_GUIDE.md` | Product logic, architecture, data model, update model, CLI, acceptance tests. |
-| `docs/UI_SPEC.md` | The interface contract: shell, tokens, component inventory, every screen region by region. |
+| `docs/UI_SPEC.md` | The interface contract: shell, tokens, component inventory, every screen region by region, states, and the query behind each element. |
 | `CLAUDE.md` | Persistent project rules, loaded automatically by Claude Code. |
-| `references/` | Six UI reference images — layout and interaction are the design contract; command text inside them is illustrative only. |
+| `references/` | Six UI reference images (see below). |
+| `docs/BUILD_PACK_README.md` | Original build-pack notes. |
+| `docs/LUNA_MAX_PERSONAL_WIKI_REPAIR_PLAN.md` | Current audited repair plan and completion gates. |
+| `docs/WEBAPP_README.md` | Web application setup, build, and hosting notes. |
+| `app/`, `server/`, `db/` | Current web interface, server logic, and data model. |
 
-## Target stack
+## Reference images
 
-Tauri 2 · Svelte 5 · TypeScript (strict) · SQLite + FTS5 · Rust (stable MSVC) ·
-pnpm · Vitest · Playwright. Light theme only. Arabic RTL first,
-localisation-ready.
+| Image | Screen |
+| --- | --- |
+| `01_HOME_DASHBOARD.png` | Home — the outermost face of the app: hero, tool grid, activity, quick actions. |
+| `02_TOOL_FAMILY_CODEX.png` | Inside one tool: identity header, stat strip, section tabs, command cards. |
+| `03_COMMAND_DETAIL.png` | One command in full: purpose, when to use, parameters, example, expected result, source, related. |
+| `04_GLOBAL_SEARCH.png` | Cross-tool search by intent, with filters, ranking, suggestions, saved searches. |
+| `05_UPDATE_CENTER.png` | Sources, detected changes, diff review, human approval before anything is applied. |
+| `06_GENERIC_CATEGORY_DETAIL.png` | The tool-independent task/category view with a pinned detail panel. |
 
-## Building it yourself
+Layout and interaction in these images are the design contract. Command text
+inside them is illustrative — verify every command against an official source
+before storing it as official.
 
-```bash
-pnpm install
-cargo build --workspace          # core + CLI + desktop app
-pnpm build:only && pnpm check    # frontend build + typecheck
-cargo test --workspace --exclude personal-wiki-app
-pnpm test                        # Vitest unit tests
-pnpm exec playwright test        # E2E (needs `pnpm dev` running)
-pnpm tauri dev                   # the desktop app itself (needs a WebView2/webkit2gtk runtime)
-pnpm tauri build                 # release installer (NSIS + MSI on Windows)
-```
+## How an agent starts work
 
-The `personal-wiki` CLI (`target/debug/personal-wiki`) works standalone:
+1. Read `CLAUDE.md`.
+2. Read `docs/LUNA_MAX_PERSONAL_WIKI_REPAIR_PLAN.md` completely.
+3. Inspect the current web app and run its existing checks before changing code.
+4. Implement the repair phases in order and do not deploy without a separate user request.
 
-```bash
-personal-wiki status
-personal-wiki search "تشغيل وكيل في الخلفية"
-personal-wiki sources manifest --json      # what a research agent should check
-personal-wiki validate pack.json
-personal-wiki import pack.json --stage     # staging is always the default
-personal-wiki changes diff <batch-id>
-personal-wiki changes approve <batch-id>
-personal-wiki changes apply <batch-id>
-personal-wiki doctor
-```
+## Current web stack
+
+Vinext/React with TypeScript, D1 data storage, R2 backup storage, and ChatGPT
+authentication. The original Tauri/SQLite desktop target remains a future portable
+shell; it must reuse the same domain and Knowledge Pack rules instead of creating a
+second conflicting product.
 
 ## Safety model
 
-External AI agents never write to the trusted database directly. They produce
-a validated **Knowledge Pack** (`schemas/knowledge-pack.schema.json`), which is
-staged, diffed, reviewed by a human in the Update Center, and then applied
-inside a transaction with a backup taken first. Personal notes, favourites,
-and pins always survive a source refresh — that is enforced by the schema
-(the personal overlay lives in tables a pack apply never touches) and proven
-by an automated test.
+External AI agents never write to the trusted database directly. They produce a
+validated **Knowledge Pack**, which is staged, diffed, reviewed by a human, and
+then applied inside a transaction with a backup taken first. Personal notes and
+favourites always survive a source refresh.
