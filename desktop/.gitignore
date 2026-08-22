@@ -1,0 +1,27 @@
+# Rust
+/target/
+Cargo.lock.bak
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# Test artifacts
+test-results/
+playwright-report/
+/tests/e2e/.cache/
+
+# OS/editor
+.DS_Store
+*.swp
+
+# Local data (never ship a real user database)
+*.db
+*.db-wal
+*.db-shm
+!seed/**/*.json

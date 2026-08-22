@@ -1,16 +1,29 @@
 name: Windows build and test
 
-# Personal Wiki targets Windows 11. This workflow is the real proof: it builds
-# and tests the whole stack — Rust core, CLI, Tauri app, Svelte frontend — on
-# an actual Windows runner, and produces the NSIS/MSI installer as an artifact.
+# Personal Wiki (desktop) targets Windows 11. This workflow is the real proof:
+# it builds and tests the whole stack — Rust core, CLI, Tauri app, Svelte
+# frontend — on an actual Windows runner, and produces the NSIS/MSI installer
+# as an artifact. The desktop app lives in desktop/, alongside a separate
+# Next.js/Cloudflare web app at the repository root; this workflow only
+# touches desktop/.
 on:
   push:
     branches: [main, "claude/**"]
+    paths:
+      - "desktop/**"
+      - ".github/workflows/windows-build.yml"
   pull_request:
+    paths:
+      - "desktop/**"
+      - ".github/workflows/windows-build.yml"
   workflow_dispatch: {}
 
 env:
   CARGO_TERM_COLOR: always
+
+defaults:
+  run:
+    working-directory: desktop
 
 jobs:
   windows:
@@ -25,7 +38,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: ". -> target"
+          workspaces: "desktop -> target"
 
       - name: Install Node 24 LTS
         uses: actions/setup-node@v4
@@ -88,8 +101,8 @@ jobs:
         with:
           name: personal-wiki-windows-installers
           path: |
-            src-tauri/target/release/bundle/nsis/*.exe
-            src-tauri/target/release/bundle/msi/*.msi
+            desktop/src-tauri/target/release/bundle/nsis/*.exe
+            desktop/src-tauri/target/release/bundle/msi/*.msi
           if-no-files-found: error
           retention-days: 30
 
@@ -107,5 +120,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-windows
-          path: playwright-report/
+          path: desktop/playwright-report/
           retention-days: 14

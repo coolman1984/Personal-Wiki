@@ -3,6 +3,12 @@
 The active deliverable is the web application in this repository. It is the shared
 codebase for ChatGPT, Claude, and every later coding agent.
 
+A separate Tauri + Rust + Svelte desktop implementation lives in `desktop/`,
+with its own package.json/Cargo workspace and its own instructions at
+`desktop/docs/DEVELOPER_NOTES.md`. It does not share build tooling with the
+web app above and these root instructions do not govern it. Windows CI for it
+runs from `.github/workflows/windows-build.yml`.
+
 Read these files in this order before changing code:
 
 1. `docs/LUNA_MAX_PERSONAL_WIKI_REPAIR_PLAN.md` — current repair scope and acceptance gates.

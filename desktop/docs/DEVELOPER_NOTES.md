@@ -1,10 +1,15 @@
 # Developer Notes
 
-Internal notes for anyone continuing work on Personal Wiki. For product/UX rules
-see `PERSONAL_WIKI_MASTER_GUIDE.md` and `docs/UI_SPEC.md`; this file is about the
-code as it actually exists.
+Internal notes for anyone continuing work on the **desktop** (Tauri/Rust/Svelte)
+implementation of Personal Wiki, which lives in this `desktop/` directory. A
+separate Next.js/Cloudflare web implementation lives at the repository root —
+see `../docs/WEBAPP_README.md` for that one; this file is only about the code
+in `desktop/`.
 
-## Repository layout
+For product/UX rules shared by both implementations, see
+`../PERSONAL_WIKI_MASTER_GUIDE.md` and `../docs/UI_SPEC.md`.
+
+## Repository layout (all paths below are relative to `desktop/`)
 
 ```text
 crates/pw-core/     shared Rust domain core (SQLite, migrations, search,
@@ -22,7 +27,9 @@ crates/pw-core/tests/  Rust integration tests (dynamic data, update safety,
 crates/pw-cli/tests/   CLI end-to-end tests (spawn the real binary)
 tests/unit/          Vitest unit tests for pure frontend logic (router, format,
                      icons, types)
-.github/workflows/   Windows CI: build, test, and produce the NSIS/MSI installer
+../.github/workflows/  Windows CI: build, test, and produce the NSIS/MSI
+                     installer for this app (must live at the repo root for
+                     GitHub Actions to discover it; its steps `cd desktop`)
 ```
 
 ## The one rule that shaped every decision

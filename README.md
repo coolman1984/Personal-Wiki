@@ -29,6 +29,7 @@ database schema produce a new build.
 | `docs/LUNA_MAX_PERSONAL_WIKI_REPAIR_PLAN.md` | Current audited repair plan and completion gates. |
 | `docs/WEBAPP_README.md` | Web application setup, build, and hosting notes. |
 | `app/`, `server/`, `db/` | Current web interface, server logic, and data model. |
+| `desktop/` | A separate Tauri + Rust + Svelte desktop implementation of the same product contract — its own README/build/CI, not part of this web build. |
 
 ## Reference images
 
@@ -55,9 +56,15 @@ before storing it as official.
 ## Current web stack
 
 Vinext/React with TypeScript, D1 data storage, R2 backup storage, and ChatGPT
-authentication. The original Tauri/SQLite desktop target remains a future portable
-shell; it must reuse the same domain and Knowledge Pack rules instead of creating a
-second conflicting product.
+authentication.
+
+## Desktop implementation
+
+A working Tauri + Rust + Svelte desktop build now exists in `desktop/` — see
+`desktop/README.md`. It shares this repository's product contract
+(`PERSONAL_WIKI_MASTER_GUIDE.md`, `docs/UI_SPEC.md`) and Knowledge Pack model,
+but is a fully separate codebase, dependency tree, and CI pipeline from the
+web app above; changing one does not require changing the other.
 
 ## Safety model
 
